@@ -23,11 +23,25 @@ func (r *queryResolver) InsertJenisBarang(ctx context.Context, jenisBarang strin
 
 	if error != nil {
 		log.Fatal(error)
+
+		resultJenisBarang.Code = 404
+		resultJenisBarang.Status = "Insert to database not success for Jenis Barang"
+
+		return &resultJenisBarang, error
 	}
 
-	fmt.Print("insert :d", status)
+	fmt.Printf("insert %d", status)
 
+	resultJenisBarang.Code = 200
 	resultJenisBarang.Status = "Success Insert data into Jenis Barang"
+	resultJenisBarang.Data = &models.JenisBarang{
+		ID:          int(status),
+		JenisBarang: jenisBarang,
+	}
 
 	return &resultJenisBarang, nil
+}
+
+func (r *queryResolver) GetAllJenisBarang(ctx context.Context) (*model.ResultGetAllJenisBarang, error) {
+	panic(fmt.Errorf("not implemented"))
 }

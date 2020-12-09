@@ -2,6 +2,10 @@
 
 package model
 
+import (
+	"github.com/juragankoding/golang_graphql_training/models"
+)
+
 type ResultInsert interface {
 	IsResultInsert()
 }
@@ -14,9 +18,18 @@ type Karyawan struct {
 	NoHp       string `json:"noHp"`
 }
 
+type ResultGetAllJenisBarang struct {
+	Status string                `json:"status"`
+	Code   int                   `json:"code"`
+	Data   []*models.JenisBarang `json:"data"`
+}
+
+func (ResultGetAllJenisBarang) IsResultInsert() {}
+
 type ResultJenisBarang struct {
-	Status string `json:"status"`
-	Code   int    `json:"code"`
+	Status string              `json:"status"`
+	Code   int                 `json:"code"`
+	Data   *models.JenisBarang `json:"data"`
 }
 
 func (ResultJenisBarang) IsResultInsert() {}

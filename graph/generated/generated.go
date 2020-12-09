@@ -64,14 +64,22 @@ type ComplexityRoot struct {
 	}
 
 	Query struct {
+		GetAllJenisBarang func(childComplexity int) int
 		GetBarang         func(childComplexity int) int
 		GetInfoKaryawan   func(childComplexity int, id int) int
 		InsertBarang      func(childComplexity int, id int, nama string, description string) int
 		InsertJenisBarang func(childComplexity int, jenisBarang string) int
 	}
 
+	ResultGetAllJenisBarang struct {
+		Code   func(childComplexity int) int
+		Data   func(childComplexity int) int
+		Status func(childComplexity int) int
+	}
+
 	ResultJenisBarang struct {
 		Code   func(childComplexity int) int
+		Data   func(childComplexity int) int
 		Status func(childComplexity int) int
 	}
 }
@@ -80,6 +88,7 @@ type QueryResolver interface {
 	GetBarang(ctx context.Context) (*string, error)
 	InsertBarang(ctx context.Context, id int, nama string, description string) (*models.Barang, error)
 	InsertJenisBarang(ctx context.Context, jenisBarang string) (*model.ResultJenisBarang, error)
+	GetAllJenisBarang(ctx context.Context) (*model.ResultGetAllJenisBarang, error)
 	GetInfoKaryawan(ctx context.Context, id int) (*model.Karyawan, error)
 }
 
@@ -168,6 +177,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Karyawan.NoHp(childComplexity), true
 
+	case "Query.getAllJenisBarang":
+		if e.complexity.Query.GetAllJenisBarang == nil {
+			break
+		}
+
+		return e.complexity.Query.GetAllJenisBarang(childComplexity), true
+
 	case "Query.getBarang":
 		if e.complexity.Query.GetBarang == nil {
 			break
@@ -211,12 +227,40 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Query.InsertJenisBarang(childComplexity, args["jenis_barang"].(string)), true
 
+	case "resultGetAllJenisBarang.code":
+		if e.complexity.ResultGetAllJenisBarang.Code == nil {
+			break
+		}
+
+		return e.complexity.ResultGetAllJenisBarang.Code(childComplexity), true
+
+	case "resultGetAllJenisBarang.data":
+		if e.complexity.ResultGetAllJenisBarang.Data == nil {
+			break
+		}
+
+		return e.complexity.ResultGetAllJenisBarang.Data(childComplexity), true
+
+	case "resultGetAllJenisBarang.status":
+		if e.complexity.ResultGetAllJenisBarang.Status == nil {
+			break
+		}
+
+		return e.complexity.ResultGetAllJenisBarang.Status(childComplexity), true
+
 	case "resultJenisBarang.code":
 		if e.complexity.ResultJenisBarang.Code == nil {
 			break
 		}
 
 		return e.complexity.ResultJenisBarang.Code(childComplexity), true
+
+	case "resultJenisBarang.data":
+		if e.complexity.ResultJenisBarang.Data == nil {
+			break
+		}
+
+		return e.complexity.ResultJenisBarang.Data(childComplexity), true
 
 	case "resultJenisBarang.status":
 		if e.complexity.ResultJenisBarang.Status == nil {
@@ -298,10 +342,18 @@ type Query{
 type resultJenisBarang implements resultInsert {
   status: String!
   code: Int!
+  data: JenisBarang!
+}
+
+type resultGetAllJenisBarang implements resultInsert {
+  status: String!
+  code: Int!
+  data: [JenisBarang]!
 }
 
 extend type Query {
   insertJenisBarang(jenis_barang: String!): resultJenisBarang!
+  getAllJenisBarang: resultGetAllJenisBarang!
 }
 `, BuiltIn: false},
 	{Name: "graph/schema/schema.graphqls", Input: `# GraphQL schema example
@@ -904,6 +956,41 @@ func (ec *executionContext) _Query_insertJenisBarang(ctx context.Context, field 
 	res := resTmp.(*model.ResultJenisBarang)
 	fc.Result = res
 	return ec.marshalNresultJenisBarang2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋgraphᚋmodelᚐResultJenisBarang(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Query_getAllJenisBarang(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().GetAllJenisBarang(rctx)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*model.ResultGetAllJenisBarang)
+	fc.Result = res
+	return ec.marshalNresultGetAllJenisBarang2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋgraphᚋmodelᚐResultGetAllJenisBarang(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query_getInfoKaryawan(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -2099,6 +2186,111 @@ func (ec *executionContext) ___Type_ofType(ctx context.Context, field graphql.Co
 	return ec.marshalO__Type2ᚖgithubᚗcomᚋ99designsᚋgqlgenᚋgraphqlᚋintrospectionᚐType(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _resultGetAllJenisBarang_status(ctx context.Context, field graphql.CollectedField, obj *model.ResultGetAllJenisBarang) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "resultGetAllJenisBarang",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Status, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _resultGetAllJenisBarang_code(ctx context.Context, field graphql.CollectedField, obj *model.ResultGetAllJenisBarang) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "resultGetAllJenisBarang",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Code, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNInt2int(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _resultGetAllJenisBarang_data(ctx context.Context, field graphql.CollectedField, obj *model.ResultGetAllJenisBarang) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "resultGetAllJenisBarang",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Data, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.([]*models.JenisBarang)
+	fc.Result = res
+	return ec.marshalNJenisBarang2ᚕᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelsᚐJenisBarang(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _resultJenisBarang_status(ctx context.Context, field graphql.CollectedField, obj *model.ResultJenisBarang) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -2169,6 +2361,41 @@ func (ec *executionContext) _resultJenisBarang_code(ctx context.Context, field g
 	return ec.marshalNInt2int(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _resultJenisBarang_data(ctx context.Context, field graphql.CollectedField, obj *model.ResultJenisBarang) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "resultJenisBarang",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Data, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*models.JenisBarang)
+	fc.Result = res
+	return ec.marshalNJenisBarang2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelsᚐJenisBarang(ctx, field.Selections, res)
+}
+
 // endregion **************************** field.gotpl *****************************
 
 // region    **************************** input.gotpl *****************************
@@ -2188,6 +2415,13 @@ func (ec *executionContext) _resultInsert(ctx context.Context, sel ast.Selection
 			return graphql.Null
 		}
 		return ec._resultJenisBarang(ctx, sel, obj)
+	case model.ResultGetAllJenisBarang:
+		return ec._resultGetAllJenisBarang(ctx, sel, &obj)
+	case *model.ResultGetAllJenisBarang:
+		if obj == nil {
+			return graphql.Null
+		}
+		return ec._resultGetAllJenisBarang(ctx, sel, obj)
 	default:
 		panic(fmt.Errorf("unexpected type %T", obj))
 	}
@@ -2359,6 +2593,20 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 					}
 				}()
 				res = ec._Query_insertJenisBarang(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			})
+		case "getAllJenisBarang":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_getAllJenisBarang(ctx, field)
 				if res == graphql.Null {
 					atomic.AddUint32(&invalids, 1)
 				}
@@ -2631,6 +2879,43 @@ func (ec *executionContext) ___Type(ctx context.Context, sel ast.SelectionSet, o
 	return out
 }
 
+var resultGetAllJenisBarangImplementors = []string{"resultGetAllJenisBarang", "resultInsert"}
+
+func (ec *executionContext) _resultGetAllJenisBarang(ctx context.Context, sel ast.SelectionSet, obj *model.ResultGetAllJenisBarang) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, resultGetAllJenisBarangImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("resultGetAllJenisBarang")
+		case "status":
+			out.Values[i] = ec._resultGetAllJenisBarang_status(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "code":
+			out.Values[i] = ec._resultGetAllJenisBarang_code(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "data":
+			out.Values[i] = ec._resultGetAllJenisBarang_data(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
 var resultJenisBarangImplementors = []string{"resultJenisBarang", "resultInsert"}
 
 func (ec *executionContext) _resultJenisBarang(ctx context.Context, sel ast.SelectionSet, obj *model.ResultJenisBarang) graphql.Marshaler {
@@ -2649,6 +2934,11 @@ func (ec *executionContext) _resultJenisBarang(ctx context.Context, sel ast.Sele
 			}
 		case "code":
 			out.Values[i] = ec._resultJenisBarang_code(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "data":
+			out.Values[i] = ec._resultJenisBarang_data(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
@@ -2695,6 +2985,53 @@ func (ec *executionContext) marshalNInt2int(ctx context.Context, sel ast.Selecti
 		}
 	}
 	return res
+}
+
+func (ec *executionContext) marshalNJenisBarang2ᚕᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelsᚐJenisBarang(ctx context.Context, sel ast.SelectionSet, v []*models.JenisBarang) graphql.Marshaler {
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalOJenisBarang2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelsᚐJenisBarang(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+	return ret
+}
+
+func (ec *executionContext) marshalNJenisBarang2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelsᚐJenisBarang(ctx context.Context, sel ast.SelectionSet, v *models.JenisBarang) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	return ec._JenisBarang(ctx, sel, v)
 }
 
 func (ec *executionContext) unmarshalNString2string(ctx context.Context, v interface{}) (string, error) {
@@ -2941,6 +3278,20 @@ func (ec *executionContext) marshalN__TypeKind2string(ctx context.Context, sel a
 	return res
 }
 
+func (ec *executionContext) marshalNresultGetAllJenisBarang2githubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋgraphᚋmodelᚐResultGetAllJenisBarang(ctx context.Context, sel ast.SelectionSet, v model.ResultGetAllJenisBarang) graphql.Marshaler {
+	return ec._resultGetAllJenisBarang(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNresultGetAllJenisBarang2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋgraphᚋmodelᚐResultGetAllJenisBarang(ctx context.Context, sel ast.SelectionSet, v *model.ResultGetAllJenisBarang) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	return ec._resultGetAllJenisBarang(ctx, sel, v)
+}
+
 func (ec *executionContext) marshalNresultJenisBarang2githubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋgraphᚋmodelᚐResultJenisBarang(ctx context.Context, sel ast.SelectionSet, v model.ResultJenisBarang) graphql.Marshaler {
 	return ec._resultJenisBarang(ctx, sel, &v)
 }
@@ -2984,6 +3335,13 @@ func (ec *executionContext) marshalOBoolean2ᚖbool(ctx context.Context, sel ast
 		return graphql.Null
 	}
 	return graphql.MarshalBoolean(*v)
+}
+
+func (ec *executionContext) marshalOJenisBarang2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelsᚐJenisBarang(ctx context.Context, sel ast.SelectionSet, v *models.JenisBarang) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._JenisBarang(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalOKaryawan2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋgraphᚋmodelᚐKaryawan(ctx context.Context, sel ast.SelectionSet, v *model.Karyawan) graphql.Marshaler {

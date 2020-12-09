@@ -6,8 +6,16 @@ type JenisBarang {
 type resultJenisBarang implements resultInsert {
   status: String!
   code: Int!
+  data: JenisBarang!
+}
+
+type resultGetAllJenisBarang implements resultInsert {
+  status: String!
+  code: Int!
+  data: [JenisBarang]!
 }
 
 extend type Query {
   insertJenisBarang(jenis_barang: String!): resultJenisBarang!
+  getAllJenisBarang: resultGetAllJenisBarang!
 }
