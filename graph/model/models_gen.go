@@ -6,14 +6,6 @@ type ResultInsert interface {
 	IsResultInsert()
 }
 
-type Karyawan struct {
-	ID         int    `json:"id"`
-	IDKaryawan string `json:"idKaryawan"`
-	Nama       string `json:"nama"`
-	Email      string `json:"email"`
-	NoHp       string `json:"noHp"`
-}
-
 type ResultJenisBarang struct {
 	Status string `json:"status"`
 	Code   int    `json:"code"`
