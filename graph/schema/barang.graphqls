@@ -1,0 +1,10 @@
+type Barang{
+  id: Int!
+  nama: String!
+  description: String!
+}
+
+type Query{
+  getBarang: String
+  insertBarang(id: Int!, nama: String!, description: String!): Barang
+}

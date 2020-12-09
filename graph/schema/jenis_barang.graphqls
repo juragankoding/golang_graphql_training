@@ -1,0 +1,13 @@
+type JenisBarang {
+  id: Int!
+  jenis_barang: String!
+}
+
+type resultJenisBarang implements resultInsert {
+  status: String!
+  code: Int!
+}
+
+extend type Query {
+  insertJenisBarang(jenis_barang: String!): resultJenisBarang!
+}

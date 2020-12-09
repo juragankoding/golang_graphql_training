@@ -1,0 +1,15 @@
+# GraphQL schema example
+#
+# https://gqlgen.com/getting-started/
+
+extend type Query {
+  getInfoKaryawan(id: Int!): Karyawan
+}
+
+type Karyawan {
+  id: Int!
+  idKaryawan: String!
+  nama: String!
+  email: String!
+  noHp: String!
+}

@@ -1,0 +1,5 @@
+development:
+  dialect: sqlite3
+  datasource: report.db
+  table: migrations
+  dir: migrations/sqlite3

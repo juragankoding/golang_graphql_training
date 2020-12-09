@@ -1,0 +1,4 @@
+interface resultInsert {
+  status: String!
+  code: Int!
+}
