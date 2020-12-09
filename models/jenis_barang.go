@@ -16,18 +16,26 @@ func InsertJenisBarang(barang JenisBarang) (int64, error) {
 
 	if err != nil {
 		fmt.Printf("kesalahan di")
+
+		return -1, err
 	}
 
-	statement, err := sql.Prepare(fmt.Sprint("INSERT INTO jenis_barang (jenis) values (:s)", barang.JenisBarang))
+	query := fmt.Sprintf("INSERT INTO jenis_barang (jenis) values ('%s')", barang.JenisBarang)
+	fmt.Print(query)
+	statement, err := sql.Prepare(query)
 
 	if err != nil {
 		fmt.Printf("Kesalahan di builder statement")
+
+		return -1, err
 	}
 
 	res, err := statement.Exec()
 
 	if err != nil {
 		fmt.Printf("kesalahan di ekseskusi statement")
+
+		return -1, err
 	}
 	return res.LastInsertId()
 }

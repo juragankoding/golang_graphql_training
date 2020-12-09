@@ -6,10 +6,28 @@ package graph
 import (
 	"context"
 	"fmt"
+	"log"
 
 	"github.com/juragankoding/golang_graphql_training/graph/model"
+	"github.com/juragankoding/golang_graphql_training/models"
 )
 
 func (r *queryResolver) InsertJenisBarang(ctx context.Context, jenisBarang string) (*model.ResultJenisBarang, error) {
-	panic(fmt.Errorf("not implemented"))
+	resultJenisBarang := model.ResultJenisBarang{}
+	status, error := models.InsertJenisBarang(
+		models.JenisBarang{
+			JenisBarang: jenisBarang,
+			ID:          0,
+		},
+	)
+
+	if error != nil {
+		log.Fatal(error)
+	}
+
+	fmt.Print("insert :d", status)
+
+	resultJenisBarang.Status = "Success Insert data into Jenis Barang"
+
+	return &resultJenisBarang, nil
 }
