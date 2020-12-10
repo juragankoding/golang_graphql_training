@@ -2,6 +2,7 @@ package models
 
 import (
 	"fmt"
+	"log"
 
 	"github.com/juragankoding/golang_graphql_training/db"
 )
@@ -11,7 +12,7 @@ type JenisBarang struct {
 	JenisBarang string `json:"jenis_barnag"`
 }
 
-func InsertJenisBarang(barang JenisBarang) (int64, error) {
+func (jenis *JenisBarang) InsertJenisBarang() (int64, error) {
 	sql, err := db.GetDatabase()
 
 	if err != nil {
@@ -20,7 +21,7 @@ func InsertJenisBarang(barang JenisBarang) (int64, error) {
 		return -1, err
 	}
 
-	query := fmt.Sprintf("INSERT INTO jenis_barang (jenis) values ('%s')", barang.JenisBarang)
+	query := fmt.Sprintf("INSERT INTO jenis_barang (jenis) values ('%s')", jenis.JenisBarang)
 	fmt.Print(query)
 	statement, err := sql.Prepare(query)
 
@@ -40,8 +41,38 @@ func InsertJenisBarang(barang JenisBarang) (int64, error) {
 	return res.LastInsertId()
 }
 
-func GetJenisBarangSingle() ([]JenisBarang, error) {
-	var jenisBarang []JenisBarang
+func GetAll() ([]*JenisBarang, error) {
+	var jenisBarangs []*JenisBarang
 
-	return jenisBarang, nil
+	database, err := db.GetDatabase()
+
+	if err != nil {
+		fmt.Printf("Get database failed")
+
+		log.Fatal(err)
+
+		return nil, err
+	}
+
+	rows, err := database.Query("SELECT * FROM jenis_barang")
+
+	if err != nil {
+		fmt.Printf("Kesalahan di pengambilan data dari database")
+
+		log.Fatal(err)
+
+		return nil, err
+	}
+
+	var jenisBarangTmp JenisBarang
+
+	for rows.Next() {
+		rows.Scan(&jenisBarangTmp.ID, &jenisBarangTmp.JenisBarang)
+
+		fmt.Print("Get data from rows with id ", jenisBarangTmp.ID, ", jenis barang : ", jenisBarangTmp.JenisBarang)
+
+		jenisBarangs = append(jenisBarangs, &jenisBarangTmp)
+	}
+
+	return jenisBarangs, nil
 }
