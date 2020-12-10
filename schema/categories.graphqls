@@ -1,0 +1,14 @@
+type Categories {
+  ID: Int!
+  Name: String!
+}
+
+type ResultInsertCategories implements resultInsert {
+  status: String!
+  code: Int!
+  data: Categories!
+}
+
+extend type Mutation {
+  InsertCategories(nama: String!): ResultInsertCategories!
+}

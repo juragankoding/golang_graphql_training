@@ -1,3 +1,7 @@
 package graph
 
-type Resolver struct{}
+import "github.com/juragankoding/golang_graphql_training/domain"
+
+type Resolver struct {
+	DomainCategoriUseCase domain.CategoriesUseCase
+}
