@@ -18,6 +18,14 @@ type Karyawan struct {
 	NoHp       string `json:"noHp"`
 }
 
+type ResultInsertBarang struct {
+	Status string         `json:"status"`
+	Code   int            `json:"code"`
+	Data   *models.Barang `json:"data"`
+}
+
+func (ResultInsertBarang) IsResultInsert() {}
+
 type ResultGetAllJenisBarang struct {
 	Status string                `json:"status"`
 	Code   int                   `json:"code"`

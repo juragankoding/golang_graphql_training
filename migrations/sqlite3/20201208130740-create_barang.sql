@@ -5,7 +5,7 @@ create table barang (
     nama varchar(50) not null,
     desc varchar(100),
     jumlah integer,
-    jenis_barang integer
+    jenis_barang integer references jenis_barang(id)
 );
 
 -- +migrate Down

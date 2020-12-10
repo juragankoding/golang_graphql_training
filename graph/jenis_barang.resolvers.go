@@ -12,14 +12,15 @@ import (
 	"github.com/juragankoding/golang_graphql_training/models"
 )
 
-func (r *queryResolver) InsertJenisBarang(ctx context.Context, jenisBarang string) (*model.ResultJenisBarang, error) {
+func (r *mutationResolver) InsertJenisBarang(ctx context.Context, jenisBarang string) (*model.ResultJenisBarang, error) {
 	resultJenisBarang := model.ResultJenisBarang{}
-	status, error := models.InsertJenisBarang(
-		models.JenisBarang{
-			JenisBarang: jenisBarang,
-			ID:          0,
-		},
-	)
+
+	jb := models.JenisBarang{
+		ID:          0,
+		JenisBarang: jenisBarang,
+	}
+
+	status, error := jb.InsertJenisBarang()
 
 	if error != nil {
 		log.Fatal(error)
@@ -43,5 +44,26 @@ func (r *queryResolver) InsertJenisBarang(ctx context.Context, jenisBarang strin
 }
 
 func (r *queryResolver) GetAllJenisBarang(ctx context.Context) (*model.ResultGetAllJenisBarang, error) {
-	panic(fmt.Errorf("not implemented"))
+	resultGetAllJenisBarang := model.ResultGetAllJenisBarang{
+		Status: "nothing happens",
+		Code:   0,
+		Data:   nil,
+	}
+
+	data, err := models.GetAll()
+
+	if err != nil {
+		log.Fatal(err)
+
+		resultGetAllJenisBarang.Code = 404
+		resultGetAllJenisBarang.Status = err.Error()
+
+		return &resultGetAllJenisBarang, err
+	}
+
+	resultGetAllJenisBarang.Code = 200
+	resultGetAllJenisBarang.Status = "Success gettering data"
+	resultGetAllJenisBarang.Data = data
+
+	return &resultGetAllJenisBarang, nil
 }

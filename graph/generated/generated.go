@@ -37,6 +37,7 @@ type Config struct {
 }
 
 type ResolverRoot interface {
+	Mutation() MutationResolver
 	Query() QueryResolver
 }
 
@@ -47,6 +48,8 @@ type ComplexityRoot struct {
 	Barang struct {
 		Description func(childComplexity int) int
 		ID          func(childComplexity int) int
+		JenisBarang func(childComplexity int) int
+		Jumlah      func(childComplexity int) int
 		Nama        func(childComplexity int) int
 	}
 
@@ -63,12 +66,21 @@ type ComplexityRoot struct {
 		NoHp       func(childComplexity int) int
 	}
 
+	Mutation struct {
+		InsertBarang      func(childComplexity int, id int, nama string, description string, jenisBarang int) int
+		InsertJenisBarang func(childComplexity int, jenisBarang string) int
+	}
+
 	Query struct {
 		GetAllJenisBarang func(childComplexity int) int
 		GetBarang         func(childComplexity int) int
 		GetInfoKaryawan   func(childComplexity int, id int) int
-		InsertBarang      func(childComplexity int, id int, nama string, description string) int
-		InsertJenisBarang func(childComplexity int, jenisBarang string) int
+	}
+
+	ResultInsertBarang struct {
+		Code   func(childComplexity int) int
+		Data   func(childComplexity int) int
+		Status func(childComplexity int) int
 	}
 
 	ResultGetAllJenisBarang struct {
@@ -84,10 +96,12 @@ type ComplexityRoot struct {
 	}
 }
 
+type MutationResolver interface {
+	InsertBarang(ctx context.Context, id int, nama string, description string, jenisBarang int) (*model.ResultInsertBarang, error)
+	InsertJenisBarang(ctx context.Context, jenisBarang string) (*model.ResultJenisBarang, error)
+}
 type QueryResolver interface {
 	GetBarang(ctx context.Context) (*string, error)
-	InsertBarang(ctx context.Context, id int, nama string, description string) (*models.Barang, error)
-	InsertJenisBarang(ctx context.Context, jenisBarang string) (*model.ResultJenisBarang, error)
 	GetAllJenisBarang(ctx context.Context) (*model.ResultGetAllJenisBarang, error)
 	GetInfoKaryawan(ctx context.Context, id int) (*model.Karyawan, error)
 }
@@ -120,6 +134,20 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Barang.ID(childComplexity), true
+
+	case "Barang.jenisBarang":
+		if e.complexity.Barang.JenisBarang == nil {
+			break
+		}
+
+		return e.complexity.Barang.JenisBarang(childComplexity), true
+
+	case "Barang.jumlah":
+		if e.complexity.Barang.Jumlah == nil {
+			break
+		}
+
+		return e.complexity.Barang.Jumlah(childComplexity), true
 
 	case "Barang.nama":
 		if e.complexity.Barang.Nama == nil {
@@ -177,6 +205,30 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Karyawan.NoHp(childComplexity), true
 
+	case "Mutation.insertBarang":
+		if e.complexity.Mutation.InsertBarang == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_insertBarang_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.InsertBarang(childComplexity, args["id"].(int), args["nama"].(string), args["description"].(string), args["jenisBarang"].(int)), true
+
+	case "Mutation.insertJenisBarang":
+		if e.complexity.Mutation.InsertJenisBarang == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_insertJenisBarang_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.InsertJenisBarang(childComplexity, args["jenis_barang"].(string)), true
+
 	case "Query.getAllJenisBarang":
 		if e.complexity.Query.GetAllJenisBarang == nil {
 			break
@@ -203,29 +255,26 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Query.GetInfoKaryawan(childComplexity, args["id"].(int)), true
 
-	case "Query.insertBarang":
-		if e.complexity.Query.InsertBarang == nil {
+	case "ResultInsertBarang.code":
+		if e.complexity.ResultInsertBarang.Code == nil {
 			break
 		}
 
-		args, err := ec.field_Query_insertBarang_args(context.TODO(), rawArgs)
-		if err != nil {
-			return 0, false
-		}
+		return e.complexity.ResultInsertBarang.Code(childComplexity), true
 
-		return e.complexity.Query.InsertBarang(childComplexity, args["id"].(int), args["nama"].(string), args["description"].(string)), true
-
-	case "Query.insertJenisBarang":
-		if e.complexity.Query.InsertJenisBarang == nil {
+	case "ResultInsertBarang.data":
+		if e.complexity.ResultInsertBarang.Data == nil {
 			break
 		}
 
-		args, err := ec.field_Query_insertJenisBarang_args(context.TODO(), rawArgs)
-		if err != nil {
-			return 0, false
+		return e.complexity.ResultInsertBarang.Data(childComplexity), true
+
+	case "ResultInsertBarang.status":
+		if e.complexity.ResultInsertBarang.Status == nil {
+			break
 		}
 
-		return e.complexity.Query.InsertJenisBarang(childComplexity, args["jenis_barang"].(string)), true
+		return e.complexity.ResultInsertBarang.Status(childComplexity), true
 
 	case "resultGetAllJenisBarang.code":
 		if e.complexity.ResultGetAllJenisBarang.Code == nil {
@@ -293,6 +342,20 @@ func (e *executableSchema) Exec(ctx context.Context) graphql.ResponseHandler {
 				Data: buf.Bytes(),
 			}
 		}
+	case ast.Mutation:
+		return func(ctx context.Context) *graphql.Response {
+			if !first {
+				return nil
+			}
+			first = false
+			data := ec._Mutation(ctx, rc.Operation.SelectionSet)
+			var buf bytes.Buffer
+			data.MarshalGQL(&buf)
+
+			return &graphql.Response{
+				Data: buf.Bytes(),
+			}
+		}
 
 	default:
 		return graphql.OneShot(graphql.ErrorResponse(ctx, "unsupported GraphQL operation"))
@@ -324,16 +387,32 @@ var sources = []*ast.Source{
   code: Int!
 }
 `, BuiltIn: false},
-	{Name: "graph/schema/barang.graphqls", Input: `type Barang{
+	{Name: "graph/schema/barang.graphqls", Input: `type Barang {
   id: Int!
   nama: String!
   description: String!
+  jumlah: Int!
+  jenisBarang: Int!
 }
 
-type Query{
+type ResultInsertBarang implements resultInsert {
+  status: String!
+  code: Int!
+  data: Barang!
+}
+type Query {
   getBarang: String
-  insertBarang(id: Int!, nama: String!, description: String!): Barang
-}`, BuiltIn: false},
+}
+
+type Mutation {
+  insertBarang(
+    id: Int!
+    nama: String!
+    description: String!
+    jenisBarang: Int!
+  ): ResultInsertBarang!
+}
+`, BuiltIn: false},
 	{Name: "graph/schema/jenis_barang.graphqls", Input: `type JenisBarang {
   id: Int!
   jenis_barang: String!
@@ -352,8 +431,11 @@ type resultGetAllJenisBarang implements resultInsert {
 }
 
 extend type Query {
-  insertJenisBarang(jenis_barang: String!): resultJenisBarang!
   getAllJenisBarang: resultGetAllJenisBarang!
+}
+
+extend type Mutation {
+  insertJenisBarang(jenis_barang: String!): resultJenisBarang!
 }
 `, BuiltIn: false},
 	{Name: "graph/schema/schema.graphqls", Input: `# GraphQL schema example
@@ -379,37 +461,7 @@ var parsedSchema = gqlparser.MustLoadSchema(sources...)
 
 // region    ***************************** args.gotpl *****************************
 
-func (ec *executionContext) field_Query___type_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
-	var err error
-	args := map[string]interface{}{}
-	var arg0 string
-	if tmp, ok := rawArgs["name"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("name"))
-		arg0, err = ec.unmarshalNString2string(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["name"] = arg0
-	return args, nil
-}
-
-func (ec *executionContext) field_Query_getInfoKaryawan_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
-	var err error
-	args := map[string]interface{}{}
-	var arg0 int
-	if tmp, ok := rawArgs["id"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
-		arg0, err = ec.unmarshalNInt2int(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["id"] = arg0
-	return args, nil
-}
-
-func (ec *executionContext) field_Query_insertBarang_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+func (ec *executionContext) field_Mutation_insertBarang_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
 	var arg0 int
@@ -439,10 +491,19 @@ func (ec *executionContext) field_Query_insertBarang_args(ctx context.Context, r
 		}
 	}
 	args["description"] = arg2
+	var arg3 int
+	if tmp, ok := rawArgs["jenisBarang"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("jenisBarang"))
+		arg3, err = ec.unmarshalNInt2int(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["jenisBarang"] = arg3
 	return args, nil
 }
 
-func (ec *executionContext) field_Query_insertJenisBarang_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+func (ec *executionContext) field_Mutation_insertJenisBarang_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
 	var arg0 string
@@ -454,6 +515,36 @@ func (ec *executionContext) field_Query_insertJenisBarang_args(ctx context.Conte
 		}
 	}
 	args["jenis_barang"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Query___type_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 string
+	if tmp, ok := rawArgs["name"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("name"))
+		arg0, err = ec.unmarshalNString2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["name"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Query_getInfoKaryawan_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 int
+	if tmp, ok := rawArgs["id"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+		arg0, err = ec.unmarshalNInt2int(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["id"] = arg0
 	return args, nil
 }
 
@@ -598,6 +689,76 @@ func (ec *executionContext) _Barang_description(ctx context.Context, field graph
 	res := resTmp.(string)
 	fc.Result = res
 	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Barang_jumlah(ctx context.Context, field graphql.CollectedField, obj *models.Barang) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Barang",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Jumlah, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNInt2int(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Barang_jenisBarang(ctx context.Context, field graphql.CollectedField, obj *models.Barang) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Barang",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.JenisBarang, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNInt2int(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _JenisBarang_id(ctx context.Context, field graphql.CollectedField, obj *models.JenisBarang) (ret graphql.Marshaler) {
@@ -845,6 +1006,90 @@ func (ec *executionContext) _Karyawan_noHp(ctx context.Context, field graphql.Co
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _Mutation_insertBarang(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_insertBarang_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().InsertBarang(rctx, args["id"].(int), args["nama"].(string), args["description"].(string), args["jenisBarang"].(int))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*model.ResultInsertBarang)
+	fc.Result = res
+	return ec.marshalNResultInsertBarang2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋgraphᚋmodelᚐResultInsertBarang(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Mutation_insertJenisBarang(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_insertJenisBarang_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().InsertJenisBarang(rctx, args["jenis_barang"].(string))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*model.ResultJenisBarang)
+	fc.Result = res
+	return ec.marshalNresultJenisBarang2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋgraphᚋmodelᚐResultJenisBarang(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _Query_getBarang(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -875,87 +1120,6 @@ func (ec *executionContext) _Query_getBarang(ctx context.Context, field graphql.
 	res := resTmp.(*string)
 	fc.Result = res
 	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _Query_insertBarang(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "Query",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   true,
-		IsResolver: true,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	rawArgs := field.ArgumentMap(ec.Variables)
-	args, err := ec.field_Query_insertBarang_args(ctx, rawArgs)
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	fc.Args = args
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().InsertBarang(rctx, args["id"].(int), args["nama"].(string), args["description"].(string))
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*models.Barang)
-	fc.Result = res
-	return ec.marshalOBarang2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelsᚐBarang(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _Query_insertJenisBarang(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "Query",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   true,
-		IsResolver: true,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	rawArgs := field.ArgumentMap(ec.Variables)
-	args, err := ec.field_Query_insertJenisBarang_args(ctx, rawArgs)
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	fc.Args = args
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().InsertJenisBarang(rctx, args["jenis_barang"].(string))
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(*model.ResultJenisBarang)
-	fc.Result = res
-	return ec.marshalNresultJenisBarang2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋgraphᚋmodelᚐResultJenisBarang(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query_getAllJenisBarang(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -1101,6 +1265,111 @@ func (ec *executionContext) _Query___schema(ctx context.Context, field graphql.C
 	res := resTmp.(*introspection.Schema)
 	fc.Result = res
 	return ec.marshalO__Schema2ᚖgithubᚗcomᚋ99designsᚋgqlgenᚋgraphqlᚋintrospectionᚐSchema(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _ResultInsertBarang_status(ctx context.Context, field graphql.CollectedField, obj *model.ResultInsertBarang) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "ResultInsertBarang",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Status, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _ResultInsertBarang_code(ctx context.Context, field graphql.CollectedField, obj *model.ResultInsertBarang) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "ResultInsertBarang",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Code, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNInt2int(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _ResultInsertBarang_data(ctx context.Context, field graphql.CollectedField, obj *model.ResultInsertBarang) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "ResultInsertBarang",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Data, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*models.Barang)
+	fc.Result = res
+	return ec.marshalNBarang2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelsᚐBarang(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) ___Directive_name(ctx context.Context, field graphql.CollectedField, obj *introspection.Directive) (ret graphql.Marshaler) {
@@ -2408,6 +2677,13 @@ func (ec *executionContext) _resultInsert(ctx context.Context, sel ast.Selection
 	switch obj := (obj).(type) {
 	case nil:
 		return graphql.Null
+	case model.ResultInsertBarang:
+		return ec._ResultInsertBarang(ctx, sel, &obj)
+	case *model.ResultInsertBarang:
+		if obj == nil {
+			return graphql.Null
+		}
+		return ec._ResultInsertBarang(ctx, sel, obj)
 	case model.ResultJenisBarang:
 		return ec._resultJenisBarang(ctx, sel, &obj)
 	case *model.ResultJenisBarang:
@@ -2454,6 +2730,16 @@ func (ec *executionContext) _Barang(ctx context.Context, sel ast.SelectionSet, o
 			}
 		case "description":
 			out.Values[i] = ec._Barang_description(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "jumlah":
+			out.Values[i] = ec._Barang_jumlah(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "jenisBarang":
+			out.Values[i] = ec._Barang_jenisBarang(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
@@ -2547,6 +2833,42 @@ func (ec *executionContext) _Karyawan(ctx context.Context, sel ast.SelectionSet,
 	return out
 }
 
+var mutationImplementors = []string{"Mutation"}
+
+func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, mutationImplementors)
+
+	ctx = graphql.WithFieldContext(ctx, &graphql.FieldContext{
+		Object: "Mutation",
+	})
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("Mutation")
+		case "insertBarang":
+			out.Values[i] = ec._Mutation_insertBarang(ctx, field)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "insertJenisBarang":
+			out.Values[i] = ec._Mutation_insertJenisBarang(ctx, field)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
 var queryImplementors = []string{"Query"}
 
 func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) graphql.Marshaler {
@@ -2571,31 +2893,6 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 					}
 				}()
 				res = ec._Query_getBarang(ctx, field)
-				return res
-			})
-		case "insertBarang":
-			field := field
-			out.Concurrently(i, func() (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._Query_insertBarang(ctx, field)
-				return res
-			})
-		case "insertJenisBarang":
-			field := field
-			out.Concurrently(i, func() (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._Query_insertJenisBarang(ctx, field)
-				if res == graphql.Null {
-					atomic.AddUint32(&invalids, 1)
-				}
 				return res
 			})
 		case "getAllJenisBarang":
@@ -2627,6 +2924,43 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 			out.Values[i] = ec._Query___type(ctx, field)
 		case "__schema":
 			out.Values[i] = ec._Query___schema(ctx, field)
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var resultInsertBarangImplementors = []string{"ResultInsertBarang", "resultInsert"}
+
+func (ec *executionContext) _ResultInsertBarang(ctx context.Context, sel ast.SelectionSet, obj *model.ResultInsertBarang) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, resultInsertBarangImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("ResultInsertBarang")
+		case "status":
+			out.Values[i] = ec._ResultInsertBarang_status(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "code":
+			out.Values[i] = ec._ResultInsertBarang_code(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "data":
+			out.Values[i] = ec._ResultInsertBarang_data(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -2957,6 +3291,16 @@ func (ec *executionContext) _resultJenisBarang(ctx context.Context, sel ast.Sele
 
 // region    ***************************** type.gotpl *****************************
 
+func (ec *executionContext) marshalNBarang2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelsᚐBarang(ctx context.Context, sel ast.SelectionSet, v *models.Barang) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	return ec._Barang(ctx, sel, v)
+}
+
 func (ec *executionContext) unmarshalNBoolean2bool(ctx context.Context, v interface{}) (bool, error) {
 	res, err := graphql.UnmarshalBoolean(v)
 	return res, graphql.ErrorOnPath(ctx, err)
@@ -3032,6 +3376,20 @@ func (ec *executionContext) marshalNJenisBarang2ᚖgithubᚗcomᚋjuragankoding�
 		return graphql.Null
 	}
 	return ec._JenisBarang(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalNResultInsertBarang2githubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋgraphᚋmodelᚐResultInsertBarang(ctx context.Context, sel ast.SelectionSet, v model.ResultInsertBarang) graphql.Marshaler {
+	return ec._ResultInsertBarang(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNResultInsertBarang2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋgraphᚋmodelᚐResultInsertBarang(ctx context.Context, sel ast.SelectionSet, v *model.ResultInsertBarang) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	return ec._ResultInsertBarang(ctx, sel, v)
 }
 
 func (ec *executionContext) unmarshalNString2string(ctx context.Context, v interface{}) (string, error) {
@@ -3304,13 +3662,6 @@ func (ec *executionContext) marshalNresultJenisBarang2ᚖgithubᚗcomᚋjuragank
 		return graphql.Null
 	}
 	return ec._resultJenisBarang(ctx, sel, v)
-}
-
-func (ec *executionContext) marshalOBarang2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelsᚐBarang(ctx context.Context, sel ast.SelectionSet, v *models.Barang) graphql.Marshaler {
-	if v == nil {
-		return graphql.Null
-	}
-	return ec._Barang(ctx, sel, v)
 }
 
 func (ec *executionContext) unmarshalOBoolean2bool(ctx context.Context, v interface{}) (bool, error) {

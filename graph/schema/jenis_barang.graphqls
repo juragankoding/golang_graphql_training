@@ -16,6 +16,9 @@ type resultGetAllJenisBarang implements resultInsert {
 }
 
 extend type Query {
-  insertJenisBarang(jenis_barang: String!): resultJenisBarang!
   getAllJenisBarang: resultGetAllJenisBarang!
+}
+
+extend type Mutation {
+  insertJenisBarang(jenis_barang: String!): resultJenisBarang!
 }
