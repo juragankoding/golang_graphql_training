@@ -12,7 +12,7 @@ import (
 	"github.com/juragankoding/golang_graphql_training/models"
 )
 
-func (r *queryResolver) InsertJenisBarang(ctx context.Context, jenisBarang string) (*model.ResultJenisBarang, error) {
+func (r *mutationResolver) InsertJenisBarang(ctx context.Context, jenisBarang string) (*model.ResultJenisBarang, error) {
 	resultJenisBarang := model.ResultJenisBarang{}
 
 	jb := models.JenisBarang{

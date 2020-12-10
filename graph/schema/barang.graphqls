@@ -1,10 +1,25 @@
-type Barang{
+type Barang {
   id: Int!
   nama: String!
   description: String!
+  jumlah: Int!
+  jenisBarang: Int!
 }
 
-type Query{
+type ResultInsertBarang implements resultInsert {
+  status: String!
+  code: Int!
+  data: Barang!
+}
+type Query {
   getBarang: String
-  insertBarang(id: Int!, nama: String!, description: String!): Barang
+}
+
+type Mutation {
+  insertBarang(
+    id: Int!
+    nama: String!
+    description: String!
+    jenisBarang: Int!
+  ): ResultInsertBarang!
 }
