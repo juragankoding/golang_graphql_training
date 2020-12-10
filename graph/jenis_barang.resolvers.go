@@ -8,7 +8,7 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/juragankoding/golang_graphql_training/graph/model"
+	"github.com/juragankoding/golang_graphql_training/model"
 	"github.com/juragankoding/golang_graphql_training/models"
 )
 
