@@ -7,23 +7,44 @@ import (
 
 	"github.com/99designs/gqlgen/graphql/handler"
 	"github.com/99designs/gqlgen/graphql/playground"
+	"github.com/juragankoding/golang_graphql_training/categories/repository"
+	"github.com/juragankoding/golang_graphql_training/categories/usecase"
+	"github.com/juragankoding/golang_graphql_training/db"
+	"github.com/juragankoding/golang_graphql_training/generated"
 	"github.com/juragankoding/golang_graphql_training/graph"
-	"github.com/juragankoding/golang_graphql_training/graph/generated"
 )
 
 const defaultPort = "8080"
 
 func main() {
 	port := os.Getenv("PORT")
+
 	if port == "" {
 		port = defaultPort
 	}
 
-	srv := handler.NewDefaultServer(generated.NewExecutableSchema(generated.Config{Resolvers: &graph.Resolver{}}))
+	//prepare conect database on repository
+	db, err := db.GetDatabase()
 
-	http.Handle("/", playground.Handler("GraphQL playground", "/query"))
-	http.Handle("/query", srv)
+	if err != nil {
+		log.Fatal(err)
 
-	log.Printf("connect to http://localhost:%s/ for GraphQL playground", port)
+		return
+	}
+
+	//prepare repository
+	respositoryCategories := repository.NewCategoriesRepository(db)
+
+	//prepare usecase
+	categoriesUseCase := usecase.NewCategoriesUserCase(respositoryCategories)
+
+	srv := handler.NewDefaultServer(generated.NewExecutableSchema(generated.Config{Resolvers: &graph.Resolver{
+		DomainCategoriUseCase: categoriesUseCase,
+	}}))
+
+	http.Handle("/playground", playground.Handler("GraphQL playground", "/"))
+	http.Handle("/", srv)
+
+	log.Printf("connect to http://localhost:%s/playground for GraphQL playground", port)
 	log.Fatal(http.ListenAndServe(":"+port, nil))
 }

@@ -11,6 +11,7 @@ type ResultInsertBarang implements resultInsert {
   code: Int!
   data: Barang!
 }
+
 type Query {
   getBarang: String
 }
