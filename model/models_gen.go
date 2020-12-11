@@ -11,6 +11,22 @@ type ResultInsert interface {
 	IsResultInsert()
 }
 
+type ResultDeleteCategories struct {
+	Status string             `json:"status"`
+	Code   int                `json:"code"`
+	Data   *domain.Categories `json:"data"`
+}
+
+func (ResultDeleteCategories) IsResultInsert() {}
+
+type ResultFetchCategories struct {
+	Status string               `json:"status"`
+	Code   int                  `json:"code"`
+	Data   []*domain.Categories `json:"data"`
+}
+
+func (ResultFetchCategories) IsResultInsert() {}
+
 type ResultInsertCategories struct {
 	Status string             `json:"status"`
 	Code   int                `json:"code"`
@@ -18,6 +34,14 @@ type ResultInsertCategories struct {
 }
 
 func (ResultInsertCategories) IsResultInsert() {}
+
+type ResultUpdateCategories struct {
+	Status string             `json:"status"`
+	Code   int                `json:"code"`
+	Data   *domain.Categories `json:"data"`
+}
+
+func (ResultUpdateCategories) IsResultInsert() {}
 
 type ResultGetAllJenisBarang struct {
 	Status string                `json:"status"`

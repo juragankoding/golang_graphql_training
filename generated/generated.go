@@ -74,15 +74,30 @@ type ComplexityRoot struct {
 	}
 
 	Mutation struct {
+		DeleteCategories  func(childComplexity int, id int) int
 		InsertBarang      func(childComplexity int, id int, nama string, description string, jenisBarang int) int
 		InsertCategories  func(childComplexity int, nama string) int
 		InsertJenisBarang func(childComplexity int, jenisBarang string) int
+		UpdateCategories  func(childComplexity int, id int, nama string) int
 	}
 
 	Query struct {
+		Fetch             func(childComplexity int) int
 		GetAllJenisBarang func(childComplexity int) int
 		GetBarang         func(childComplexity int) int
 		GetInfoKaryawan   func(childComplexity int, id int) int
+	}
+
+	ResultDeleteCategories struct {
+		Code   func(childComplexity int) int
+		Data   func(childComplexity int) int
+		Status func(childComplexity int) int
+	}
+
+	ResultFetchCategories struct {
+		Code   func(childComplexity int) int
+		Data   func(childComplexity int) int
+		Status func(childComplexity int) int
 	}
 
 	ResultInsertBarang struct {
@@ -92,6 +107,12 @@ type ComplexityRoot struct {
 	}
 
 	ResultInsertCategories struct {
+		Code   func(childComplexity int) int
+		Data   func(childComplexity int) int
+		Status func(childComplexity int) int
+	}
+
+	ResultUpdateCategories struct {
 		Code   func(childComplexity int) int
 		Data   func(childComplexity int) int
 		Status func(childComplexity int) int
@@ -113,10 +134,13 @@ type ComplexityRoot struct {
 type MutationResolver interface {
 	InsertBarang(ctx context.Context, id int, nama string, description string, jenisBarang int) (*model.ResultInsertBarang, error)
 	InsertCategories(ctx context.Context, nama string) (*model1.ResultInsertCategories, error)
+	UpdateCategories(ctx context.Context, id int, nama string) (*model1.ResultUpdateCategories, error)
+	DeleteCategories(ctx context.Context, id int) (*model1.ResultDeleteCategories, error)
 	InsertJenisBarang(ctx context.Context, jenisBarang string) (*model1.ResultJenisBarang, error)
 }
 type QueryResolver interface {
 	GetBarang(ctx context.Context) (*string, error)
+	Fetch(ctx context.Context) (*model1.ResultFetchCategories, error)
 	GetAllJenisBarang(ctx context.Context) (*model1.ResultGetAllJenisBarang, error)
 	GetInfoKaryawan(ctx context.Context, id int) (*model.Karyawan, error)
 }
@@ -234,6 +258,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Karyawan.NoHp(childComplexity), true
 
+	case "Mutation.DeleteCategories":
+		if e.complexity.Mutation.DeleteCategories == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_DeleteCategories_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.DeleteCategories(childComplexity, args["id"].(int)), true
+
 	case "Mutation.insertBarang":
 		if e.complexity.Mutation.InsertBarang == nil {
 			break
@@ -270,6 +306,25 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Mutation.InsertJenisBarang(childComplexity, args["jenis_barang"].(string)), true
 
+	case "Mutation.UpdateCategories":
+		if e.complexity.Mutation.UpdateCategories == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_UpdateCategories_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.UpdateCategories(childComplexity, args["id"].(int), args["nama"].(string)), true
+
+	case "Query.Fetch":
+		if e.complexity.Query.Fetch == nil {
+			break
+		}
+
+		return e.complexity.Query.Fetch(childComplexity), true
+
 	case "Query.getAllJenisBarang":
 		if e.complexity.Query.GetAllJenisBarang == nil {
 			break
@@ -295,6 +350,48 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Query.GetInfoKaryawan(childComplexity, args["id"].(int)), true
+
+	case "ResultDeleteCategories.code":
+		if e.complexity.ResultDeleteCategories.Code == nil {
+			break
+		}
+
+		return e.complexity.ResultDeleteCategories.Code(childComplexity), true
+
+	case "ResultDeleteCategories.data":
+		if e.complexity.ResultDeleteCategories.Data == nil {
+			break
+		}
+
+		return e.complexity.ResultDeleteCategories.Data(childComplexity), true
+
+	case "ResultDeleteCategories.status":
+		if e.complexity.ResultDeleteCategories.Status == nil {
+			break
+		}
+
+		return e.complexity.ResultDeleteCategories.Status(childComplexity), true
+
+	case "ResultFetchCategories.code":
+		if e.complexity.ResultFetchCategories.Code == nil {
+			break
+		}
+
+		return e.complexity.ResultFetchCategories.Code(childComplexity), true
+
+	case "ResultFetchCategories.data":
+		if e.complexity.ResultFetchCategories.Data == nil {
+			break
+		}
+
+		return e.complexity.ResultFetchCategories.Data(childComplexity), true
+
+	case "ResultFetchCategories.status":
+		if e.complexity.ResultFetchCategories.Status == nil {
+			break
+		}
+
+		return e.complexity.ResultFetchCategories.Status(childComplexity), true
 
 	case "ResultInsertBarang.code":
 		if e.complexity.ResultInsertBarang.Code == nil {
@@ -337,6 +434,27 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.ResultInsertCategories.Status(childComplexity), true
+
+	case "ResultUpdateCategories.code":
+		if e.complexity.ResultUpdateCategories.Code == nil {
+			break
+		}
+
+		return e.complexity.ResultUpdateCategories.Code(childComplexity), true
+
+	case "ResultUpdateCategories.data":
+		if e.complexity.ResultUpdateCategories.Data == nil {
+			break
+		}
+
+		return e.complexity.ResultUpdateCategories.Data(childComplexity), true
+
+	case "ResultUpdateCategories.status":
+		if e.complexity.ResultUpdateCategories.Status == nil {
+			break
+		}
+
+		return e.complexity.ResultUpdateCategories.Status(childComplexity), true
 
 	case "resultGetAllJenisBarang.code":
 		if e.complexity.ResultGetAllJenisBarang.Code == nil {
@@ -487,8 +605,32 @@ type ResultInsertCategories implements resultInsert {
   data: Categories!
 }
 
+type ResultUpdateCategories implements resultInsert {
+  status: String!
+  code: Int!
+  data: Categories!
+}
+
+type ResultDeleteCategories implements resultInsert {
+  status: String!
+  code: Int!
+  data: Categories!
+}
+
+type ResultFetchCategories implements resultInsert {
+  status: String!
+  code: Int!
+  data: [Categories]!
+}
+
+extend type Query{
+  Fetch: ResultFetchCategories!
+}
+
 extend type Mutation {
   InsertCategories(nama: String!): ResultInsertCategories!
+  UpdateCategories(id: Int!, nama: String!): ResultUpdateCategories!
+  DeleteCategories(id: Int!): ResultDeleteCategories!
 }
 `, BuiltIn: false},
 	{Name: "schema/jenis_barang.graphqls", Input: `type JenisBarang {
@@ -539,6 +681,21 @@ var parsedSchema = gqlparser.MustLoadSchema(sources...)
 
 // region    ***************************** args.gotpl *****************************
 
+func (ec *executionContext) field_Mutation_DeleteCategories_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 int
+	if tmp, ok := rawArgs["id"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+		arg0, err = ec.unmarshalNInt2int(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["id"] = arg0
+	return args, nil
+}
+
 func (ec *executionContext) field_Mutation_InsertCategories_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
@@ -551,6 +708,30 @@ func (ec *executionContext) field_Mutation_InsertCategories_args(ctx context.Con
 		}
 	}
 	args["nama"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_UpdateCategories_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 int
+	if tmp, ok := rawArgs["id"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+		arg0, err = ec.unmarshalNInt2int(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["id"] = arg0
+	var arg1 string
+	if tmp, ok := rawArgs["nama"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("nama"))
+		arg1, err = ec.unmarshalNString2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["nama"] = arg1
 	return args, nil
 }
 
@@ -1253,6 +1434,90 @@ func (ec *executionContext) _Mutation_InsertCategories(ctx context.Context, fiel
 	return ec.marshalNResultInsertCategories2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultInsertCategories(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _Mutation_UpdateCategories(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_UpdateCategories_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().UpdateCategories(rctx, args["id"].(int), args["nama"].(string))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*model1.ResultUpdateCategories)
+	fc.Result = res
+	return ec.marshalNResultUpdateCategories2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultUpdateCategories(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Mutation_DeleteCategories(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_DeleteCategories_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().DeleteCategories(rctx, args["id"].(int))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*model1.ResultDeleteCategories)
+	fc.Result = res
+	return ec.marshalNResultDeleteCategories2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultDeleteCategories(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _Mutation_insertJenisBarang(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -1325,6 +1590,41 @@ func (ec *executionContext) _Query_getBarang(ctx context.Context, field graphql.
 	res := resTmp.(*string)
 	fc.Result = res
 	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Query_Fetch(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().Fetch(rctx)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*model1.ResultFetchCategories)
+	fc.Result = res
+	return ec.marshalNResultFetchCategories2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultFetchCategories(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query_getAllJenisBarang(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -1470,6 +1770,216 @@ func (ec *executionContext) _Query___schema(ctx context.Context, field graphql.C
 	res := resTmp.(*introspection.Schema)
 	fc.Result = res
 	return ec.marshalO__Schema2ᚖgithubᚗcomᚋ99designsᚋgqlgenᚋgraphqlᚋintrospectionᚐSchema(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _ResultDeleteCategories_status(ctx context.Context, field graphql.CollectedField, obj *model1.ResultDeleteCategories) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "ResultDeleteCategories",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Status, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _ResultDeleteCategories_code(ctx context.Context, field graphql.CollectedField, obj *model1.ResultDeleteCategories) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "ResultDeleteCategories",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Code, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNInt2int(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _ResultDeleteCategories_data(ctx context.Context, field graphql.CollectedField, obj *model1.ResultDeleteCategories) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "ResultDeleteCategories",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Data, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*domain.Categories)
+	fc.Result = res
+	return ec.marshalNCategories2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋdomainᚐCategories(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _ResultFetchCategories_status(ctx context.Context, field graphql.CollectedField, obj *model1.ResultFetchCategories) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "ResultFetchCategories",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Status, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _ResultFetchCategories_code(ctx context.Context, field graphql.CollectedField, obj *model1.ResultFetchCategories) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "ResultFetchCategories",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Code, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNInt2int(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _ResultFetchCategories_data(ctx context.Context, field graphql.CollectedField, obj *model1.ResultFetchCategories) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "ResultFetchCategories",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Data, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.([]*domain.Categories)
+	fc.Result = res
+	return ec.marshalNCategories2ᚕᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋdomainᚐCategories(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _ResultInsertBarang_status(ctx context.Context, field graphql.CollectedField, obj *model.ResultInsertBarang) (ret graphql.Marshaler) {
@@ -1656,6 +2166,111 @@ func (ec *executionContext) _ResultInsertCategories_data(ctx context.Context, fi
 	}()
 	fc := &graphql.FieldContext{
 		Object:     "ResultInsertCategories",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Data, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*domain.Categories)
+	fc.Result = res
+	return ec.marshalNCategories2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋdomainᚐCategories(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _ResultUpdateCategories_status(ctx context.Context, field graphql.CollectedField, obj *model1.ResultUpdateCategories) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "ResultUpdateCategories",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Status, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _ResultUpdateCategories_code(ctx context.Context, field graphql.CollectedField, obj *model1.ResultUpdateCategories) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "ResultUpdateCategories",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Code, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNInt2int(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _ResultUpdateCategories_data(ctx context.Context, field graphql.CollectedField, obj *model1.ResultUpdateCategories) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "ResultUpdateCategories",
 		Field:      field,
 		Args:       nil,
 		IsMethod:   false,
@@ -3001,6 +3616,27 @@ func (ec *executionContext) _resultInsert(ctx context.Context, sel ast.Selection
 			return graphql.Null
 		}
 		return ec._ResultInsertCategories(ctx, sel, obj)
+	case model1.ResultUpdateCategories:
+		return ec._ResultUpdateCategories(ctx, sel, &obj)
+	case *model1.ResultUpdateCategories:
+		if obj == nil {
+			return graphql.Null
+		}
+		return ec._ResultUpdateCategories(ctx, sel, obj)
+	case model1.ResultDeleteCategories:
+		return ec._ResultDeleteCategories(ctx, sel, &obj)
+	case *model1.ResultDeleteCategories:
+		if obj == nil {
+			return graphql.Null
+		}
+		return ec._ResultDeleteCategories(ctx, sel, obj)
+	case model1.ResultFetchCategories:
+		return ec._ResultFetchCategories(ctx, sel, &obj)
+	case *model1.ResultFetchCategories:
+		if obj == nil {
+			return graphql.Null
+		}
+		return ec._ResultFetchCategories(ctx, sel, obj)
 	case model1.ResultJenisBarang:
 		return ec._resultJenisBarang(ctx, sel, &obj)
 	case *model1.ResultJenisBarang:
@@ -3207,6 +3843,16 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
+		case "UpdateCategories":
+			out.Values[i] = ec._Mutation_UpdateCategories(ctx, field)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "DeleteCategories":
+			out.Values[i] = ec._Mutation_DeleteCategories(ctx, field)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
 		case "insertJenisBarang":
 			out.Values[i] = ec._Mutation_insertJenisBarang(ctx, field)
 			if out.Values[i] == graphql.Null {
@@ -3249,6 +3895,20 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 				res = ec._Query_getBarang(ctx, field)
 				return res
 			})
+		case "Fetch":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_Fetch(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			})
 		case "getAllJenisBarang":
 			field := field
 			out.Concurrently(i, func() (res graphql.Marshaler) {
@@ -3278,6 +3938,80 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 			out.Values[i] = ec._Query___type(ctx, field)
 		case "__schema":
 			out.Values[i] = ec._Query___schema(ctx, field)
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var resultDeleteCategoriesImplementors = []string{"ResultDeleteCategories", "resultInsert"}
+
+func (ec *executionContext) _ResultDeleteCategories(ctx context.Context, sel ast.SelectionSet, obj *model1.ResultDeleteCategories) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, resultDeleteCategoriesImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("ResultDeleteCategories")
+		case "status":
+			out.Values[i] = ec._ResultDeleteCategories_status(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "code":
+			out.Values[i] = ec._ResultDeleteCategories_code(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "data":
+			out.Values[i] = ec._ResultDeleteCategories_data(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var resultFetchCategoriesImplementors = []string{"ResultFetchCategories", "resultInsert"}
+
+func (ec *executionContext) _ResultFetchCategories(ctx context.Context, sel ast.SelectionSet, obj *model1.ResultFetchCategories) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, resultFetchCategoriesImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("ResultFetchCategories")
+		case "status":
+			out.Values[i] = ec._ResultFetchCategories_status(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "code":
+			out.Values[i] = ec._ResultFetchCategories_code(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "data":
+			out.Values[i] = ec._ResultFetchCategories_data(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -3349,6 +4083,43 @@ func (ec *executionContext) _ResultInsertCategories(ctx context.Context, sel ast
 			}
 		case "data":
 			out.Values[i] = ec._ResultInsertCategories_data(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var resultUpdateCategoriesImplementors = []string{"ResultUpdateCategories", "resultInsert"}
+
+func (ec *executionContext) _ResultUpdateCategories(ctx context.Context, sel ast.SelectionSet, obj *model1.ResultUpdateCategories) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, resultUpdateCategoriesImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("ResultUpdateCategories")
+		case "status":
+			out.Values[i] = ec._ResultUpdateCategories_status(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "code":
+			out.Values[i] = ec._ResultUpdateCategories_code(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "data":
+			out.Values[i] = ec._ResultUpdateCategories_data(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
@@ -3707,6 +4478,43 @@ func (ec *executionContext) marshalNBoolean2bool(ctx context.Context, sel ast.Se
 	return res
 }
 
+func (ec *executionContext) marshalNCategories2ᚕᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋdomainᚐCategories(ctx context.Context, sel ast.SelectionSet, v []*domain.Categories) graphql.Marshaler {
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalOCategories2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋdomainᚐCategories(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+	return ret
+}
+
 func (ec *executionContext) marshalNCategories2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋdomainᚐCategories(ctx context.Context, sel ast.SelectionSet, v *domain.Categories) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
@@ -3779,6 +4587,34 @@ func (ec *executionContext) marshalNJenisBarang2ᚖgithubᚗcomᚋjuragankoding�
 	return ec._JenisBarang(ctx, sel, v)
 }
 
+func (ec *executionContext) marshalNResultDeleteCategories2githubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultDeleteCategories(ctx context.Context, sel ast.SelectionSet, v model1.ResultDeleteCategories) graphql.Marshaler {
+	return ec._ResultDeleteCategories(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNResultDeleteCategories2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultDeleteCategories(ctx context.Context, sel ast.SelectionSet, v *model1.ResultDeleteCategories) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	return ec._ResultDeleteCategories(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalNResultFetchCategories2githubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultFetchCategories(ctx context.Context, sel ast.SelectionSet, v model1.ResultFetchCategories) graphql.Marshaler {
+	return ec._ResultFetchCategories(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNResultFetchCategories2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultFetchCategories(ctx context.Context, sel ast.SelectionSet, v *model1.ResultFetchCategories) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	return ec._ResultFetchCategories(ctx, sel, v)
+}
+
 func (ec *executionContext) marshalNResultInsertBarang2githubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋgraphᚋmodelᚐResultInsertBarang(ctx context.Context, sel ast.SelectionSet, v model.ResultInsertBarang) graphql.Marshaler {
 	return ec._ResultInsertBarang(ctx, sel, &v)
 }
@@ -3805,6 +4641,20 @@ func (ec *executionContext) marshalNResultInsertCategories2ᚖgithubᚗcomᚋjur
 		return graphql.Null
 	}
 	return ec._ResultInsertCategories(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalNResultUpdateCategories2githubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultUpdateCategories(ctx context.Context, sel ast.SelectionSet, v model1.ResultUpdateCategories) graphql.Marshaler {
+	return ec._ResultUpdateCategories(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNResultUpdateCategories2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultUpdateCategories(ctx context.Context, sel ast.SelectionSet, v *model1.ResultUpdateCategories) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	return ec._ResultUpdateCategories(ctx, sel, v)
 }
 
 func (ec *executionContext) unmarshalNString2string(ctx context.Context, v interface{}) (string, error) {
@@ -4101,6 +4951,13 @@ func (ec *executionContext) marshalOBoolean2ᚖbool(ctx context.Context, sel ast
 		return graphql.Null
 	}
 	return graphql.MarshalBoolean(*v)
+}
+
+func (ec *executionContext) marshalOCategories2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋdomainᚐCategories(ctx context.Context, sel ast.SelectionSet, v *domain.Categories) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._Categories(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalOJenisBarang2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelsᚐJenisBarang(ctx context.Context, sel ast.SelectionSet, v *models.JenisBarang) graphql.Marshaler {

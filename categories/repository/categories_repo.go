@@ -1,7 +1,6 @@
 package repository
 
 import (
-	"context"
 	"database/sql"
 
 	"github.com/juragankoding/golang_graphql_training/domain"
@@ -17,6 +16,16 @@ func NewCategoriesRepository(Conn *sql.DB) domain.CategoriesRepository {
 	}
 }
 
-func (r *categoriesRepository) Fetch(ctx context.Context, cursor string, num int64) (res []domain.Categories, nextCursor string, err error) {
+func (r *categoriesRepository) Fetch() (res []domain.Categories, nextCursor string, err error) {
 	return nil, "", nil
+}
+
+func (r *categoriesRepository) Insert(categories domain.Categories) (int64, string, error) {
+	return -1, "", nil
+}
+func (r *categoriesRepository) Update(categories domain.Categories) (int64, string, error) {
+	return -1, "", nil
+}
+func (r *categoriesRepository) Delete(categories domain.Categories) (int64, string, error) {
+	return -1, "", nil
 }
