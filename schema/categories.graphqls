@@ -9,6 +9,37 @@ type ResultInsertCategories implements resultInsert {
   data: Categories!
 }
 
+type ResultGetCategories implements resultInsert {
+  status: String!
+  code: Int!
+  data: Categories!
+}
+
+type ResultGetAllCategories implements resultInsert {
+  status: String!
+  code: Int!
+  data: [Categories]!
+}
+
+type ResultUpdateCategories implements resultInsert {
+  status: String!
+  code: Int!
+  data: Categories!
+}
+
+type ResultDeleteCategories implements resultInsert {
+  status: String!
+  code: Int!
+  id: Int!
+}
+
+extend type Query {
+  GetAllCategories: ResultGetAllCategories!
+  GetCategories(id: Int!): ResultGetCategories!
+}
+
 extend type Mutation {
   InsertCategories(nama: String!): ResultInsertCategories!
+  UpdateCategories(id: Int!, nama: String!): ResultUpdateCategories!
+  DeleteCategories(id: Int!): ResultDeleteCategories!
 }
