@@ -11,6 +11,26 @@ type ResultInsert interface {
 	IsResultInsert()
 }
 
+type Brands struct {
+	ID   int    `json:"ID"`
+	Name string `json:"Name"`
+}
+
+type ResultAllBrands struct {
+	Status string    `json:"status"`
+	Code   int       `json:"code"`
+	Data   []*Brands `json:"data"`
+}
+
+func (ResultAllBrands) IsResultInsert() {}
+
+type ResultDeleteBrands struct {
+	Status string `json:"status"`
+	Code   int    `json:"code"`
+}
+
+func (ResultDeleteBrands) IsResultInsert() {}
+
 type ResultDeleteCategories struct {
 	Status string             `json:"status"`
 	Code   int                `json:"code"`
@@ -27,6 +47,14 @@ type ResultFetchCategories struct {
 
 func (ResultFetchCategories) IsResultInsert() {}
 
+type ResultInsertBrands struct {
+	Status string  `json:"status"`
+	Code   int     `json:"code"`
+	Data   *Brands `json:"data"`
+}
+
+func (ResultInsertBrands) IsResultInsert() {}
+
 type ResultInsertCategories struct {
 	Status string             `json:"status"`
 	Code   int                `json:"code"`
@@ -34,6 +62,22 @@ type ResultInsertCategories struct {
 }
 
 func (ResultInsertCategories) IsResultInsert() {}
+
+type ResultSingleBrands struct {
+	Status string  `json:"status"`
+	Code   int     `json:"code"`
+	Data   *Brands `json:"data"`
+}
+
+func (ResultSingleBrands) IsResultInsert() {}
+
+type ResultUpdateBrands struct {
+	Status string  `json:"status"`
+	Code   int     `json:"code"`
+	Data   *Brands `json:"data"`
+}
+
+func (ResultUpdateBrands) IsResultInsert() {}
 
 type ResultUpdateCategories struct {
 	Status string             `json:"status"`

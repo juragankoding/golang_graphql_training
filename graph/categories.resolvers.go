@@ -6,12 +6,38 @@ package graph
 import (
 	"context"
 	"fmt"
+	"log"
 
+	"github.com/juragankoding/golang_graphql_training/domain"
 	"github.com/juragankoding/golang_graphql_training/model"
 )
 
 func (r *mutationResolver) InsertCategories(ctx context.Context, nama string) (*model.ResultInsertCategories, error) {
-	panic(fmt.Errorf("not implemented"))
+	resultInsertCategories := model.ResultInsertCategories{
+		Status: "",
+		Code:   404,
+		Data:   nil,
+	}
+
+	categories := domain.Categories{
+		Name: nama,
+	}
+
+	lastId, _, err := r.DomainCategoriUseCase.Insert(categories)
+
+	if err != nil {
+		log.Fatal(err)
+
+		return &resultInsertCategories, err
+	}
+
+	categories.ID = int(lastId)
+
+	resultInsertCategories.Status = "Sucess insert categories"
+	resultInsertCategories.Code = 200
+	resultInsertCategories.Data = &categories
+
+	return &resultInsertCategories, nil
 }
 
 func (r *mutationResolver) UpdateCategories(ctx context.Context, id int, nama string) (*model.ResultUpdateCategories, error) {
@@ -23,7 +49,5 @@ func (r *mutationResolver) DeleteCategories(ctx context.Context, id int) (*model
 }
 
 func (r *queryResolver) Fetch(ctx context.Context) (*model.ResultFetchCategories, error) {
-	data, message, err := r.DomainCategoriUseCase.Fetch()
-
 	panic(fmt.Errorf("not implemented"))
 }

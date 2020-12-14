@@ -1,6 +1,8 @@
 package usecase
 
 import (
+	"errors"
+
 	"github.com/juragankoding/golang_graphql_training/domain"
 )
 
@@ -19,6 +21,11 @@ func (a *categoriesUseCase) Fetch() ([]domain.Categories, string, error) {
 }
 
 func (a *categoriesUseCase) Insert(categories domain.Categories) (int64, string, error) {
+
+	if categories.Name == "" {
+		return -1, "name cannot null", errors.New("name cannot be null")
+	}
+
 	return -1, "", nil
 }
 func (a *categoriesUseCase) Update(categories domain.Categories) (int64, string, error) {
