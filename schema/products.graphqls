@@ -1,0 +1,64 @@
+type Products {
+  ProductID: Int!
+  ProductName: Int!
+  BrandID: Int!
+  CategoryID: Int!
+  ModelYear: String!
+  ListPrice: Int!
+  CategoriesData: Categories!
+  BrandsData: Brands!
+}
+
+type ResultInsertProducts implements resultInsert {
+  status: String!
+  code: Int!
+  data: Products!
+}
+
+type ResultUpdateProducts implements resultInsert {
+  status: String!
+  code: Int!
+  data: Products!
+}
+
+type ResultDeleteProducts implements resultInsert {
+  status: String!
+  code: Int!
+  data: Products!
+}
+
+type ResultSingleProducts implements resultInsert {
+  status: String!
+  code: Int!
+  data: Products!
+}
+
+type ResultAllProducts implements resultInsert {
+  status: String!
+  code: Int!
+  data: [Products]!
+}
+
+extend type Query {
+  AllProducts: ResultAllProducts!
+  SingleProducts(id: Int): ResultSingleProducts!
+}
+
+extend type Mutation {
+  InsertProducts(
+    name: String!
+    brandID: Int!
+    categoryID: Int!
+    modelyear: Int!
+    ListPrice: Int!
+  ): ResultInsertProducts!
+  UpdateProducts(
+    id: Int!
+    name: String!
+    brandID: Int!
+    categoryID: Int!
+    modelyear: Int!
+    ListPrice: Int!
+  ): ResultUpdateProducts!
+  DeleteProdcuts(id: Int!): ResultDeleteProducts!
+}

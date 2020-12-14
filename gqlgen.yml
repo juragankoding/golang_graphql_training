@@ -49,6 +49,10 @@ models:
     model: github.com/juragankoding/golang_graphql_training/models.Barang
   JenisBarang:
     model: github.com/juragankoding/golang_graphql_training/models.JenisBarang
+  Products:
+    model: github.com/juragankoding/golang_graphql_training/domain.Products
+  Brands:
+    model: github.com/juragankoding/golang_graphql_training/domain.Brands
   ID:
     model:
       - github.com/99designs/gqlgen/graphql.ID
