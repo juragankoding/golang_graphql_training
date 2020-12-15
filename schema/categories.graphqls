@@ -35,12 +35,12 @@ type ResultGetCategories implements resultInsert {
 
 
 extend type Query{
-  Categories: ResultFetchCategories!
-  Category(id: Int): ResultGetCategories!
+  AllCategories: ResultFetchCategories!
+  SingleCategories(id: Int): ResultGetCategories!
 }
 
 extend type Mutation {
-  Categories(nama: String!): ResultInsertCategories!
+  InsertCategories(nama: String!): ResultInsertCategories!
   UpdateCategories(id: Int!, nama: String!): ResultUpdateCategories!
   DeleteCategories(id: Int!): ResultDeleteCategories!
 }

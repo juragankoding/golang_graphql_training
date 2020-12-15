@@ -80,13 +80,13 @@ type ComplexityRoot struct {
 	}
 
 	Mutation struct {
-		Categories        func(childComplexity int, nama string) int
 		DeleteBrands      func(childComplexity int, id int) int
 		DeleteCategories  func(childComplexity int, id int) int
 		DeleteProducts    func(childComplexity int, id int) int
 		DeleteStores      func(childComplexity int, id int) int
 		InsertBarang      func(childComplexity int, id int, nama string, description string, jenisBarang int) int
 		InsertBrands      func(childComplexity int, nama string) int
+		InsertCategories  func(childComplexity int, nama string) int
 		InsertJenisBarang func(childComplexity int, jenisBarang string) int
 		InsertProducts    func(childComplexity int, name string, brandID int, categoryID int, modelyear int, listPrice int) int
 		InsertStores      func(childComplexity int, storeName string, phone string, email string, city string, state string, zipCode string) int
@@ -109,14 +109,14 @@ type ComplexityRoot struct {
 
 	Query struct {
 		AllBrands         func(childComplexity int) int
+		AllCategories     func(childComplexity int) int
 		AllProducts       func(childComplexity int) int
 		AllStores         func(childComplexity int) int
-		Categories        func(childComplexity int) int
-		Category          func(childComplexity int, id *int) int
 		GetAllJenisBarang func(childComplexity int) int
 		GetBarang         func(childComplexity int) int
 		GetInfoKaryawan   func(childComplexity int, id int) int
 		SingleBrands      func(childComplexity int, id int) int
+		SingleCategories  func(childComplexity int, id *int) int
 		SingleProducts    func(childComplexity int, id *int) int
 		SingleStores      func(childComplexity int, id *int) int
 	}
@@ -274,7 +274,7 @@ type MutationResolver interface {
 	InsertBrands(ctx context.Context, nama string) (*model1.ResultInsertBrands, error)
 	UpdateBrands(ctx context.Context, id int, nama string) (*model1.ResultUpdateBrands, error)
 	DeleteBrands(ctx context.Context, id int) (*model1.ResultDeleteBrands, error)
-	Categories(ctx context.Context, nama string) (*model1.ResultInsertCategories, error)
+	InsertCategories(ctx context.Context, nama string) (*model1.ResultInsertCategories, error)
 	UpdateCategories(ctx context.Context, id int, nama string) (*model1.ResultUpdateCategories, error)
 	DeleteCategories(ctx context.Context, id int) (*model1.ResultDeleteCategories, error)
 	InsertJenisBarang(ctx context.Context, jenisBarang string) (*model1.ResultJenisBarang, error)
@@ -292,8 +292,8 @@ type QueryResolver interface {
 	GetBarang(ctx context.Context) (*string, error)
 	SingleBrands(ctx context.Context, id int) (*model1.ResultSingleBrands, error)
 	AllBrands(ctx context.Context) (*model1.ResultAllBrands, error)
-	Categories(ctx context.Context) (*model1.ResultFetchCategories, error)
-	Category(ctx context.Context, id *int) (*model1.ResultGetCategories, error)
+	AllCategories(ctx context.Context) (*model1.ResultFetchCategories, error)
+	SingleCategories(ctx context.Context, id *int) (*model1.ResultGetCategories, error)
 	GetAllJenisBarang(ctx context.Context) (*model1.ResultGetAllJenisBarang, error)
 	AllProducts(ctx context.Context) (*model1.ResultAllProducts, error)
 	SingleProducts(ctx context.Context, id *int) (*model1.ResultSingleProducts, error)
@@ -429,18 +429,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Karyawan.NoHp(childComplexity), true
 
-	case "Mutation.Categories":
-		if e.complexity.Mutation.Categories == nil {
-			break
-		}
-
-		args, err := ec.field_Mutation_Categories_args(context.TODO(), rawArgs)
-		if err != nil {
-			return 0, false
-		}
-
-		return e.complexity.Mutation.Categories(childComplexity, args["nama"].(string)), true
-
 	case "Mutation.DeleteBrands":
 		if e.complexity.Mutation.DeleteBrands == nil {
 			break
@@ -512,6 +500,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Mutation.InsertBrands(childComplexity, args["nama"].(string)), true
+
+	case "Mutation.InsertCategories":
+		if e.complexity.Mutation.InsertCategories == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_InsertCategories_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.InsertCategories(childComplexity, args["nama"].(string)), true
 
 	case "Mutation.insertJenisBarang":
 		if e.complexity.Mutation.InsertJenisBarang == nil {
@@ -660,6 +660,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Query.AllBrands(childComplexity), true
 
+	case "Query.AllCategories":
+		if e.complexity.Query.AllCategories == nil {
+			break
+		}
+
+		return e.complexity.Query.AllCategories(childComplexity), true
+
 	case "Query.AllProducts":
 		if e.complexity.Query.AllProducts == nil {
 			break
@@ -673,25 +680,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Query.AllStores(childComplexity), true
-
-	case "Query.Categories":
-		if e.complexity.Query.Categories == nil {
-			break
-		}
-
-		return e.complexity.Query.Categories(childComplexity), true
-
-	case "Query.Category":
-		if e.complexity.Query.Category == nil {
-			break
-		}
-
-		args, err := ec.field_Query_Category_args(context.TODO(), rawArgs)
-		if err != nil {
-			return 0, false
-		}
-
-		return e.complexity.Query.Category(childComplexity, args["id"].(*int)), true
 
 	case "Query.getAllJenisBarang":
 		if e.complexity.Query.GetAllJenisBarang == nil {
@@ -730,6 +718,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Query.SingleBrands(childComplexity, args["ID"].(int)), true
+
+	case "Query.SingleCategories":
+		if e.complexity.Query.SingleCategories == nil {
+			break
+		}
+
+		args, err := ec.field_Query_SingleCategories_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.SingleCategories(childComplexity, args["id"].(*int)), true
 
 	case "Query.SingleProducts":
 		if e.complexity.Query.SingleProducts == nil {
@@ -1458,12 +1458,12 @@ type ResultGetCategories implements resultInsert {
 
 
 extend type Query{
-  Categories: ResultFetchCategories!
-  Category(id: Int): ResultGetCategories!
+  AllCategories: ResultFetchCategories!
+  SingleCategories(id: Int): ResultGetCategories!
 }
 
 extend type Mutation {
-  Categories(nama: String!): ResultInsertCategories!
+  InsertCategories(nama: String!): ResultInsertCategories!
   UpdateCategories(id: Int!, nama: String!): ResultUpdateCategories!
   DeleteCategories(id: Int!): ResultDeleteCategories!
 }
@@ -1647,21 +1647,6 @@ var parsedSchema = gqlparser.MustLoadSchema(sources...)
 
 // region    ***************************** args.gotpl *****************************
 
-func (ec *executionContext) field_Mutation_Categories_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
-	var err error
-	args := map[string]interface{}{}
-	var arg0 string
-	if tmp, ok := rawArgs["nama"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("nama"))
-		arg0, err = ec.unmarshalNString2string(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["nama"] = arg0
-	return args, nil
-}
-
 func (ec *executionContext) field_Mutation_DeleteBrands_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
@@ -1723,6 +1708,21 @@ func (ec *executionContext) field_Mutation_DeleteStores_args(ctx context.Context
 }
 
 func (ec *executionContext) field_Mutation_InsertBrands_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 string
+	if tmp, ok := rawArgs["nama"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("nama"))
+		arg0, err = ec.unmarshalNString2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["nama"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_InsertCategories_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
 	var arg0 string
@@ -2082,21 +2082,6 @@ func (ec *executionContext) field_Mutation_insertJenisBarang_args(ctx context.Co
 	return args, nil
 }
 
-func (ec *executionContext) field_Query_Category_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
-	var err error
-	args := map[string]interface{}{}
-	var arg0 *int
-	if tmp, ok := rawArgs["id"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
-		arg0, err = ec.unmarshalOInt2ᚖint(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["id"] = arg0
-	return args, nil
-}
-
 func (ec *executionContext) field_Query_SingleBrands_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
@@ -2109,6 +2094,21 @@ func (ec *executionContext) field_Query_SingleBrands_args(ctx context.Context, r
 		}
 	}
 	args["ID"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Query_SingleCategories_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 *int
+	if tmp, ok := rawArgs["id"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+		arg0, err = ec.unmarshalOInt2ᚖint(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["id"] = arg0
 	return args, nil
 }
 
@@ -2938,7 +2938,7 @@ func (ec *executionContext) _Mutation_DeleteBrands(ctx context.Context, field gr
 	return ec.marshalNResultDeleteBrands2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultDeleteBrands(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Mutation_Categories(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+func (ec *executionContext) _Mutation_InsertCategories(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -2955,7 +2955,7 @@ func (ec *executionContext) _Mutation_Categories(ctx context.Context, field grap
 
 	ctx = graphql.WithFieldContext(ctx, fc)
 	rawArgs := field.ArgumentMap(ec.Variables)
-	args, err := ec.field_Mutation_Categories_args(ctx, rawArgs)
+	args, err := ec.field_Mutation_InsertCategories_args(ctx, rawArgs)
 	if err != nil {
 		ec.Error(ctx, err)
 		return graphql.Null
@@ -2963,7 +2963,7 @@ func (ec *executionContext) _Mutation_Categories(ctx context.Context, field grap
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().Categories(rctx, args["nama"].(string))
+		return ec.resolvers.Mutation().InsertCategories(rctx, args["nama"].(string))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -3747,7 +3747,7 @@ func (ec *executionContext) _Query_AllBrands(ctx context.Context, field graphql.
 	return ec.marshalNResultAllBrands2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultAllBrands(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Query_Categories(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+func (ec *executionContext) _Query_AllCategories(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -3765,7 +3765,7 @@ func (ec *executionContext) _Query_Categories(ctx context.Context, field graphql
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().Categories(rctx)
+		return ec.resolvers.Query().AllCategories(rctx)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -3782,7 +3782,7 @@ func (ec *executionContext) _Query_Categories(ctx context.Context, field graphql
 	return ec.marshalNResultFetchCategories2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultFetchCategories(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Query_Category(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+func (ec *executionContext) _Query_SingleCategories(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -3799,7 +3799,7 @@ func (ec *executionContext) _Query_Category(ctx context.Context, field graphql.C
 
 	ctx = graphql.WithFieldContext(ctx, fc)
 	rawArgs := field.ArgumentMap(ec.Variables)
-	args, err := ec.field_Query_Category_args(ctx, rawArgs)
+	args, err := ec.field_Query_SingleCategories_args(ctx, rawArgs)
 	if err != nil {
 		ec.Error(ctx, err)
 		return graphql.Null
@@ -3807,7 +3807,7 @@ func (ec *executionContext) _Query_Category(ctx context.Context, field graphql.C
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().Category(rctx, args["id"].(*int))
+		return ec.resolvers.Query().SingleCategories(rctx, args["id"].(*int))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -8238,8 +8238,8 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
-		case "Categories":
-			out.Values[i] = ec._Mutation_Categories(ctx, field)
+		case "InsertCategories":
+			out.Values[i] = ec._Mutation_InsertCategories(ctx, field)
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
@@ -8424,7 +8424,7 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 				}
 				return res
 			})
-		case "Categories":
+		case "AllCategories":
 			field := field
 			out.Concurrently(i, func() (res graphql.Marshaler) {
 				defer func() {
@@ -8432,13 +8432,13 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 						ec.Error(ctx, ec.Recover(ctx, r))
 					}
 				}()
-				res = ec._Query_Categories(ctx, field)
+				res = ec._Query_AllCategories(ctx, field)
 				if res == graphql.Null {
 					atomic.AddUint32(&invalids, 1)
 				}
 				return res
 			})
-		case "Category":
+		case "SingleCategories":
 			field := field
 			out.Concurrently(i, func() (res graphql.Marshaler) {
 				defer func() {
@@ -8446,7 +8446,7 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 						ec.Error(ctx, ec.Recover(ctx, r))
 					}
 				}()
-				res = ec._Query_Category(ctx, field)
+				res = ec._Query_SingleCategories(ctx, field)
 				if res == graphql.Null {
 					atomic.AddUint32(&invalids, 1)
 				}

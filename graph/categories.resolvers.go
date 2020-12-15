@@ -12,8 +12,32 @@ import (
 	"github.com/juragankoding/golang_graphql_training/model"
 )
 
-func (r *mutationResolver) Categories(ctx context.Context, nama string) (*model.ResultInsertCategories, error) {
-	panic(fmt.Errorf("not implemented"))
+func (r *mutationResolver) InsertCategories(ctx context.Context, nama string) (*model.ResultInsertCategories, error) {
+	resultInsertCategories := model.ResultInsertCategories{
+		Status: "",
+		Code:   404,
+		Data:   nil,
+	}
+
+	categories := domain.Categories{
+		Name: nama,
+	}
+
+	lastId, _, err := r.DomainCategoriUseCase.Insert(categories)
+
+	if err != nil {
+		log.Fatal(err)
+
+		return &resultInsertCategories, err
+	}
+
+	categories.ID = int(lastId)
+
+	resultInsertCategories.Status = "Sucess insert categories"
+	resultInsertCategories.Code = 200
+	resultInsertCategories.Data = &categories
+
+	return &resultInsertCategories, nil
 }
 
 func (r *mutationResolver) UpdateCategories(ctx context.Context, id int, nama string) (*model.ResultUpdateCategories, error) {
@@ -56,6 +80,20 @@ func (r *mutationResolver) DeleteCategories(ctx context.Context, id int) (*model
 	}, nil
 }
 
+func (r *queryResolver) AllCategories(ctx context.Context) (*model.ResultFetchCategories, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
+func (r *queryResolver) SingleCategories(ctx context.Context, id *int) (*model.ResultGetCategories, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
+// !!! WARNING !!!
+// The code below was going to be deleted when updating resolvers. It has been copied here so you have
+// one last chance to move it out of harms way if you want. There are two reasons this happens:
+//  - When renaming or deleting a resolver the old code will be put in here. You can safely delete
+//    it when you're done.
+//  - You have helper methods in this file. Move them out to keep these resolver files clean.
 func (r *queryResolver) Categories(ctx context.Context) (*model.ResultFetchCategories, error) {
 	var categories []*domain.Categories
 	var err error
@@ -72,43 +110,11 @@ func (r *queryResolver) Categories(ctx context.Context) (*model.ResultFetchCateg
 		Data:   categories,
 	}, nil
 }
-
 func (r *queryResolver) Category(ctx context.Context, id *int) (*model.ResultGetCategories, error) {
 	panic(fmt.Errorf("not implemented"))
 }
-
-// !!! WARNING !!!
-// The code below was going to be deleted when updating resolvers. It has been copied here so you have
-// one last chance to move it out of harms way if you want. There are two reasons this happens:
-//  - When renaming or deleting a resolver the old code will be put in here. You can safely delete
-//    it when you're done.
-//  - You have helper methods in this file. Move them out to keep these resolver files clean.
-func (r *mutationResolver) InsertCategories(ctx context.Context, nama string) (*model.ResultInsertCategories, error) {
-	resultInsertCategories := model.ResultInsertCategories{
-		Status: "",
-		Code:   404,
-		Data:   nil,
-	}
-
-	categories := domain.Categories{
-		Name: nama,
-	}
-
-	lastId, _, err := r.DomainCategoriUseCase.Insert(categories)
-
-	if err != nil {
-		log.Fatal(err)
-
-		return &resultInsertCategories, err
-	}
-
-	categories.ID = int(lastId)
-
-	resultInsertCategories.Status = "Sucess insert categories"
-	resultInsertCategories.Code = 200
-	resultInsertCategories.Data = &categories
-
-	return &resultInsertCategories, nil
+func (r *mutationResolver) Categories(ctx context.Context, nama string) (*model.ResultInsertCategories, error) {
+	panic(fmt.Errorf("not implemented"))
 }
 func (r *queryResolver) Fetch(ctx context.Context) (*model.ResultFetchCategories, error) {
 	panic(fmt.Errorf("not implemented"))
