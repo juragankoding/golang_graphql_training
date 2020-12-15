@@ -55,8 +55,6 @@ extend type Mutation {
     ShippedDate: String!
     StoreID: Int!
     StaffID: Int!
-    StoreData: Stores!
-    StaffData: Staffs!
   ): ResultInsertOrders!
   UpdateOrders(
     OrderID: Int!
@@ -67,8 +65,6 @@ extend type Mutation {
     ShippedDate: String!
     StoreID: Int!
     StaffID: Int!
-    StoreData: Stores!
-    StaffData: Staffs!
   ): ResultUpdateOrders!
   DeleteOrders(id: Int!): ResultDeleteOrders!
 }

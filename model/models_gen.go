@@ -11,6 +11,19 @@ type ResultInsert interface {
 	IsResultInsert()
 }
 
+type Orders struct {
+	OrderID      int            `json:"OrderID"`
+	CustormerID  int            `json:"CustormerID"`
+	OrderStatus  int            `json:"OrderStatus"`
+	OrderDate    string         `json:"OrderDate"`
+	RequiredDate string         `json:"RequiredDate"`
+	ShippedDate  string         `json:"ShippedDate"`
+	StoreID      int            `json:"StoreID"`
+	StaffID      int            `json:"StaffID"`
+	StoreData    *Stores        `json:"StoreData"`
+	StaffData    *domain.Staffs `json:"StaffData"`
+}
+
 type ResultAllBrands struct {
 	Status string           `json:"status"`
 	Code   int              `json:"code"`
@@ -49,6 +62,14 @@ type ResultDeleteCategories struct {
 }
 
 func (ResultDeleteCategories) IsResultInsert() {}
+
+type ResultDeleteOrders struct {
+	Status string  `json:"status"`
+	Code   int     `json:"code"`
+	Data   *Orders `json:"data"`
+}
+
+func (ResultDeleteOrders) IsResultInsert() {}
 
 type ResultDeleteProducts struct {
 	Status string           `json:"status"`
@@ -90,6 +111,14 @@ type ResultFetchCategories struct {
 
 func (ResultFetchCategories) IsResultInsert() {}
 
+type ResultFetchOrders struct {
+	Status string    `json:"status"`
+	Code   int       `json:"code"`
+	Data   []*Orders `json:"data"`
+}
+
+func (ResultFetchOrders) IsResultInsert() {}
+
 type ResultFetchStaffs struct {
 	Status string           `json:"status"`
 	Code   int              `json:"code"`
@@ -113,6 +142,14 @@ type ResultGetCategories struct {
 }
 
 func (ResultGetCategories) IsResultInsert() {}
+
+type ResultGetOrders struct {
+	Status string  `json:"status"`
+	Code   int     `json:"code"`
+	Data   *Orders `json:"data"`
+}
+
+func (ResultGetOrders) IsResultInsert() {}
 
 type ResultGetStaffs struct {
 	Status string         `json:"status"`
@@ -145,6 +182,14 @@ type ResultInsertCategories struct {
 }
 
 func (ResultInsertCategories) IsResultInsert() {}
+
+type ResultInsertOrders struct {
+	Status string  `json:"status"`
+	Code   int     `json:"code"`
+	Data   *Orders `json:"data"`
+}
+
+func (ResultInsertOrders) IsResultInsert() {}
 
 type ResultInsertProducts struct {
 	Status string           `json:"status"`
@@ -217,6 +262,14 @@ type ResultUpdateCategories struct {
 }
 
 func (ResultUpdateCategories) IsResultInsert() {}
+
+type ResultUpdateOrders struct {
+	Status string  `json:"status"`
+	Code   int     `json:"code"`
+	Data   *Orders `json:"data"`
+}
+
+func (ResultUpdateOrders) IsResultInsert() {}
 
 type ResultUpdateProducts struct {
 	Status string           `json:"status"`
