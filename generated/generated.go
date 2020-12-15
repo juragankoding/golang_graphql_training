@@ -74,28 +74,28 @@ type ComplexityRoot struct {
 	}
 
 	Mutation struct {
+		Categories        func(childComplexity int, nama string) int
 		DeleteCategories  func(childComplexity int, id int) int
 		InsertBarang      func(childComplexity int, id int, nama string, description string, jenisBarang int) int
-		InsertCategories  func(childComplexity int, nama string) int
 		InsertJenisBarang func(childComplexity int, jenisBarang string) int
 		UpdateCategories  func(childComplexity int, id int, nama string) int
 	}
 
 	Query struct {
-		GetAllCategories  func(childComplexity int) int
+		Categories        func(childComplexity int) int
+		Category          func(childComplexity int, id *int) int
 		GetAllJenisBarang func(childComplexity int) int
 		GetBarang         func(childComplexity int) int
-		GetCategories     func(childComplexity int, id int) int
 		GetInfoKaryawan   func(childComplexity int, id int) int
 	}
 
 	ResultDeleteCategories struct {
 		Code   func(childComplexity int) int
-		ID     func(childComplexity int) int
+		Data   func(childComplexity int) int
 		Status func(childComplexity int) int
 	}
 
-	ResultGetAllCategories struct {
+	ResultFetchCategories struct {
 		Code   func(childComplexity int) int
 		Data   func(childComplexity int) int
 		Status func(childComplexity int) int
@@ -140,15 +140,15 @@ type ComplexityRoot struct {
 
 type MutationResolver interface {
 	InsertBarang(ctx context.Context, id int, nama string, description string, jenisBarang int) (*model.ResultInsertBarang, error)
-	InsertCategories(ctx context.Context, nama string) (*model1.ResultInsertCategories, error)
+	Categories(ctx context.Context, nama string) (*model1.ResultInsertCategories, error)
 	UpdateCategories(ctx context.Context, id int, nama string) (*model1.ResultUpdateCategories, error)
 	DeleteCategories(ctx context.Context, id int) (*model1.ResultDeleteCategories, error)
 	InsertJenisBarang(ctx context.Context, jenisBarang string) (*model1.ResultJenisBarang, error)
 }
 type QueryResolver interface {
 	GetBarang(ctx context.Context) (*string, error)
-	GetAllCategories(ctx context.Context) (*model1.ResultGetAllCategories, error)
-	GetCategories(ctx context.Context, id int) (*model1.ResultGetCategories, error)
+	Categories(ctx context.Context) (*model1.ResultFetchCategories, error)
+	Category(ctx context.Context, id *int) (*model1.ResultGetCategories, error)
 	GetAllJenisBarang(ctx context.Context) (*model1.ResultGetAllJenisBarang, error)
 	GetInfoKaryawan(ctx context.Context, id int) (*model.Karyawan, error)
 }
@@ -266,6 +266,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Karyawan.NoHp(childComplexity), true
 
+	case "Mutation.Categories":
+		if e.complexity.Mutation.Categories == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_Categories_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.Categories(childComplexity, args["nama"].(string)), true
+
 	case "Mutation.DeleteCategories":
 		if e.complexity.Mutation.DeleteCategories == nil {
 			break
@@ -289,18 +301,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Mutation.InsertBarang(childComplexity, args["id"].(int), args["nama"].(string), args["description"].(string), args["jenisBarang"].(int)), true
-
-	case "Mutation.InsertCategories":
-		if e.complexity.Mutation.InsertCategories == nil {
-			break
-		}
-
-		args, err := ec.field_Mutation_InsertCategories_args(context.TODO(), rawArgs)
-		if err != nil {
-			return 0, false
-		}
-
-		return e.complexity.Mutation.InsertCategories(childComplexity, args["nama"].(string)), true
 
 	case "Mutation.insertJenisBarang":
 		if e.complexity.Mutation.InsertJenisBarang == nil {
@@ -326,12 +326,24 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Mutation.UpdateCategories(childComplexity, args["id"].(int), args["nama"].(string)), true
 
-	case "Query.GetAllCategories":
-		if e.complexity.Query.GetAllCategories == nil {
+	case "Query.Categories":
+		if e.complexity.Query.Categories == nil {
 			break
 		}
 
-		return e.complexity.Query.GetAllCategories(childComplexity), true
+		return e.complexity.Query.Categories(childComplexity), true
+
+	case "Query.Category":
+		if e.complexity.Query.Category == nil {
+			break
+		}
+
+		args, err := ec.field_Query_Category_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.Category(childComplexity, args["id"].(*int)), true
 
 	case "Query.getAllJenisBarang":
 		if e.complexity.Query.GetAllJenisBarang == nil {
@@ -346,18 +358,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Query.GetBarang(childComplexity), true
-
-	case "Query.GetCategories":
-		if e.complexity.Query.GetCategories == nil {
-			break
-		}
-
-		args, err := ec.field_Query_GetCategories_args(context.TODO(), rawArgs)
-		if err != nil {
-			return 0, false
-		}
-
-		return e.complexity.Query.GetCategories(childComplexity, args["id"].(int)), true
 
 	case "Query.getInfoKaryawan":
 		if e.complexity.Query.GetInfoKaryawan == nil {
@@ -378,12 +378,12 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.ResultDeleteCategories.Code(childComplexity), true
 
-	case "ResultDeleteCategories.id":
-		if e.complexity.ResultDeleteCategories.ID == nil {
+	case "ResultDeleteCategories.data":
+		if e.complexity.ResultDeleteCategories.Data == nil {
 			break
 		}
 
-		return e.complexity.ResultDeleteCategories.ID(childComplexity), true
+		return e.complexity.ResultDeleteCategories.Data(childComplexity), true
 
 	case "ResultDeleteCategories.status":
 		if e.complexity.ResultDeleteCategories.Status == nil {
@@ -392,26 +392,26 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.ResultDeleteCategories.Status(childComplexity), true
 
-	case "ResultGetAllCategories.code":
-		if e.complexity.ResultGetAllCategories.Code == nil {
+	case "ResultFetchCategories.code":
+		if e.complexity.ResultFetchCategories.Code == nil {
 			break
 		}
 
-		return e.complexity.ResultGetAllCategories.Code(childComplexity), true
+		return e.complexity.ResultFetchCategories.Code(childComplexity), true
 
-	case "ResultGetAllCategories.data":
-		if e.complexity.ResultGetAllCategories.Data == nil {
+	case "ResultFetchCategories.data":
+		if e.complexity.ResultFetchCategories.Data == nil {
 			break
 		}
 
-		return e.complexity.ResultGetAllCategories.Data(childComplexity), true
+		return e.complexity.ResultFetchCategories.Data(childComplexity), true
 
-	case "ResultGetAllCategories.status":
-		if e.complexity.ResultGetAllCategories.Status == nil {
+	case "ResultFetchCategories.status":
+		if e.complexity.ResultFetchCategories.Status == nil {
 			break
 		}
 
-		return e.complexity.ResultGetAllCategories.Status(childComplexity), true
+		return e.complexity.ResultFetchCategories.Status(childComplexity), true
 
 	case "ResultGetCategories.code":
 		if e.complexity.ResultGetCategories.Code == nil {
@@ -646,18 +646,6 @@ type ResultInsertCategories implements resultInsert {
   data: Categories!
 }
 
-type ResultGetCategories implements resultInsert {
-  status: String!
-  code: Int!
-  data: Categories!
-}
-
-type ResultGetAllCategories implements resultInsert {
-  status: String!
-  code: Int!
-  data: [Categories]!
-}
-
 type ResultUpdateCategories implements resultInsert {
   status: String!
   code: Int!
@@ -667,16 +655,29 @@ type ResultUpdateCategories implements resultInsert {
 type ResultDeleteCategories implements resultInsert {
   status: String!
   code: Int!
-  id: Int!
+  data: Categories!
 }
 
-extend type Query {
-  GetAllCategories: ResultGetAllCategories!
-  GetCategories(id: Int!): ResultGetCategories!
+type ResultFetchCategories implements resultInsert {
+  status: String!
+  code: Int!
+  data: [Categories]!
+}
+
+type ResultGetCategories implements resultInsert {
+  status: String!
+  code: Int!
+  data: Categories!
+}
+
+
+extend type Query{
+  Categories: ResultFetchCategories!
+  Category(id: Int): ResultGetCategories!
 }
 
 extend type Mutation {
-  InsertCategories(nama: String!): ResultInsertCategories!
+  Categories(nama: String!): ResultInsertCategories!
   UpdateCategories(id: Int!, nama: String!): ResultUpdateCategories!
   DeleteCategories(id: Int!): ResultDeleteCategories!
 }
@@ -729,6 +730,21 @@ var parsedSchema = gqlparser.MustLoadSchema(sources...)
 
 // region    ***************************** args.gotpl *****************************
 
+func (ec *executionContext) field_Mutation_Categories_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 string
+	if tmp, ok := rawArgs["nama"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("nama"))
+		arg0, err = ec.unmarshalNString2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["nama"] = arg0
+	return args, nil
+}
+
 func (ec *executionContext) field_Mutation_DeleteCategories_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
@@ -741,21 +757,6 @@ func (ec *executionContext) field_Mutation_DeleteCategories_args(ctx context.Con
 		}
 	}
 	args["id"] = arg0
-	return args, nil
-}
-
-func (ec *executionContext) field_Mutation_InsertCategories_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
-	var err error
-	args := map[string]interface{}{}
-	var arg0 string
-	if tmp, ok := rawArgs["nama"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("nama"))
-		arg0, err = ec.unmarshalNString2string(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["nama"] = arg0
 	return args, nil
 }
 
@@ -840,13 +841,13 @@ func (ec *executionContext) field_Mutation_insertJenisBarang_args(ctx context.Co
 	return args, nil
 }
 
-func (ec *executionContext) field_Query_GetCategories_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+func (ec *executionContext) field_Query_Category_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 int
+	var arg0 *int
 	if tmp, ok := rawArgs["id"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
-		arg0, err = ec.unmarshalNInt2int(ctx, tmp)
+		arg0, err = ec.unmarshalOInt2ᚖint(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -1455,7 +1456,7 @@ func (ec *executionContext) _Mutation_insertBarang(ctx context.Context, field gr
 	return ec.marshalNResultInsertBarang2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋgraphᚋmodelᚐResultInsertBarang(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Mutation_InsertCategories(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+func (ec *executionContext) _Mutation_Categories(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -1472,7 +1473,7 @@ func (ec *executionContext) _Mutation_InsertCategories(ctx context.Context, fiel
 
 	ctx = graphql.WithFieldContext(ctx, fc)
 	rawArgs := field.ArgumentMap(ec.Variables)
-	args, err := ec.field_Mutation_InsertCategories_args(ctx, rawArgs)
+	args, err := ec.field_Mutation_Categories_args(ctx, rawArgs)
 	if err != nil {
 		ec.Error(ctx, err)
 		return graphql.Null
@@ -1480,7 +1481,7 @@ func (ec *executionContext) _Mutation_InsertCategories(ctx context.Context, fiel
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().InsertCategories(rctx, args["nama"].(string))
+		return ec.resolvers.Mutation().Categories(rctx, args["nama"].(string))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -1655,7 +1656,7 @@ func (ec *executionContext) _Query_getBarang(ctx context.Context, field graphql.
 	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Query_GetAllCategories(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+func (ec *executionContext) _Query_Categories(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -1673,7 +1674,7 @@ func (ec *executionContext) _Query_GetAllCategories(ctx context.Context, field g
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().GetAllCategories(rctx)
+		return ec.resolvers.Query().Categories(rctx)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -1685,12 +1686,12 @@ func (ec *executionContext) _Query_GetAllCategories(ctx context.Context, field g
 		}
 		return graphql.Null
 	}
-	res := resTmp.(*model1.ResultGetAllCategories)
+	res := resTmp.(*model1.ResultFetchCategories)
 	fc.Result = res
-	return ec.marshalNResultGetAllCategories2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultGetAllCategories(ctx, field.Selections, res)
+	return ec.marshalNResultFetchCategories2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultFetchCategories(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Query_GetCategories(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+func (ec *executionContext) _Query_Category(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -1707,7 +1708,7 @@ func (ec *executionContext) _Query_GetCategories(ctx context.Context, field grap
 
 	ctx = graphql.WithFieldContext(ctx, fc)
 	rawArgs := field.ArgumentMap(ec.Variables)
-	args, err := ec.field_Query_GetCategories_args(ctx, rawArgs)
+	args, err := ec.field_Query_Category_args(ctx, rawArgs)
 	if err != nil {
 		ec.Error(ctx, err)
 		return graphql.Null
@@ -1715,7 +1716,7 @@ func (ec *executionContext) _Query_GetCategories(ctx context.Context, field grap
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().GetCategories(rctx, args["id"].(int))
+		return ec.resolvers.Query().Category(rctx, args["id"].(*int))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -1947,7 +1948,7 @@ func (ec *executionContext) _ResultDeleteCategories_code(ctx context.Context, fi
 	return ec.marshalNInt2int(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _ResultDeleteCategories_id(ctx context.Context, field graphql.CollectedField, obj *model1.ResultDeleteCategories) (ret graphql.Marshaler) {
+func (ec *executionContext) _ResultDeleteCategories_data(ctx context.Context, field graphql.CollectedField, obj *model1.ResultDeleteCategories) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -1965,7 +1966,7 @@ func (ec *executionContext) _ResultDeleteCategories_id(ctx context.Context, fiel
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.ID, nil
+		return obj.Data, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -1977,12 +1978,12 @@ func (ec *executionContext) _ResultDeleteCategories_id(ctx context.Context, fiel
 		}
 		return graphql.Null
 	}
-	res := resTmp.(int)
+	res := resTmp.(*domain.Categories)
 	fc.Result = res
-	return ec.marshalNInt2int(ctx, field.Selections, res)
+	return ec.marshalNCategories2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋdomainᚐCategories(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _ResultGetAllCategories_status(ctx context.Context, field graphql.CollectedField, obj *model1.ResultGetAllCategories) (ret graphql.Marshaler) {
+func (ec *executionContext) _ResultFetchCategories_status(ctx context.Context, field graphql.CollectedField, obj *model1.ResultFetchCategories) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -1990,7 +1991,7 @@ func (ec *executionContext) _ResultGetAllCategories_status(ctx context.Context, 
 		}
 	}()
 	fc := &graphql.FieldContext{
-		Object:     "ResultGetAllCategories",
+		Object:     "ResultFetchCategories",
 		Field:      field,
 		Args:       nil,
 		IsMethod:   false,
@@ -2017,7 +2018,7 @@ func (ec *executionContext) _ResultGetAllCategories_status(ctx context.Context, 
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _ResultGetAllCategories_code(ctx context.Context, field graphql.CollectedField, obj *model1.ResultGetAllCategories) (ret graphql.Marshaler) {
+func (ec *executionContext) _ResultFetchCategories_code(ctx context.Context, field graphql.CollectedField, obj *model1.ResultFetchCategories) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -2025,7 +2026,7 @@ func (ec *executionContext) _ResultGetAllCategories_code(ctx context.Context, fi
 		}
 	}()
 	fc := &graphql.FieldContext{
-		Object:     "ResultGetAllCategories",
+		Object:     "ResultFetchCategories",
 		Field:      field,
 		Args:       nil,
 		IsMethod:   false,
@@ -2052,7 +2053,7 @@ func (ec *executionContext) _ResultGetAllCategories_code(ctx context.Context, fi
 	return ec.marshalNInt2int(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _ResultGetAllCategories_data(ctx context.Context, field graphql.CollectedField, obj *model1.ResultGetAllCategories) (ret graphql.Marshaler) {
+func (ec *executionContext) _ResultFetchCategories_data(ctx context.Context, field graphql.CollectedField, obj *model1.ResultFetchCategories) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -2060,7 +2061,7 @@ func (ec *executionContext) _ResultGetAllCategories_data(ctx context.Context, fi
 		}
 	}()
 	fc := &graphql.FieldContext{
-		Object:     "ResultGetAllCategories",
+		Object:     "ResultFetchCategories",
 		Field:      field,
 		Args:       nil,
 		IsMethod:   false,
@@ -3826,20 +3827,6 @@ func (ec *executionContext) _resultInsert(ctx context.Context, sel ast.Selection
 			return graphql.Null
 		}
 		return ec._ResultInsertCategories(ctx, sel, obj)
-	case model1.ResultGetCategories:
-		return ec._ResultGetCategories(ctx, sel, &obj)
-	case *model1.ResultGetCategories:
-		if obj == nil {
-			return graphql.Null
-		}
-		return ec._ResultGetCategories(ctx, sel, obj)
-	case model1.ResultGetAllCategories:
-		return ec._ResultGetAllCategories(ctx, sel, &obj)
-	case *model1.ResultGetAllCategories:
-		if obj == nil {
-			return graphql.Null
-		}
-		return ec._ResultGetAllCategories(ctx, sel, obj)
 	case model1.ResultUpdateCategories:
 		return ec._ResultUpdateCategories(ctx, sel, &obj)
 	case *model1.ResultUpdateCategories:
@@ -3854,6 +3841,20 @@ func (ec *executionContext) _resultInsert(ctx context.Context, sel ast.Selection
 			return graphql.Null
 		}
 		return ec._ResultDeleteCategories(ctx, sel, obj)
+	case model1.ResultFetchCategories:
+		return ec._ResultFetchCategories(ctx, sel, &obj)
+	case *model1.ResultFetchCategories:
+		if obj == nil {
+			return graphql.Null
+		}
+		return ec._ResultFetchCategories(ctx, sel, obj)
+	case model1.ResultGetCategories:
+		return ec._ResultGetCategories(ctx, sel, &obj)
+	case *model1.ResultGetCategories:
+		if obj == nil {
+			return graphql.Null
+		}
+		return ec._ResultGetCategories(ctx, sel, obj)
 	case model1.ResultJenisBarang:
 		return ec._resultJenisBarang(ctx, sel, &obj)
 	case *model1.ResultJenisBarang:
@@ -4055,8 +4056,8 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
-		case "InsertCategories":
-			out.Values[i] = ec._Mutation_InsertCategories(ctx, field)
+		case "Categories":
+			out.Values[i] = ec._Mutation_Categories(ctx, field)
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
@@ -4112,7 +4113,7 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 				res = ec._Query_getBarang(ctx, field)
 				return res
 			})
-		case "GetAllCategories":
+		case "Categories":
 			field := field
 			out.Concurrently(i, func() (res graphql.Marshaler) {
 				defer func() {
@@ -4120,13 +4121,13 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 						ec.Error(ctx, ec.Recover(ctx, r))
 					}
 				}()
-				res = ec._Query_GetAllCategories(ctx, field)
+				res = ec._Query_Categories(ctx, field)
 				if res == graphql.Null {
 					atomic.AddUint32(&invalids, 1)
 				}
 				return res
 			})
-		case "GetCategories":
+		case "Category":
 			field := field
 			out.Concurrently(i, func() (res graphql.Marshaler) {
 				defer func() {
@@ -4134,7 +4135,7 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 						ec.Error(ctx, ec.Recover(ctx, r))
 					}
 				}()
-				res = ec._Query_GetCategories(ctx, field)
+				res = ec._Query_Category(ctx, field)
 				if res == graphql.Null {
 					atomic.AddUint32(&invalids, 1)
 				}
@@ -4201,8 +4202,8 @@ func (ec *executionContext) _ResultDeleteCategories(ctx context.Context, sel ast
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
-		case "id":
-			out.Values[i] = ec._ResultDeleteCategories_id(ctx, field, obj)
+		case "data":
+			out.Values[i] = ec._ResultDeleteCategories_data(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
@@ -4217,29 +4218,29 @@ func (ec *executionContext) _ResultDeleteCategories(ctx context.Context, sel ast
 	return out
 }
 
-var resultGetAllCategoriesImplementors = []string{"ResultGetAllCategories", "resultInsert"}
+var resultFetchCategoriesImplementors = []string{"ResultFetchCategories", "resultInsert"}
 
-func (ec *executionContext) _ResultGetAllCategories(ctx context.Context, sel ast.SelectionSet, obj *model1.ResultGetAllCategories) graphql.Marshaler {
-	fields := graphql.CollectFields(ec.OperationContext, sel, resultGetAllCategoriesImplementors)
+func (ec *executionContext) _ResultFetchCategories(ctx context.Context, sel ast.SelectionSet, obj *model1.ResultFetchCategories) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, resultFetchCategoriesImplementors)
 
 	out := graphql.NewFieldSet(fields)
 	var invalids uint32
 	for i, field := range fields {
 		switch field.Name {
 		case "__typename":
-			out.Values[i] = graphql.MarshalString("ResultGetAllCategories")
+			out.Values[i] = graphql.MarshalString("ResultFetchCategories")
 		case "status":
-			out.Values[i] = ec._ResultGetAllCategories_status(ctx, field, obj)
+			out.Values[i] = ec._ResultFetchCategories_status(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
 		case "code":
-			out.Values[i] = ec._ResultGetAllCategories_code(ctx, field, obj)
+			out.Values[i] = ec._ResultFetchCategories_code(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
 		case "data":
-			out.Values[i] = ec._ResultGetAllCategories_data(ctx, field, obj)
+			out.Values[i] = ec._ResultFetchCategories_data(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
@@ -4869,18 +4870,18 @@ func (ec *executionContext) marshalNResultDeleteCategories2ᚖgithubᚗcomᚋjur
 	return ec._ResultDeleteCategories(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalNResultGetAllCategories2githubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultGetAllCategories(ctx context.Context, sel ast.SelectionSet, v model1.ResultGetAllCategories) graphql.Marshaler {
-	return ec._ResultGetAllCategories(ctx, sel, &v)
+func (ec *executionContext) marshalNResultFetchCategories2githubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultFetchCategories(ctx context.Context, sel ast.SelectionSet, v model1.ResultFetchCategories) graphql.Marshaler {
+	return ec._ResultFetchCategories(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNResultGetAllCategories2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultGetAllCategories(ctx context.Context, sel ast.SelectionSet, v *model1.ResultGetAllCategories) graphql.Marshaler {
+func (ec *executionContext) marshalNResultFetchCategories2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultFetchCategories(ctx context.Context, sel ast.SelectionSet, v *model1.ResultFetchCategories) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "must not be null")
 		}
 		return graphql.Null
 	}
-	return ec._ResultGetAllCategories(ctx, sel, v)
+	return ec._ResultFetchCategories(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalNResultGetCategories2githubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultGetCategories(ctx context.Context, sel ast.SelectionSet, v model1.ResultGetCategories) graphql.Marshaler {
@@ -5240,6 +5241,21 @@ func (ec *executionContext) marshalOCategories2ᚖgithubᚗcomᚋjuragankoding�
 		return graphql.Null
 	}
 	return ec._Categories(ctx, sel, v)
+}
+
+func (ec *executionContext) unmarshalOInt2ᚖint(ctx context.Context, v interface{}) (*int, error) {
+	if v == nil {
+		return nil, nil
+	}
+	res, err := graphql.UnmarshalInt(v)
+	return &res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalOInt2ᚖint(ctx context.Context, sel ast.SelectionSet, v *int) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return graphql.MarshalInt(*v)
 }
 
 func (ec *executionContext) marshalOJenisBarang2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelsᚐJenisBarang(ctx context.Context, sel ast.SelectionSet, v *models.JenisBarang) graphql.Marshaler {

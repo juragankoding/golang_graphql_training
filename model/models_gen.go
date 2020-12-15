@@ -12,20 +12,20 @@ type ResultInsert interface {
 }
 
 type ResultDeleteCategories struct {
-	Status string `json:"status"`
-	Code   int    `json:"code"`
-	ID     int    `json:"id"`
+	Status string             `json:"status"`
+	Code   int                `json:"code"`
+	Data   *domain.Categories `json:"data"`
 }
 
 func (ResultDeleteCategories) IsResultInsert() {}
 
-type ResultGetAllCategories struct {
+type ResultFetchCategories struct {
 	Status string               `json:"status"`
 	Code   int                  `json:"code"`
 	Data   []*domain.Categories `json:"data"`
 }
 
-func (ResultGetAllCategories) IsResultInsert() {}
+func (ResultFetchCategories) IsResultInsert() {}
 
 type ResultGetCategories struct {
 	Status string             `json:"status"`

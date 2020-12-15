@@ -6,11 +6,21 @@ type Categories struct {
 }
 
 type CategoriesUseCase interface {
-	Fetch() ([]Categories, string, error)
-	Insert(Categories) (int64, string, error)
+	Fetch() ([]*Categories, string, error)
+	Get(id int) (*Categories, string, error)
+	Insert(categories Categories) (int64, string, error)
+	Update(categories Categories) (string, error)
+	Delete(id int) (string, error)
 }
 
 type CategoriesRepository interface {
-	Fetch() (res []Categories, nextCursor string, err error)
-	Insert(Categories) (int64, string, error)
+	Fetch() (res []*Categories, nextCursor string, err error)
+	Get(id int) (*Categories, string, error)
+	Insert(categories Categories) (int64, string, error)
+	Update(categories Categories) (string, error)
+	Delete(id int) (string, error)
+}
+
+func (c *Categories) Validate() error {
+	return nil
 }
