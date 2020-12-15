@@ -56,7 +56,9 @@ models:
   Customers:
     model: github.com/juragankoding/golang_graphql_training/domain.Customers
   Staffs:
-    model: github.com/juragankoding/golagn_graphql_training/domain.Staffs
+    model: github.com/juragankoding/golang_graphql_training/domain.Staffs
+  Stocks:
+    model: github.com/juragankoding/golang_graphql_training/domain.Stocks
   ID:
     model:
       - github.com/99designs/gqlgen/graphql.ID

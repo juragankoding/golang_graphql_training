@@ -58,6 +58,22 @@ type ResultDeleteProducts struct {
 
 func (ResultDeleteProducts) IsResultInsert() {}
 
+type ResultDeleteStaffs struct {
+	Status string         `json:"status"`
+	Code   int            `json:"code"`
+	Data   *domain.Staffs `json:"data"`
+}
+
+func (ResultDeleteStaffs) IsResultInsert() {}
+
+type ResultDeleteStocks struct {
+	Status string         `json:"status"`
+	Code   int            `json:"code"`
+	Data   *domain.Stocks `json:"data"`
+}
+
+func (ResultDeleteStocks) IsResultInsert() {}
+
 type ResultDeleteStores struct {
 	Status string  `json:"status"`
 	Code   int     `json:"code"`
@@ -74,6 +90,22 @@ type ResultFetchCategories struct {
 
 func (ResultFetchCategories) IsResultInsert() {}
 
+type ResultFetchStaffs struct {
+	Status string           `json:"status"`
+	Code   int              `json:"code"`
+	Data   []*domain.Staffs `json:"data"`
+}
+
+func (ResultFetchStaffs) IsResultInsert() {}
+
+type ResultFetchStocks struct {
+	Status string           `json:"status"`
+	Code   int              `json:"code"`
+	Data   []*domain.Stocks `json:"data"`
+}
+
+func (ResultFetchStocks) IsResultInsert() {}
+
 type ResultGetCategories struct {
 	Status string             `json:"status"`
 	Code   int                `json:"code"`
@@ -81,6 +113,22 @@ type ResultGetCategories struct {
 }
 
 func (ResultGetCategories) IsResultInsert() {}
+
+type ResultGetStaffs struct {
+	Status string         `json:"status"`
+	Code   int            `json:"code"`
+	Data   *domain.Staffs `json:"data"`
+}
+
+func (ResultGetStaffs) IsResultInsert() {}
+
+type ResultGetStocks struct {
+	Status string         `json:"status"`
+	Code   int            `json:"code"`
+	Data   *domain.Stocks `json:"data"`
+}
+
+func (ResultGetStocks) IsResultInsert() {}
 
 type ResultInsertBrands struct {
 	Status string         `json:"status"`
@@ -105,6 +153,22 @@ type ResultInsertProducts struct {
 }
 
 func (ResultInsertProducts) IsResultInsert() {}
+
+type ResultInsertStaffs struct {
+	Status string         `json:"status"`
+	Code   int            `json:"code"`
+	Data   *domain.Staffs `json:"data"`
+}
+
+func (ResultInsertStaffs) IsResultInsert() {}
+
+type ResultInsertStocks struct {
+	Status string         `json:"status"`
+	Code   int            `json:"code"`
+	Data   *domain.Stocks `json:"data"`
+}
+
+func (ResultInsertStocks) IsResultInsert() {}
 
 type ResultInsertStores struct {
 	Status string  `json:"status"`
@@ -161,6 +225,22 @@ type ResultUpdateProducts struct {
 }
 
 func (ResultUpdateProducts) IsResultInsert() {}
+
+type ResultUpdateStaffs struct {
+	Status string         `json:"status"`
+	Code   int            `json:"code"`
+	Data   *domain.Staffs `json:"data"`
+}
+
+func (ResultUpdateStaffs) IsResultInsert() {}
+
+type ResultUpdateStocks struct {
+	Status string         `json:"status"`
+	Code   int            `json:"code"`
+	Data   *domain.Stocks `json:"data"`
+}
+
+func (ResultUpdateStocks) IsResultInsert() {}
 
 type ResultUpdateStores struct {
 	Status string  `json:"status"`

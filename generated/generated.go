@@ -42,6 +42,8 @@ type ResolverRoot interface {
 	Mutation() MutationResolver
 	Products() ProductsResolver
 	Query() QueryResolver
+	Staffs() StaffsResolver
+	Stocks() StocksResolver
 }
 
 type DirectiveRoot struct {
@@ -83,16 +85,22 @@ type ComplexityRoot struct {
 		DeleteBrands      func(childComplexity int, id int) int
 		DeleteCategories  func(childComplexity int, id int) int
 		DeleteProducts    func(childComplexity int, id int) int
+		DeleteStaffs      func(childComplexity int, id int) int
+		DeleteStocks      func(childComplexity int, id int) int
 		DeleteStores      func(childComplexity int, id int) int
 		InsertBarang      func(childComplexity int, id int, nama string, description string, jenisBarang int) int
 		InsertBrands      func(childComplexity int, nama string) int
 		InsertCategories  func(childComplexity int, nama string) int
 		InsertJenisBarang func(childComplexity int, jenisBarang string) int
 		InsertProducts    func(childComplexity int, name string, brandID int, categoryID int, modelyear int, listPrice int) int
+		InsertStaffs      func(childComplexity int, firstName string, lastName string, phone string, email string, active int, storeID int, managerID int) int
+		InsertStocks      func(childComplexity int, productID int, quantity int) int
 		InsertStores      func(childComplexity int, storeName string, phone string, email string, city string, state string, zipCode string) int
 		UpdateBrands      func(childComplexity int, id int, nama string) int
 		UpdateCategories  func(childComplexity int, id int, nama string) int
 		UpdateProducts    func(childComplexity int, id int, name string, brandID int, categoryID int, modelyear int, listPrice int) int
+		UpdateStaffs      func(childComplexity int, staffID int, firstName string, lastName string, phone string, email string, active int, storeID int, managerID int) int
+		UpdateStocks      func(childComplexity int, stockID int, productID int, quantity int) int
 		UpdateStores      func(childComplexity int, storeID int, storeName string, phone string, email string, city string, state string, zipCode string) int
 	}
 
@@ -111,10 +119,14 @@ type ComplexityRoot struct {
 		AllBrands         func(childComplexity int) int
 		AllCategories     func(childComplexity int) int
 		AllProducts       func(childComplexity int) int
+		AllStaffs         func(childComplexity int) int
+		AllStocks         func(childComplexity int) int
 		AllStores         func(childComplexity int) int
 		GetAllJenisBarang func(childComplexity int) int
 		GetBarang         func(childComplexity int) int
 		GetInfoKaryawan   func(childComplexity int, id int) int
+		SingelStaffs      func(childComplexity int, id *int) int
+		SingelStocks      func(childComplexity int, id *int) int
 		SingleBrands      func(childComplexity int, id int) int
 		SingleCategories  func(childComplexity int, id *int) int
 		SingleProducts    func(childComplexity int, id *int) int
@@ -156,6 +168,18 @@ type ComplexityRoot struct {
 		Status func(childComplexity int) int
 	}
 
+	ResultDeleteStaffs struct {
+		Code   func(childComplexity int) int
+		Data   func(childComplexity int) int
+		Status func(childComplexity int) int
+	}
+
+	ResultDeleteStocks struct {
+		Code   func(childComplexity int) int
+		Data   func(childComplexity int) int
+		Status func(childComplexity int) int
+	}
+
 	ResultDeleteStores struct {
 		Code   func(childComplexity int) int
 		Data   func(childComplexity int) int
@@ -168,7 +192,31 @@ type ComplexityRoot struct {
 		Status func(childComplexity int) int
 	}
 
+	ResultFetchStaffs struct {
+		Code   func(childComplexity int) int
+		Data   func(childComplexity int) int
+		Status func(childComplexity int) int
+	}
+
+	ResultFetchStocks struct {
+		Code   func(childComplexity int) int
+		Data   func(childComplexity int) int
+		Status func(childComplexity int) int
+	}
+
 	ResultGetCategories struct {
+		Code   func(childComplexity int) int
+		Data   func(childComplexity int) int
+		Status func(childComplexity int) int
+	}
+
+	ResultGetStaffs struct {
+		Code   func(childComplexity int) int
+		Data   func(childComplexity int) int
+		Status func(childComplexity int) int
+	}
+
+	ResultGetStocks struct {
 		Code   func(childComplexity int) int
 		Data   func(childComplexity int) int
 		Status func(childComplexity int) int
@@ -193,6 +241,18 @@ type ComplexityRoot struct {
 	}
 
 	ResultInsertProducts struct {
+		Code   func(childComplexity int) int
+		Data   func(childComplexity int) int
+		Status func(childComplexity int) int
+	}
+
+	ResultInsertStaffs struct {
+		Code   func(childComplexity int) int
+		Data   func(childComplexity int) int
+		Status func(childComplexity int) int
+	}
+
+	ResultInsertStocks struct {
 		Code   func(childComplexity int) int
 		Data   func(childComplexity int) int
 		Status func(childComplexity int) int
@@ -240,10 +300,41 @@ type ComplexityRoot struct {
 		Status func(childComplexity int) int
 	}
 
+	ResultUpdateStaffs struct {
+		Code   func(childComplexity int) int
+		Data   func(childComplexity int) int
+		Status func(childComplexity int) int
+	}
+
+	ResultUpdateStocks struct {
+		Code   func(childComplexity int) int
+		Data   func(childComplexity int) int
+		Status func(childComplexity int) int
+	}
+
 	ResultUpdateStores struct {
 		Code   func(childComplexity int) int
 		Data   func(childComplexity int) int
 		Status func(childComplexity int) int
+	}
+
+	Staffs struct {
+		Active    func(childComplexity int) int
+		Email     func(childComplexity int) int
+		FirstName func(childComplexity int) int
+		LastName  func(childComplexity int) int
+		ManagerID func(childComplexity int) int
+		Phone     func(childComplexity int) int
+		StaffID   func(childComplexity int) int
+		StoreData func(childComplexity int) int
+		StoreID   func(childComplexity int) int
+	}
+
+	Stocks struct {
+		ProducData func(childComplexity int) int
+		ProductID  func(childComplexity int) int
+		Quantity   func(childComplexity int) int
+		StoreID    func(childComplexity int) int
 	}
 
 	Stores struct {
@@ -281,6 +372,12 @@ type MutationResolver interface {
 	InsertProducts(ctx context.Context, name string, brandID int, categoryID int, modelyear int, listPrice int) (*model1.ResultInsertProducts, error)
 	UpdateProducts(ctx context.Context, id int, name string, brandID int, categoryID int, modelyear int, listPrice int) (*model1.ResultUpdateProducts, error)
 	DeleteProducts(ctx context.Context, id int) (*model1.ResultDeleteProducts, error)
+	InsertStaffs(ctx context.Context, firstName string, lastName string, phone string, email string, active int, storeID int, managerID int) (*model1.ResultInsertStaffs, error)
+	UpdateStaffs(ctx context.Context, staffID int, firstName string, lastName string, phone string, email string, active int, storeID int, managerID int) (*model1.ResultUpdateStaffs, error)
+	DeleteStaffs(ctx context.Context, id int) (*model1.ResultDeleteStaffs, error)
+	InsertStocks(ctx context.Context, productID int, quantity int) (*model1.ResultInsertStocks, error)
+	UpdateStocks(ctx context.Context, stockID int, productID int, quantity int) (*model1.ResultUpdateStocks, error)
+	DeleteStocks(ctx context.Context, id int) (*model1.ResultDeleteStocks, error)
 	InsertStores(ctx context.Context, storeName string, phone string, email string, city string, state string, zipCode string) (*model1.ResultInsertStores, error)
 	UpdateStores(ctx context.Context, storeID int, storeName string, phone string, email string, city string, state string, zipCode string) (*model1.ResultUpdateStores, error)
 	DeleteStores(ctx context.Context, id int) (*model1.ResultDeleteStores, error)
@@ -298,8 +395,20 @@ type QueryResolver interface {
 	AllProducts(ctx context.Context) (*model1.ResultAllProducts, error)
 	SingleProducts(ctx context.Context, id *int) (*model1.ResultSingleProducts, error)
 	GetInfoKaryawan(ctx context.Context, id int) (*model.Karyawan, error)
+	AllStaffs(ctx context.Context) (*model1.ResultFetchStaffs, error)
+	SingelStaffs(ctx context.Context, id *int) (*model1.ResultGetStaffs, error)
+	AllStocks(ctx context.Context) (*model1.ResultFetchStocks, error)
+	SingelStocks(ctx context.Context, id *int) (*model1.ResultGetStocks, error)
 	AllStores(ctx context.Context) (*model1.ResultAllStores, error)
 	SingleStores(ctx context.Context, id *int) (*model1.ResultSingleStores, error)
+}
+type StaffsResolver interface {
+	Active(ctx context.Context, obj *domain.Staffs) (int, error)
+
+	StoreData(ctx context.Context, obj *domain.Staffs) (*model1.Stores, error)
+}
+type StocksResolver interface {
+	ProducData(ctx context.Context, obj *domain.Stocks) (*domain.Products, error)
 }
 
 type executableSchema struct {
@@ -465,6 +574,30 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Mutation.DeleteProducts(childComplexity, args["id"].(int)), true
 
+	case "Mutation.DeleteStaffs":
+		if e.complexity.Mutation.DeleteStaffs == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_DeleteStaffs_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.DeleteStaffs(childComplexity, args["id"].(int)), true
+
+	case "Mutation.DeleteStocks":
+		if e.complexity.Mutation.DeleteStocks == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_DeleteStocks_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.DeleteStocks(childComplexity, args["id"].(int)), true
+
 	case "Mutation.DeleteStores":
 		if e.complexity.Mutation.DeleteStores == nil {
 			break
@@ -537,6 +670,30 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Mutation.InsertProducts(childComplexity, args["name"].(string), args["brandID"].(int), args["categoryID"].(int), args["modelyear"].(int), args["ListPrice"].(int)), true
 
+	case "Mutation.InsertStaffs":
+		if e.complexity.Mutation.InsertStaffs == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_InsertStaffs_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.InsertStaffs(childComplexity, args["FirstName"].(string), args["LastName"].(string), args["Phone"].(string), args["Email"].(string), args["Active"].(int), args["StoreID"].(int), args["ManagerId"].(int)), true
+
+	case "Mutation.InsertStocks":
+		if e.complexity.Mutation.InsertStocks == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_InsertStocks_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.InsertStocks(childComplexity, args["ProductID"].(int), args["Quantity"].(int)), true
+
 	case "Mutation.InsertStores":
 		if e.complexity.Mutation.InsertStores == nil {
 			break
@@ -584,6 +741,30 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Mutation.UpdateProducts(childComplexity, args["id"].(int), args["name"].(string), args["brandID"].(int), args["categoryID"].(int), args["modelyear"].(int), args["ListPrice"].(int)), true
+
+	case "Mutation.UpdateStaffs":
+		if e.complexity.Mutation.UpdateStaffs == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_UpdateStaffs_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.UpdateStaffs(childComplexity, args["StaffID"].(int), args["FirstName"].(string), args["LastName"].(string), args["Phone"].(string), args["Email"].(string), args["Active"].(int), args["StoreID"].(int), args["ManagerId"].(int)), true
+
+	case "Mutation.UpdateStocks":
+		if e.complexity.Mutation.UpdateStocks == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_UpdateStocks_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.UpdateStocks(childComplexity, args["StockID"].(int), args["ProductID"].(int), args["Quantity"].(int)), true
 
 	case "Mutation.UpdateStores":
 		if e.complexity.Mutation.UpdateStores == nil {
@@ -674,6 +855,20 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Query.AllProducts(childComplexity), true
 
+	case "Query.AllStaffs":
+		if e.complexity.Query.AllStaffs == nil {
+			break
+		}
+
+		return e.complexity.Query.AllStaffs(childComplexity), true
+
+	case "Query.AllStocks":
+		if e.complexity.Query.AllStocks == nil {
+			break
+		}
+
+		return e.complexity.Query.AllStocks(childComplexity), true
+
 	case "Query.AllStores":
 		if e.complexity.Query.AllStores == nil {
 			break
@@ -706,6 +901,30 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Query.GetInfoKaryawan(childComplexity, args["id"].(int)), true
+
+	case "Query.SingelStaffs":
+		if e.complexity.Query.SingelStaffs == nil {
+			break
+		}
+
+		args, err := ec.field_Query_SingelStaffs_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.SingelStaffs(childComplexity, args["id"].(*int)), true
+
+	case "Query.SingelStocks":
+		if e.complexity.Query.SingelStocks == nil {
+			break
+		}
+
+		args, err := ec.field_Query_SingelStocks_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.SingelStocks(childComplexity, args["id"].(*int)), true
 
 	case "Query.SingleBrands":
 		if e.complexity.Query.SingleBrands == nil {
@@ -874,6 +1093,48 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.ResultDeleteProducts.Status(childComplexity), true
 
+	case "ResultDeleteStaffs.code":
+		if e.complexity.ResultDeleteStaffs.Code == nil {
+			break
+		}
+
+		return e.complexity.ResultDeleteStaffs.Code(childComplexity), true
+
+	case "ResultDeleteStaffs.data":
+		if e.complexity.ResultDeleteStaffs.Data == nil {
+			break
+		}
+
+		return e.complexity.ResultDeleteStaffs.Data(childComplexity), true
+
+	case "ResultDeleteStaffs.status":
+		if e.complexity.ResultDeleteStaffs.Status == nil {
+			break
+		}
+
+		return e.complexity.ResultDeleteStaffs.Status(childComplexity), true
+
+	case "ResultDeleteStocks.code":
+		if e.complexity.ResultDeleteStocks.Code == nil {
+			break
+		}
+
+		return e.complexity.ResultDeleteStocks.Code(childComplexity), true
+
+	case "ResultDeleteStocks.data":
+		if e.complexity.ResultDeleteStocks.Data == nil {
+			break
+		}
+
+		return e.complexity.ResultDeleteStocks.Data(childComplexity), true
+
+	case "ResultDeleteStocks.status":
+		if e.complexity.ResultDeleteStocks.Status == nil {
+			break
+		}
+
+		return e.complexity.ResultDeleteStocks.Status(childComplexity), true
+
 	case "ResultDeleteStores.code":
 		if e.complexity.ResultDeleteStores.Code == nil {
 			break
@@ -916,6 +1177,48 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.ResultFetchCategories.Status(childComplexity), true
 
+	case "ResultFetchStaffs.code":
+		if e.complexity.ResultFetchStaffs.Code == nil {
+			break
+		}
+
+		return e.complexity.ResultFetchStaffs.Code(childComplexity), true
+
+	case "ResultFetchStaffs.data":
+		if e.complexity.ResultFetchStaffs.Data == nil {
+			break
+		}
+
+		return e.complexity.ResultFetchStaffs.Data(childComplexity), true
+
+	case "ResultFetchStaffs.status":
+		if e.complexity.ResultFetchStaffs.Status == nil {
+			break
+		}
+
+		return e.complexity.ResultFetchStaffs.Status(childComplexity), true
+
+	case "ResultFetchStocks.code":
+		if e.complexity.ResultFetchStocks.Code == nil {
+			break
+		}
+
+		return e.complexity.ResultFetchStocks.Code(childComplexity), true
+
+	case "ResultFetchStocks.data":
+		if e.complexity.ResultFetchStocks.Data == nil {
+			break
+		}
+
+		return e.complexity.ResultFetchStocks.Data(childComplexity), true
+
+	case "ResultFetchStocks.status":
+		if e.complexity.ResultFetchStocks.Status == nil {
+			break
+		}
+
+		return e.complexity.ResultFetchStocks.Status(childComplexity), true
+
 	case "ResultGetCategories.code":
 		if e.complexity.ResultGetCategories.Code == nil {
 			break
@@ -936,6 +1239,48 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.ResultGetCategories.Status(childComplexity), true
+
+	case "ResultGetStaffs.code":
+		if e.complexity.ResultGetStaffs.Code == nil {
+			break
+		}
+
+		return e.complexity.ResultGetStaffs.Code(childComplexity), true
+
+	case "ResultGetStaffs.data":
+		if e.complexity.ResultGetStaffs.Data == nil {
+			break
+		}
+
+		return e.complexity.ResultGetStaffs.Data(childComplexity), true
+
+	case "ResultGetStaffs.status":
+		if e.complexity.ResultGetStaffs.Status == nil {
+			break
+		}
+
+		return e.complexity.ResultGetStaffs.Status(childComplexity), true
+
+	case "ResultGetStocks.code":
+		if e.complexity.ResultGetStocks.Code == nil {
+			break
+		}
+
+		return e.complexity.ResultGetStocks.Code(childComplexity), true
+
+	case "ResultGetStocks.data":
+		if e.complexity.ResultGetStocks.Data == nil {
+			break
+		}
+
+		return e.complexity.ResultGetStocks.Data(childComplexity), true
+
+	case "ResultGetStocks.status":
+		if e.complexity.ResultGetStocks.Status == nil {
+			break
+		}
+
+		return e.complexity.ResultGetStocks.Status(childComplexity), true
 
 	case "ResultInsertBarang.code":
 		if e.complexity.ResultInsertBarang.Code == nil {
@@ -1020,6 +1365,48 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.ResultInsertProducts.Status(childComplexity), true
+
+	case "ResultInsertStaffs.code":
+		if e.complexity.ResultInsertStaffs.Code == nil {
+			break
+		}
+
+		return e.complexity.ResultInsertStaffs.Code(childComplexity), true
+
+	case "ResultInsertStaffs.data":
+		if e.complexity.ResultInsertStaffs.Data == nil {
+			break
+		}
+
+		return e.complexity.ResultInsertStaffs.Data(childComplexity), true
+
+	case "ResultInsertStaffs.status":
+		if e.complexity.ResultInsertStaffs.Status == nil {
+			break
+		}
+
+		return e.complexity.ResultInsertStaffs.Status(childComplexity), true
+
+	case "ResultInsertStocks.code":
+		if e.complexity.ResultInsertStocks.Code == nil {
+			break
+		}
+
+		return e.complexity.ResultInsertStocks.Code(childComplexity), true
+
+	case "ResultInsertStocks.data":
+		if e.complexity.ResultInsertStocks.Data == nil {
+			break
+		}
+
+		return e.complexity.ResultInsertStocks.Data(childComplexity), true
+
+	case "ResultInsertStocks.status":
+		if e.complexity.ResultInsertStocks.Status == nil {
+			break
+		}
+
+		return e.complexity.ResultInsertStocks.Status(childComplexity), true
 
 	case "ResultInsertStores.code":
 		if e.complexity.ResultInsertStores.Code == nil {
@@ -1168,6 +1555,48 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.ResultUpdateProducts.Status(childComplexity), true
 
+	case "ResultUpdateStaffs.code":
+		if e.complexity.ResultUpdateStaffs.Code == nil {
+			break
+		}
+
+		return e.complexity.ResultUpdateStaffs.Code(childComplexity), true
+
+	case "ResultUpdateStaffs.data":
+		if e.complexity.ResultUpdateStaffs.Data == nil {
+			break
+		}
+
+		return e.complexity.ResultUpdateStaffs.Data(childComplexity), true
+
+	case "ResultUpdateStaffs.status":
+		if e.complexity.ResultUpdateStaffs.Status == nil {
+			break
+		}
+
+		return e.complexity.ResultUpdateStaffs.Status(childComplexity), true
+
+	case "ResultUpdateStocks.code":
+		if e.complexity.ResultUpdateStocks.Code == nil {
+			break
+		}
+
+		return e.complexity.ResultUpdateStocks.Code(childComplexity), true
+
+	case "ResultUpdateStocks.data":
+		if e.complexity.ResultUpdateStocks.Data == nil {
+			break
+		}
+
+		return e.complexity.ResultUpdateStocks.Data(childComplexity), true
+
+	case "ResultUpdateStocks.status":
+		if e.complexity.ResultUpdateStocks.Status == nil {
+			break
+		}
+
+		return e.complexity.ResultUpdateStocks.Status(childComplexity), true
+
 	case "ResultUpdateStores.code":
 		if e.complexity.ResultUpdateStores.Code == nil {
 			break
@@ -1188,6 +1617,97 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.ResultUpdateStores.Status(childComplexity), true
+
+	case "Staffs.Active":
+		if e.complexity.Staffs.Active == nil {
+			break
+		}
+
+		return e.complexity.Staffs.Active(childComplexity), true
+
+	case "Staffs.Email":
+		if e.complexity.Staffs.Email == nil {
+			break
+		}
+
+		return e.complexity.Staffs.Email(childComplexity), true
+
+	case "Staffs.FirstName":
+		if e.complexity.Staffs.FirstName == nil {
+			break
+		}
+
+		return e.complexity.Staffs.FirstName(childComplexity), true
+
+	case "Staffs.LastName":
+		if e.complexity.Staffs.LastName == nil {
+			break
+		}
+
+		return e.complexity.Staffs.LastName(childComplexity), true
+
+	case "Staffs.ManagerId":
+		if e.complexity.Staffs.ManagerID == nil {
+			break
+		}
+
+		return e.complexity.Staffs.ManagerID(childComplexity), true
+
+	case "Staffs.Phone":
+		if e.complexity.Staffs.Phone == nil {
+			break
+		}
+
+		return e.complexity.Staffs.Phone(childComplexity), true
+
+	case "Staffs.StaffID":
+		if e.complexity.Staffs.StaffID == nil {
+			break
+		}
+
+		return e.complexity.Staffs.StaffID(childComplexity), true
+
+	case "Staffs.StoreData":
+		if e.complexity.Staffs.StoreData == nil {
+			break
+		}
+
+		return e.complexity.Staffs.StoreData(childComplexity), true
+
+	case "Staffs.StoreID":
+		if e.complexity.Staffs.StoreID == nil {
+			break
+		}
+
+		return e.complexity.Staffs.StoreID(childComplexity), true
+
+	case "Stocks.ProducData":
+		if e.complexity.Stocks.ProducData == nil {
+			break
+		}
+
+		return e.complexity.Stocks.ProducData(childComplexity), true
+
+	case "Stocks.ProductID":
+		if e.complexity.Stocks.ProductID == nil {
+			break
+		}
+
+		return e.complexity.Stocks.ProductID(childComplexity), true
+
+	case "Stocks.Quantity":
+		if e.complexity.Stocks.Quantity == nil {
+			break
+		}
+
+		return e.complexity.Stocks.Quantity(childComplexity), true
+
+	case "Stocks.StoreID":
+		if e.complexity.Stocks.StoreID == nil {
+			break
+		}
+
+		return e.complexity.Stocks.StoreID(childComplexity), true
 
 	case "Stores.City":
 		if e.complexity.Stores.City == nil {
@@ -1574,6 +2094,128 @@ type Karyawan {
   noHp: String!
 }
 `, BuiltIn: false},
+	{Name: "schema/staffs.graphqls", Input: `type Staffs {
+  StaffID: Int!
+  FirstName: String!
+  LastName: String!
+  Phone: String!
+  Email: String!
+  Active: Int!
+  StoreID: Int!
+  ManagerId: Int!
+  StoreData: Stores!
+}
+
+type ResultInsertStaffs implements resultInsert {
+  status: String!
+  code: Int!
+  data: Staffs!
+}
+
+type ResultUpdateStaffs implements resultInsert {
+  status: String!
+  code: Int!
+  data: Staffs!
+}
+
+type ResultDeleteStaffs implements resultInsert {
+  status: String!
+  code: Int!
+  data: Staffs!
+}
+
+type ResultFetchStaffs implements resultInsert {
+  status: String!
+  code: Int!
+  data: [Staffs]!
+}
+
+type ResultGetStaffs implements resultInsert {
+  status: String!
+  code: Int!
+  data: Staffs!
+}
+
+extend type Query {
+  AllStaffs: ResultFetchStaffs!
+  SingelStaffs(id: Int): ResultGetStaffs!
+}
+
+extend type Mutation {
+  InsertStaffs(
+    FirstName: String!
+    LastName: String!
+    Phone: String!
+    Email: String!
+    Active: Int!
+    StoreID: Int!
+    ManagerId: Int!
+  ): ResultInsertStaffs!
+  UpdateStaffs(
+    StaffID: Int!
+    FirstName: String!
+    LastName: String!
+    Phone: String!
+    Email: String!
+    Active: Int!
+    StoreID: Int!
+    ManagerId: Int!
+  ): ResultUpdateStaffs!
+  DeleteStaffs(id: Int!): ResultDeleteStaffs!
+}
+`, BuiltIn: false},
+	{Name: "schema/stocks.graphqls", Input: `type Stocks {
+  StoreID: Int!
+  ProductID: Int!
+  ProducData: Products!
+  Quantity: Int!
+}
+
+type ResultInsertStocks implements resultInsert {
+  status: String!
+  code: Int!
+  data: Stocks!
+}
+
+type ResultUpdateStocks implements resultInsert {
+  status: String!
+  code: Int!
+  data: Stocks!
+}
+
+type ResultDeleteStocks implements resultInsert {
+  status: String!
+  code: Int!
+  data: Stocks!
+}
+
+type ResultFetchStocks implements resultInsert {
+  status: String!
+  code: Int!
+  data: [Stocks]!
+}
+
+type ResultGetStocks implements resultInsert {
+  status: String!
+  code: Int!
+  data: Stocks!
+}
+
+extend type Query {
+  AllStocks: ResultFetchStocks!
+  SingelStocks(id: Int): ResultGetStocks!
+}
+
+extend type Mutation {
+  InsertStocks(ProductID: Int!, Quantity: Int!): ResultInsertStocks!
+  UpdateStocks(
+    StockID: Int!
+    ProductID: Int!
+    Quantity: Int!
+  ): ResultUpdateStocks!
+  DeleteStocks(id: Int!): ResultDeleteStocks!
+}
+`, BuiltIn: false},
 	{Name: "schema/stores.graphqls", Input: `type Stores {
   StoreID: Int!
   StoreName: String!
@@ -1692,6 +2334,36 @@ func (ec *executionContext) field_Mutation_DeleteProducts_args(ctx context.Conte
 	return args, nil
 }
 
+func (ec *executionContext) field_Mutation_DeleteStaffs_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 int
+	if tmp, ok := rawArgs["id"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+		arg0, err = ec.unmarshalNInt2int(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["id"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_DeleteStocks_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 int
+	if tmp, ok := rawArgs["id"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+		arg0, err = ec.unmarshalNInt2int(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["id"] = arg0
+	return args, nil
+}
+
 func (ec *executionContext) field_Mutation_DeleteStores_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
@@ -1785,6 +2457,99 @@ func (ec *executionContext) field_Mutation_InsertProducts_args(ctx context.Conte
 		}
 	}
 	args["ListPrice"] = arg4
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_InsertStaffs_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 string
+	if tmp, ok := rawArgs["FirstName"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("FirstName"))
+		arg0, err = ec.unmarshalNString2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["FirstName"] = arg0
+	var arg1 string
+	if tmp, ok := rawArgs["LastName"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("LastName"))
+		arg1, err = ec.unmarshalNString2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["LastName"] = arg1
+	var arg2 string
+	if tmp, ok := rawArgs["Phone"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("Phone"))
+		arg2, err = ec.unmarshalNString2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["Phone"] = arg2
+	var arg3 string
+	if tmp, ok := rawArgs["Email"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("Email"))
+		arg3, err = ec.unmarshalNString2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["Email"] = arg3
+	var arg4 int
+	if tmp, ok := rawArgs["Active"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("Active"))
+		arg4, err = ec.unmarshalNInt2int(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["Active"] = arg4
+	var arg5 int
+	if tmp, ok := rawArgs["StoreID"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("StoreID"))
+		arg5, err = ec.unmarshalNInt2int(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["StoreID"] = arg5
+	var arg6 int
+	if tmp, ok := rawArgs["ManagerId"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("ManagerId"))
+		arg6, err = ec.unmarshalNInt2int(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["ManagerId"] = arg6
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_InsertStocks_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 int
+	if tmp, ok := rawArgs["ProductID"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("ProductID"))
+		arg0, err = ec.unmarshalNInt2int(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["ProductID"] = arg0
+	var arg1 int
+	if tmp, ok := rawArgs["Quantity"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("Quantity"))
+		arg1, err = ec.unmarshalNInt2int(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["Quantity"] = arg1
 	return args, nil
 }
 
@@ -1956,6 +2721,117 @@ func (ec *executionContext) field_Mutation_UpdateProducts_args(ctx context.Conte
 	return args, nil
 }
 
+func (ec *executionContext) field_Mutation_UpdateStaffs_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 int
+	if tmp, ok := rawArgs["StaffID"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("StaffID"))
+		arg0, err = ec.unmarshalNInt2int(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["StaffID"] = arg0
+	var arg1 string
+	if tmp, ok := rawArgs["FirstName"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("FirstName"))
+		arg1, err = ec.unmarshalNString2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["FirstName"] = arg1
+	var arg2 string
+	if tmp, ok := rawArgs["LastName"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("LastName"))
+		arg2, err = ec.unmarshalNString2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["LastName"] = arg2
+	var arg3 string
+	if tmp, ok := rawArgs["Phone"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("Phone"))
+		arg3, err = ec.unmarshalNString2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["Phone"] = arg3
+	var arg4 string
+	if tmp, ok := rawArgs["Email"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("Email"))
+		arg4, err = ec.unmarshalNString2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["Email"] = arg4
+	var arg5 int
+	if tmp, ok := rawArgs["Active"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("Active"))
+		arg5, err = ec.unmarshalNInt2int(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["Active"] = arg5
+	var arg6 int
+	if tmp, ok := rawArgs["StoreID"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("StoreID"))
+		arg6, err = ec.unmarshalNInt2int(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["StoreID"] = arg6
+	var arg7 int
+	if tmp, ok := rawArgs["ManagerId"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("ManagerId"))
+		arg7, err = ec.unmarshalNInt2int(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["ManagerId"] = arg7
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_UpdateStocks_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 int
+	if tmp, ok := rawArgs["StockID"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("StockID"))
+		arg0, err = ec.unmarshalNInt2int(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["StockID"] = arg0
+	var arg1 int
+	if tmp, ok := rawArgs["ProductID"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("ProductID"))
+		arg1, err = ec.unmarshalNInt2int(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["ProductID"] = arg1
+	var arg2 int
+	if tmp, ok := rawArgs["Quantity"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("Quantity"))
+		arg2, err = ec.unmarshalNInt2int(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["Quantity"] = arg2
+	return args, nil
+}
+
 func (ec *executionContext) field_Mutation_UpdateStores_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
@@ -2079,6 +2955,36 @@ func (ec *executionContext) field_Mutation_insertJenisBarang_args(ctx context.Co
 		}
 	}
 	args["jenis_barang"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Query_SingelStaffs_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 *int
+	if tmp, ok := rawArgs["id"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+		arg0, err = ec.unmarshalOInt2ᚖint(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["id"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Query_SingelStocks_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 *int
+	if tmp, ok := rawArgs["id"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+		arg0, err = ec.unmarshalOInt2ᚖint(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["id"] = arg0
 	return args, nil
 }
 
@@ -3232,6 +4138,258 @@ func (ec *executionContext) _Mutation_DeleteProducts(ctx context.Context, field 
 	return ec.marshalNResultDeleteProducts2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultDeleteProducts(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _Mutation_InsertStaffs(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_InsertStaffs_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().InsertStaffs(rctx, args["FirstName"].(string), args["LastName"].(string), args["Phone"].(string), args["Email"].(string), args["Active"].(int), args["StoreID"].(int), args["ManagerId"].(int))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*model1.ResultInsertStaffs)
+	fc.Result = res
+	return ec.marshalNResultInsertStaffs2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultInsertStaffs(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Mutation_UpdateStaffs(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_UpdateStaffs_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().UpdateStaffs(rctx, args["StaffID"].(int), args["FirstName"].(string), args["LastName"].(string), args["Phone"].(string), args["Email"].(string), args["Active"].(int), args["StoreID"].(int), args["ManagerId"].(int))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*model1.ResultUpdateStaffs)
+	fc.Result = res
+	return ec.marshalNResultUpdateStaffs2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultUpdateStaffs(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Mutation_DeleteStaffs(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_DeleteStaffs_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().DeleteStaffs(rctx, args["id"].(int))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*model1.ResultDeleteStaffs)
+	fc.Result = res
+	return ec.marshalNResultDeleteStaffs2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultDeleteStaffs(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Mutation_InsertStocks(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_InsertStocks_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().InsertStocks(rctx, args["ProductID"].(int), args["Quantity"].(int))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*model1.ResultInsertStocks)
+	fc.Result = res
+	return ec.marshalNResultInsertStocks2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultInsertStocks(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Mutation_UpdateStocks(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_UpdateStocks_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().UpdateStocks(rctx, args["StockID"].(int), args["ProductID"].(int), args["Quantity"].(int))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*model1.ResultUpdateStocks)
+	fc.Result = res
+	return ec.marshalNResultUpdateStocks2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultUpdateStocks(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Mutation_DeleteStocks(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_DeleteStocks_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().DeleteStocks(rctx, args["id"].(int))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*model1.ResultDeleteStocks)
+	fc.Result = res
+	return ec.marshalNResultDeleteStocks2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultDeleteStocks(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _Mutation_InsertStores(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -3973,6 +5131,160 @@ func (ec *executionContext) _Query_getInfoKaryawan(ctx context.Context, field gr
 	res := resTmp.(*model.Karyawan)
 	fc.Result = res
 	return ec.marshalOKaryawan2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋgraphᚋmodelᚐKaryawan(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Query_AllStaffs(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().AllStaffs(rctx)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*model1.ResultFetchStaffs)
+	fc.Result = res
+	return ec.marshalNResultFetchStaffs2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultFetchStaffs(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Query_SingelStaffs(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Query_SingelStaffs_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().SingelStaffs(rctx, args["id"].(*int))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*model1.ResultGetStaffs)
+	fc.Result = res
+	return ec.marshalNResultGetStaffs2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultGetStaffs(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Query_AllStocks(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().AllStocks(rctx)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*model1.ResultFetchStocks)
+	fc.Result = res
+	return ec.marshalNResultFetchStocks2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultFetchStocks(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Query_SingelStocks(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Query_SingelStocks_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().SingelStocks(rctx, args["id"].(*int))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*model1.ResultGetStocks)
+	fc.Result = res
+	return ec.marshalNResultGetStocks2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultGetStocks(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query_AllStores(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -4718,6 +6030,216 @@ func (ec *executionContext) _ResultDeleteProducts_data(ctx context.Context, fiel
 	return ec.marshalNProducts2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋdomainᚐProducts(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _ResultDeleteStaffs_status(ctx context.Context, field graphql.CollectedField, obj *model1.ResultDeleteStaffs) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "ResultDeleteStaffs",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Status, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _ResultDeleteStaffs_code(ctx context.Context, field graphql.CollectedField, obj *model1.ResultDeleteStaffs) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "ResultDeleteStaffs",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Code, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNInt2int(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _ResultDeleteStaffs_data(ctx context.Context, field graphql.CollectedField, obj *model1.ResultDeleteStaffs) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "ResultDeleteStaffs",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Data, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*domain.Staffs)
+	fc.Result = res
+	return ec.marshalNStaffs2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋdomainᚐStaffs(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _ResultDeleteStocks_status(ctx context.Context, field graphql.CollectedField, obj *model1.ResultDeleteStocks) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "ResultDeleteStocks",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Status, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _ResultDeleteStocks_code(ctx context.Context, field graphql.CollectedField, obj *model1.ResultDeleteStocks) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "ResultDeleteStocks",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Code, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNInt2int(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _ResultDeleteStocks_data(ctx context.Context, field graphql.CollectedField, obj *model1.ResultDeleteStocks) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "ResultDeleteStocks",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Data, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*domain.Stocks)
+	fc.Result = res
+	return ec.marshalNStocks2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋdomainᚐStocks(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _ResultDeleteStores_status(ctx context.Context, field graphql.CollectedField, obj *model1.ResultDeleteStores) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -4928,6 +6450,216 @@ func (ec *executionContext) _ResultFetchCategories_data(ctx context.Context, fie
 	return ec.marshalNCategories2ᚕᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋdomainᚐCategories(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _ResultFetchStaffs_status(ctx context.Context, field graphql.CollectedField, obj *model1.ResultFetchStaffs) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "ResultFetchStaffs",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Status, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _ResultFetchStaffs_code(ctx context.Context, field graphql.CollectedField, obj *model1.ResultFetchStaffs) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "ResultFetchStaffs",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Code, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNInt2int(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _ResultFetchStaffs_data(ctx context.Context, field graphql.CollectedField, obj *model1.ResultFetchStaffs) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "ResultFetchStaffs",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Data, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.([]*domain.Staffs)
+	fc.Result = res
+	return ec.marshalNStaffs2ᚕᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋdomainᚐStaffs(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _ResultFetchStocks_status(ctx context.Context, field graphql.CollectedField, obj *model1.ResultFetchStocks) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "ResultFetchStocks",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Status, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _ResultFetchStocks_code(ctx context.Context, field graphql.CollectedField, obj *model1.ResultFetchStocks) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "ResultFetchStocks",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Code, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNInt2int(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _ResultFetchStocks_data(ctx context.Context, field graphql.CollectedField, obj *model1.ResultFetchStocks) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "ResultFetchStocks",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Data, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.([]*domain.Stocks)
+	fc.Result = res
+	return ec.marshalNStocks2ᚕᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋdomainᚐStocks(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _ResultGetCategories_status(ctx context.Context, field graphql.CollectedField, obj *model1.ResultGetCategories) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -5031,6 +6763,216 @@ func (ec *executionContext) _ResultGetCategories_data(ctx context.Context, field
 	res := resTmp.(*domain.Categories)
 	fc.Result = res
 	return ec.marshalNCategories2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋdomainᚐCategories(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _ResultGetStaffs_status(ctx context.Context, field graphql.CollectedField, obj *model1.ResultGetStaffs) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "ResultGetStaffs",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Status, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _ResultGetStaffs_code(ctx context.Context, field graphql.CollectedField, obj *model1.ResultGetStaffs) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "ResultGetStaffs",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Code, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNInt2int(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _ResultGetStaffs_data(ctx context.Context, field graphql.CollectedField, obj *model1.ResultGetStaffs) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "ResultGetStaffs",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Data, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*domain.Staffs)
+	fc.Result = res
+	return ec.marshalNStaffs2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋdomainᚐStaffs(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _ResultGetStocks_status(ctx context.Context, field graphql.CollectedField, obj *model1.ResultGetStocks) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "ResultGetStocks",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Status, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _ResultGetStocks_code(ctx context.Context, field graphql.CollectedField, obj *model1.ResultGetStocks) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "ResultGetStocks",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Code, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNInt2int(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _ResultGetStocks_data(ctx context.Context, field graphql.CollectedField, obj *model1.ResultGetStocks) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "ResultGetStocks",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Data, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*domain.Stocks)
+	fc.Result = res
+	return ec.marshalNStocks2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋdomainᚐStocks(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _ResultInsertBarang_status(ctx context.Context, field graphql.CollectedField, obj *model.ResultInsertBarang) (ret graphql.Marshaler) {
@@ -5451,6 +7393,216 @@ func (ec *executionContext) _ResultInsertProducts_data(ctx context.Context, fiel
 	res := resTmp.(*domain.Products)
 	fc.Result = res
 	return ec.marshalNProducts2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋdomainᚐProducts(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _ResultInsertStaffs_status(ctx context.Context, field graphql.CollectedField, obj *model1.ResultInsertStaffs) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "ResultInsertStaffs",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Status, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _ResultInsertStaffs_code(ctx context.Context, field graphql.CollectedField, obj *model1.ResultInsertStaffs) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "ResultInsertStaffs",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Code, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNInt2int(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _ResultInsertStaffs_data(ctx context.Context, field graphql.CollectedField, obj *model1.ResultInsertStaffs) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "ResultInsertStaffs",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Data, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*domain.Staffs)
+	fc.Result = res
+	return ec.marshalNStaffs2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋdomainᚐStaffs(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _ResultInsertStocks_status(ctx context.Context, field graphql.CollectedField, obj *model1.ResultInsertStocks) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "ResultInsertStocks",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Status, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _ResultInsertStocks_code(ctx context.Context, field graphql.CollectedField, obj *model1.ResultInsertStocks) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "ResultInsertStocks",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Code, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNInt2int(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _ResultInsertStocks_data(ctx context.Context, field graphql.CollectedField, obj *model1.ResultInsertStocks) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "ResultInsertStocks",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Data, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*domain.Stocks)
+	fc.Result = res
+	return ec.marshalNStocks2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋdomainᚐStocks(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _ResultInsertStores_status(ctx context.Context, field graphql.CollectedField, obj *model1.ResultInsertStores) (ret graphql.Marshaler) {
@@ -6188,6 +8340,216 @@ func (ec *executionContext) _ResultUpdateProducts_data(ctx context.Context, fiel
 	return ec.marshalNProducts2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋdomainᚐProducts(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _ResultUpdateStaffs_status(ctx context.Context, field graphql.CollectedField, obj *model1.ResultUpdateStaffs) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "ResultUpdateStaffs",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Status, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _ResultUpdateStaffs_code(ctx context.Context, field graphql.CollectedField, obj *model1.ResultUpdateStaffs) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "ResultUpdateStaffs",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Code, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNInt2int(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _ResultUpdateStaffs_data(ctx context.Context, field graphql.CollectedField, obj *model1.ResultUpdateStaffs) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "ResultUpdateStaffs",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Data, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*domain.Staffs)
+	fc.Result = res
+	return ec.marshalNStaffs2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋdomainᚐStaffs(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _ResultUpdateStocks_status(ctx context.Context, field graphql.CollectedField, obj *model1.ResultUpdateStocks) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "ResultUpdateStocks",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Status, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _ResultUpdateStocks_code(ctx context.Context, field graphql.CollectedField, obj *model1.ResultUpdateStocks) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "ResultUpdateStocks",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Code, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNInt2int(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _ResultUpdateStocks_data(ctx context.Context, field graphql.CollectedField, obj *model1.ResultUpdateStocks) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "ResultUpdateStocks",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Data, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*domain.Stocks)
+	fc.Result = res
+	return ec.marshalNStocks2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋdomainᚐStocks(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _ResultUpdateStores_status(ctx context.Context, field graphql.CollectedField, obj *model1.ResultUpdateStores) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -6291,6 +8653,461 @@ func (ec *executionContext) _ResultUpdateStores_data(ctx context.Context, field 
 	res := resTmp.(*model1.Stores)
 	fc.Result = res
 	return ec.marshalNStores2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐStores(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Staffs_StaffID(ctx context.Context, field graphql.CollectedField, obj *domain.Staffs) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Staffs",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.StaffID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNInt2int(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Staffs_FirstName(ctx context.Context, field graphql.CollectedField, obj *domain.Staffs) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Staffs",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.FirstName, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Staffs_LastName(ctx context.Context, field graphql.CollectedField, obj *domain.Staffs) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Staffs",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.LastName, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Staffs_Phone(ctx context.Context, field graphql.CollectedField, obj *domain.Staffs) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Staffs",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Phone, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Staffs_Email(ctx context.Context, field graphql.CollectedField, obj *domain.Staffs) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Staffs",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Email, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Staffs_Active(ctx context.Context, field graphql.CollectedField, obj *domain.Staffs) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Staffs",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Staffs().Active(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNInt2int(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Staffs_StoreID(ctx context.Context, field graphql.CollectedField, obj *domain.Staffs) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Staffs",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.StoreID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNInt2int(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Staffs_ManagerId(ctx context.Context, field graphql.CollectedField, obj *domain.Staffs) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Staffs",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ManagerID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNInt2int(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Staffs_StoreData(ctx context.Context, field graphql.CollectedField, obj *domain.Staffs) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Staffs",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Staffs().StoreData(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*model1.Stores)
+	fc.Result = res
+	return ec.marshalNStores2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐStores(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Stocks_StoreID(ctx context.Context, field graphql.CollectedField, obj *domain.Stocks) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Stocks",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.StoreID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNInt2int(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Stocks_ProductID(ctx context.Context, field graphql.CollectedField, obj *domain.Stocks) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Stocks",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ProductID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNInt2int(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Stocks_ProducData(ctx context.Context, field graphql.CollectedField, obj *domain.Stocks) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Stocks",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Stocks().ProducData(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*domain.Products)
+	fc.Result = res
+	return ec.marshalNProducts2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋdomainᚐProducts(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Stocks_Quantity(ctx context.Context, field graphql.CollectedField, obj *domain.Stocks) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Stocks",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Quantity, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNInt2int(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Stores_StoreID(ctx context.Context, field graphql.CollectedField, obj *model1.Stores) (ret graphql.Marshaler) {
@@ -7969,6 +10786,76 @@ func (ec *executionContext) _resultInsert(ctx context.Context, sel ast.Selection
 			return graphql.Null
 		}
 		return ec._ResultAllProducts(ctx, sel, obj)
+	case model1.ResultInsertStaffs:
+		return ec._ResultInsertStaffs(ctx, sel, &obj)
+	case *model1.ResultInsertStaffs:
+		if obj == nil {
+			return graphql.Null
+		}
+		return ec._ResultInsertStaffs(ctx, sel, obj)
+	case model1.ResultUpdateStaffs:
+		return ec._ResultUpdateStaffs(ctx, sel, &obj)
+	case *model1.ResultUpdateStaffs:
+		if obj == nil {
+			return graphql.Null
+		}
+		return ec._ResultUpdateStaffs(ctx, sel, obj)
+	case model1.ResultDeleteStaffs:
+		return ec._ResultDeleteStaffs(ctx, sel, &obj)
+	case *model1.ResultDeleteStaffs:
+		if obj == nil {
+			return graphql.Null
+		}
+		return ec._ResultDeleteStaffs(ctx, sel, obj)
+	case model1.ResultFetchStaffs:
+		return ec._ResultFetchStaffs(ctx, sel, &obj)
+	case *model1.ResultFetchStaffs:
+		if obj == nil {
+			return graphql.Null
+		}
+		return ec._ResultFetchStaffs(ctx, sel, obj)
+	case model1.ResultGetStaffs:
+		return ec._ResultGetStaffs(ctx, sel, &obj)
+	case *model1.ResultGetStaffs:
+		if obj == nil {
+			return graphql.Null
+		}
+		return ec._ResultGetStaffs(ctx, sel, obj)
+	case model1.ResultInsertStocks:
+		return ec._ResultInsertStocks(ctx, sel, &obj)
+	case *model1.ResultInsertStocks:
+		if obj == nil {
+			return graphql.Null
+		}
+		return ec._ResultInsertStocks(ctx, sel, obj)
+	case model1.ResultUpdateStocks:
+		return ec._ResultUpdateStocks(ctx, sel, &obj)
+	case *model1.ResultUpdateStocks:
+		if obj == nil {
+			return graphql.Null
+		}
+		return ec._ResultUpdateStocks(ctx, sel, obj)
+	case model1.ResultDeleteStocks:
+		return ec._ResultDeleteStocks(ctx, sel, &obj)
+	case *model1.ResultDeleteStocks:
+		if obj == nil {
+			return graphql.Null
+		}
+		return ec._ResultDeleteStocks(ctx, sel, obj)
+	case model1.ResultFetchStocks:
+		return ec._ResultFetchStocks(ctx, sel, &obj)
+	case *model1.ResultFetchStocks:
+		if obj == nil {
+			return graphql.Null
+		}
+		return ec._ResultFetchStocks(ctx, sel, obj)
+	case model1.ResultGetStocks:
+		return ec._ResultGetStocks(ctx, sel, &obj)
+	case *model1.ResultGetStocks:
+		if obj == nil {
+			return graphql.Null
+		}
+		return ec._ResultGetStocks(ctx, sel, obj)
 	case model1.ResultInsertStores:
 		return ec._ResultInsertStores(ctx, sel, &obj)
 	case *model1.ResultInsertStores:
@@ -8273,6 +11160,36 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
+		case "InsertStaffs":
+			out.Values[i] = ec._Mutation_InsertStaffs(ctx, field)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "UpdateStaffs":
+			out.Values[i] = ec._Mutation_UpdateStaffs(ctx, field)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "DeleteStaffs":
+			out.Values[i] = ec._Mutation_DeleteStaffs(ctx, field)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "InsertStocks":
+			out.Values[i] = ec._Mutation_InsertStocks(ctx, field)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "UpdateStocks":
+			out.Values[i] = ec._Mutation_UpdateStocks(ctx, field)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "DeleteStocks":
+			out.Values[i] = ec._Mutation_DeleteStocks(ctx, field)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
 		case "InsertStores":
 			out.Values[i] = ec._Mutation_InsertStores(ctx, field)
 			if out.Values[i] == graphql.Null {
@@ -8503,6 +11420,62 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 					}
 				}()
 				res = ec._Query_getInfoKaryawan(ctx, field)
+				return res
+			})
+		case "AllStaffs":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_AllStaffs(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			})
+		case "SingelStaffs":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_SingelStaffs(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			})
+		case "AllStocks":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_AllStocks(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			})
+		case "SingelStocks":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_SingelStocks(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
 				return res
 			})
 		case "AllStores":
@@ -8765,6 +11738,80 @@ func (ec *executionContext) _ResultDeleteProducts(ctx context.Context, sel ast.S
 	return out
 }
 
+var resultDeleteStaffsImplementors = []string{"ResultDeleteStaffs", "resultInsert"}
+
+func (ec *executionContext) _ResultDeleteStaffs(ctx context.Context, sel ast.SelectionSet, obj *model1.ResultDeleteStaffs) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, resultDeleteStaffsImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("ResultDeleteStaffs")
+		case "status":
+			out.Values[i] = ec._ResultDeleteStaffs_status(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "code":
+			out.Values[i] = ec._ResultDeleteStaffs_code(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "data":
+			out.Values[i] = ec._ResultDeleteStaffs_data(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var resultDeleteStocksImplementors = []string{"ResultDeleteStocks", "resultInsert"}
+
+func (ec *executionContext) _ResultDeleteStocks(ctx context.Context, sel ast.SelectionSet, obj *model1.ResultDeleteStocks) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, resultDeleteStocksImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("ResultDeleteStocks")
+		case "status":
+			out.Values[i] = ec._ResultDeleteStocks_status(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "code":
+			out.Values[i] = ec._ResultDeleteStocks_code(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "data":
+			out.Values[i] = ec._ResultDeleteStocks_data(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
 var resultDeleteStoresImplementors = []string{"ResultDeleteStores", "resultInsert"}
 
 func (ec *executionContext) _ResultDeleteStores(ctx context.Context, sel ast.SelectionSet, obj *model1.ResultDeleteStores) graphql.Marshaler {
@@ -8839,6 +11886,80 @@ func (ec *executionContext) _ResultFetchCategories(ctx context.Context, sel ast.
 	return out
 }
 
+var resultFetchStaffsImplementors = []string{"ResultFetchStaffs", "resultInsert"}
+
+func (ec *executionContext) _ResultFetchStaffs(ctx context.Context, sel ast.SelectionSet, obj *model1.ResultFetchStaffs) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, resultFetchStaffsImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("ResultFetchStaffs")
+		case "status":
+			out.Values[i] = ec._ResultFetchStaffs_status(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "code":
+			out.Values[i] = ec._ResultFetchStaffs_code(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "data":
+			out.Values[i] = ec._ResultFetchStaffs_data(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var resultFetchStocksImplementors = []string{"ResultFetchStocks", "resultInsert"}
+
+func (ec *executionContext) _ResultFetchStocks(ctx context.Context, sel ast.SelectionSet, obj *model1.ResultFetchStocks) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, resultFetchStocksImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("ResultFetchStocks")
+		case "status":
+			out.Values[i] = ec._ResultFetchStocks_status(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "code":
+			out.Values[i] = ec._ResultFetchStocks_code(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "data":
+			out.Values[i] = ec._ResultFetchStocks_data(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
 var resultGetCategoriesImplementors = []string{"ResultGetCategories", "resultInsert"}
 
 func (ec *executionContext) _ResultGetCategories(ctx context.Context, sel ast.SelectionSet, obj *model1.ResultGetCategories) graphql.Marshaler {
@@ -8862,6 +11983,80 @@ func (ec *executionContext) _ResultGetCategories(ctx context.Context, sel ast.Se
 			}
 		case "data":
 			out.Values[i] = ec._ResultGetCategories_data(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var resultGetStaffsImplementors = []string{"ResultGetStaffs", "resultInsert"}
+
+func (ec *executionContext) _ResultGetStaffs(ctx context.Context, sel ast.SelectionSet, obj *model1.ResultGetStaffs) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, resultGetStaffsImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("ResultGetStaffs")
+		case "status":
+			out.Values[i] = ec._ResultGetStaffs_status(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "code":
+			out.Values[i] = ec._ResultGetStaffs_code(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "data":
+			out.Values[i] = ec._ResultGetStaffs_data(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var resultGetStocksImplementors = []string{"ResultGetStocks", "resultInsert"}
+
+func (ec *executionContext) _ResultGetStocks(ctx context.Context, sel ast.SelectionSet, obj *model1.ResultGetStocks) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, resultGetStocksImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("ResultGetStocks")
+		case "status":
+			out.Values[i] = ec._ResultGetStocks_status(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "code":
+			out.Values[i] = ec._ResultGetStocks_code(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "data":
+			out.Values[i] = ec._ResultGetStocks_data(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
@@ -9010,6 +12205,80 @@ func (ec *executionContext) _ResultInsertProducts(ctx context.Context, sel ast.S
 			}
 		case "data":
 			out.Values[i] = ec._ResultInsertProducts_data(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var resultInsertStaffsImplementors = []string{"ResultInsertStaffs", "resultInsert"}
+
+func (ec *executionContext) _ResultInsertStaffs(ctx context.Context, sel ast.SelectionSet, obj *model1.ResultInsertStaffs) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, resultInsertStaffsImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("ResultInsertStaffs")
+		case "status":
+			out.Values[i] = ec._ResultInsertStaffs_status(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "code":
+			out.Values[i] = ec._ResultInsertStaffs_code(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "data":
+			out.Values[i] = ec._ResultInsertStaffs_data(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var resultInsertStocksImplementors = []string{"ResultInsertStocks", "resultInsert"}
+
+func (ec *executionContext) _ResultInsertStocks(ctx context.Context, sel ast.SelectionSet, obj *model1.ResultInsertStocks) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, resultInsertStocksImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("ResultInsertStocks")
+		case "status":
+			out.Values[i] = ec._ResultInsertStocks_status(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "code":
+			out.Values[i] = ec._ResultInsertStocks_code(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "data":
+			out.Values[i] = ec._ResultInsertStocks_data(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
@@ -9283,6 +12552,80 @@ func (ec *executionContext) _ResultUpdateProducts(ctx context.Context, sel ast.S
 	return out
 }
 
+var resultUpdateStaffsImplementors = []string{"ResultUpdateStaffs", "resultInsert"}
+
+func (ec *executionContext) _ResultUpdateStaffs(ctx context.Context, sel ast.SelectionSet, obj *model1.ResultUpdateStaffs) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, resultUpdateStaffsImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("ResultUpdateStaffs")
+		case "status":
+			out.Values[i] = ec._ResultUpdateStaffs_status(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "code":
+			out.Values[i] = ec._ResultUpdateStaffs_code(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "data":
+			out.Values[i] = ec._ResultUpdateStaffs_data(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var resultUpdateStocksImplementors = []string{"ResultUpdateStocks", "resultInsert"}
+
+func (ec *executionContext) _ResultUpdateStocks(ctx context.Context, sel ast.SelectionSet, obj *model1.ResultUpdateStocks) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, resultUpdateStocksImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("ResultUpdateStocks")
+		case "status":
+			out.Values[i] = ec._ResultUpdateStocks_status(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "code":
+			out.Values[i] = ec._ResultUpdateStocks_code(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "data":
+			out.Values[i] = ec._ResultUpdateStocks_data(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
 var resultUpdateStoresImplementors = []string{"ResultUpdateStores", "resultInsert"}
 
 func (ec *executionContext) _ResultUpdateStores(ctx context.Context, sel ast.SelectionSet, obj *model1.ResultUpdateStores) graphql.Marshaler {
@@ -9308,6 +12651,142 @@ func (ec *executionContext) _ResultUpdateStores(ctx context.Context, sel ast.Sel
 			out.Values[i] = ec._ResultUpdateStores_data(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var staffsImplementors = []string{"Staffs"}
+
+func (ec *executionContext) _Staffs(ctx context.Context, sel ast.SelectionSet, obj *domain.Staffs) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, staffsImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("Staffs")
+		case "StaffID":
+			out.Values[i] = ec._Staffs_StaffID(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
+		case "FirstName":
+			out.Values[i] = ec._Staffs_FirstName(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
+		case "LastName":
+			out.Values[i] = ec._Staffs_LastName(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
+		case "Phone":
+			out.Values[i] = ec._Staffs_Phone(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
+		case "Email":
+			out.Values[i] = ec._Staffs_Email(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
+		case "Active":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Staffs_Active(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			})
+		case "StoreID":
+			out.Values[i] = ec._Staffs_StoreID(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
+		case "ManagerId":
+			out.Values[i] = ec._Staffs_ManagerId(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
+		case "StoreData":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Staffs_StoreData(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			})
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var stocksImplementors = []string{"Stocks"}
+
+func (ec *executionContext) _Stocks(ctx context.Context, sel ast.SelectionSet, obj *domain.Stocks) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, stocksImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("Stocks")
+		case "StoreID":
+			out.Values[i] = ec._Stocks_StoreID(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
+		case "ProductID":
+			out.Values[i] = ec._Stocks_ProductID(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
+		case "ProducData":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Stocks_ProducData(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			})
+		case "Quantity":
+			out.Values[i] = ec._Stocks_Quantity(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
 			}
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
@@ -9885,6 +13364,10 @@ func (ec *executionContext) marshalNJenisBarang2ᚖgithubᚗcomᚋjuragankoding�
 	return ec._JenisBarang(ctx, sel, v)
 }
 
+func (ec *executionContext) marshalNProducts2githubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋdomainᚐProducts(ctx context.Context, sel ast.SelectionSet, v domain.Products) graphql.Marshaler {
+	return ec._Products(ctx, sel, &v)
+}
+
 func (ec *executionContext) marshalNProducts2ᚕᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋdomainᚐProducts(ctx context.Context, sel ast.SelectionSet, v []*domain.Products) graphql.Marshaler {
 	ret := make(graphql.Array, len(v))
 	var wg sync.WaitGroup
@@ -10016,6 +13499,34 @@ func (ec *executionContext) marshalNResultDeleteProducts2ᚖgithubᚗcomᚋjurag
 	return ec._ResultDeleteProducts(ctx, sel, v)
 }
 
+func (ec *executionContext) marshalNResultDeleteStaffs2githubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultDeleteStaffs(ctx context.Context, sel ast.SelectionSet, v model1.ResultDeleteStaffs) graphql.Marshaler {
+	return ec._ResultDeleteStaffs(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNResultDeleteStaffs2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultDeleteStaffs(ctx context.Context, sel ast.SelectionSet, v *model1.ResultDeleteStaffs) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	return ec._ResultDeleteStaffs(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalNResultDeleteStocks2githubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultDeleteStocks(ctx context.Context, sel ast.SelectionSet, v model1.ResultDeleteStocks) graphql.Marshaler {
+	return ec._ResultDeleteStocks(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNResultDeleteStocks2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultDeleteStocks(ctx context.Context, sel ast.SelectionSet, v *model1.ResultDeleteStocks) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	return ec._ResultDeleteStocks(ctx, sel, v)
+}
+
 func (ec *executionContext) marshalNResultDeleteStores2githubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultDeleteStores(ctx context.Context, sel ast.SelectionSet, v model1.ResultDeleteStores) graphql.Marshaler {
 	return ec._ResultDeleteStores(ctx, sel, &v)
 }
@@ -10044,6 +13555,34 @@ func (ec *executionContext) marshalNResultFetchCategories2ᚖgithubᚗcomᚋjura
 	return ec._ResultFetchCategories(ctx, sel, v)
 }
 
+func (ec *executionContext) marshalNResultFetchStaffs2githubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultFetchStaffs(ctx context.Context, sel ast.SelectionSet, v model1.ResultFetchStaffs) graphql.Marshaler {
+	return ec._ResultFetchStaffs(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNResultFetchStaffs2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultFetchStaffs(ctx context.Context, sel ast.SelectionSet, v *model1.ResultFetchStaffs) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	return ec._ResultFetchStaffs(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalNResultFetchStocks2githubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultFetchStocks(ctx context.Context, sel ast.SelectionSet, v model1.ResultFetchStocks) graphql.Marshaler {
+	return ec._ResultFetchStocks(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNResultFetchStocks2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultFetchStocks(ctx context.Context, sel ast.SelectionSet, v *model1.ResultFetchStocks) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	return ec._ResultFetchStocks(ctx, sel, v)
+}
+
 func (ec *executionContext) marshalNResultGetCategories2githubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultGetCategories(ctx context.Context, sel ast.SelectionSet, v model1.ResultGetCategories) graphql.Marshaler {
 	return ec._ResultGetCategories(ctx, sel, &v)
 }
@@ -10056,6 +13595,34 @@ func (ec *executionContext) marshalNResultGetCategories2ᚖgithubᚗcomᚋjuraga
 		return graphql.Null
 	}
 	return ec._ResultGetCategories(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalNResultGetStaffs2githubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultGetStaffs(ctx context.Context, sel ast.SelectionSet, v model1.ResultGetStaffs) graphql.Marshaler {
+	return ec._ResultGetStaffs(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNResultGetStaffs2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultGetStaffs(ctx context.Context, sel ast.SelectionSet, v *model1.ResultGetStaffs) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	return ec._ResultGetStaffs(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalNResultGetStocks2githubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultGetStocks(ctx context.Context, sel ast.SelectionSet, v model1.ResultGetStocks) graphql.Marshaler {
+	return ec._ResultGetStocks(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNResultGetStocks2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultGetStocks(ctx context.Context, sel ast.SelectionSet, v *model1.ResultGetStocks) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	return ec._ResultGetStocks(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalNResultInsertBarang2githubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋgraphᚋmodelᚐResultInsertBarang(ctx context.Context, sel ast.SelectionSet, v model.ResultInsertBarang) graphql.Marshaler {
@@ -10112,6 +13679,34 @@ func (ec *executionContext) marshalNResultInsertProducts2ᚖgithubᚗcomᚋjurag
 		return graphql.Null
 	}
 	return ec._ResultInsertProducts(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalNResultInsertStaffs2githubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultInsertStaffs(ctx context.Context, sel ast.SelectionSet, v model1.ResultInsertStaffs) graphql.Marshaler {
+	return ec._ResultInsertStaffs(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNResultInsertStaffs2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultInsertStaffs(ctx context.Context, sel ast.SelectionSet, v *model1.ResultInsertStaffs) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	return ec._ResultInsertStaffs(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalNResultInsertStocks2githubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultInsertStocks(ctx context.Context, sel ast.SelectionSet, v model1.ResultInsertStocks) graphql.Marshaler {
+	return ec._ResultInsertStocks(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNResultInsertStocks2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultInsertStocks(ctx context.Context, sel ast.SelectionSet, v *model1.ResultInsertStocks) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	return ec._ResultInsertStocks(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalNResultInsertStores2githubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultInsertStores(ctx context.Context, sel ast.SelectionSet, v model1.ResultInsertStores) graphql.Marshaler {
@@ -10212,6 +13807,34 @@ func (ec *executionContext) marshalNResultUpdateProducts2ᚖgithubᚗcomᚋjurag
 	return ec._ResultUpdateProducts(ctx, sel, v)
 }
 
+func (ec *executionContext) marshalNResultUpdateStaffs2githubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultUpdateStaffs(ctx context.Context, sel ast.SelectionSet, v model1.ResultUpdateStaffs) graphql.Marshaler {
+	return ec._ResultUpdateStaffs(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNResultUpdateStaffs2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultUpdateStaffs(ctx context.Context, sel ast.SelectionSet, v *model1.ResultUpdateStaffs) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	return ec._ResultUpdateStaffs(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalNResultUpdateStocks2githubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultUpdateStocks(ctx context.Context, sel ast.SelectionSet, v model1.ResultUpdateStocks) graphql.Marshaler {
+	return ec._ResultUpdateStocks(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNResultUpdateStocks2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultUpdateStocks(ctx context.Context, sel ast.SelectionSet, v *model1.ResultUpdateStocks) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	return ec._ResultUpdateStocks(ctx, sel, v)
+}
+
 func (ec *executionContext) marshalNResultUpdateStores2githubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultUpdateStores(ctx context.Context, sel ast.SelectionSet, v model1.ResultUpdateStores) graphql.Marshaler {
 	return ec._ResultUpdateStores(ctx, sel, &v)
 }
@@ -10224,6 +13847,104 @@ func (ec *executionContext) marshalNResultUpdateStores2ᚖgithubᚗcomᚋjuragan
 		return graphql.Null
 	}
 	return ec._ResultUpdateStores(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalNStaffs2ᚕᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋdomainᚐStaffs(ctx context.Context, sel ast.SelectionSet, v []*domain.Staffs) graphql.Marshaler {
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalOStaffs2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋdomainᚐStaffs(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+	return ret
+}
+
+func (ec *executionContext) marshalNStaffs2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋdomainᚐStaffs(ctx context.Context, sel ast.SelectionSet, v *domain.Staffs) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	return ec._Staffs(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalNStocks2ᚕᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋdomainᚐStocks(ctx context.Context, sel ast.SelectionSet, v []*domain.Stocks) graphql.Marshaler {
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalOStocks2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋdomainᚐStocks(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+	return ret
+}
+
+func (ec *executionContext) marshalNStocks2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋdomainᚐStocks(ctx context.Context, sel ast.SelectionSet, v *domain.Stocks) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	return ec._Stocks(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalNStores2githubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐStores(ctx context.Context, sel ast.SelectionSet, v model1.Stores) graphql.Marshaler {
+	return ec._Stores(ctx, sel, &v)
 }
 
 func (ec *executionContext) marshalNStores2ᚕᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐStores(ctx context.Context, sel ast.SelectionSet, v []*model1.Stores) graphql.Marshaler {
@@ -10617,6 +14338,20 @@ func (ec *executionContext) marshalOProducts2ᚖgithubᚗcomᚋjuragankodingᚋg
 		return graphql.Null
 	}
 	return ec._Products(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalOStaffs2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋdomainᚐStaffs(ctx context.Context, sel ast.SelectionSet, v *domain.Staffs) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._Staffs(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalOStocks2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋdomainᚐStocks(ctx context.Context, sel ast.SelectionSet, v *domain.Stocks) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._Stocks(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalOStores2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐStores(ctx context.Context, sel ast.SelectionSet, v *model1.Stores) graphql.Marshaler {
