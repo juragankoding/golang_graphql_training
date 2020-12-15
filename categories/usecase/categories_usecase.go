@@ -1,6 +1,8 @@
 package usecase
 
 import (
+	"errors"
+
 	"github.com/juragankoding/golang_graphql_training/domain"
 )
 
@@ -23,6 +25,7 @@ func (a *categoriesUseCase) Fetch() ([]*domain.Categories, string, error) {
 }
 
 func (a *categoriesUseCase) Insert(categories domain.Categories) (int64, string, error) {
+<<<<<<< HEAD
 	if err := categories.Validate(); err != nil {
 		if lastID, _, err := a.categoriesRepo.Insert(categories); err != nil {
 			return -1, err.Error(), err
@@ -30,6 +33,11 @@ func (a *categoriesUseCase) Insert(categories domain.Categories) (int64, string,
 			return lastID, "Success insert data catgories", nil
 		}
 
+=======
+
+	if categories.Name == "" {
+		return -1, "name cannot null", errors.New("name cannot be null")
+>>>>>>> 0f02cbf0ee4ebebd30fa40009ae30a26ad1bf6bb
 	}
 
 	return -1, "", nil

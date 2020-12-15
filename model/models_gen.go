@@ -11,6 +11,29 @@ type ResultInsert interface {
 	IsResultInsert()
 }
 
+type ResultAllBrands struct {
+	Status string           `json:"status"`
+	Code   int              `json:"code"`
+	Data   []*domain.Brands `json:"data"`
+}
+
+func (ResultAllBrands) IsResultInsert() {}
+
+type ResultAllProducts struct {
+	Status string             `json:"status"`
+	Code   int                `json:"code"`
+	Data   []*domain.Products `json:"data"`
+}
+
+func (ResultAllProducts) IsResultInsert() {}
+
+type ResultDeleteBrands struct {
+	Status string `json:"status"`
+	Code   int    `json:"code"`
+}
+
+func (ResultDeleteBrands) IsResultInsert() {}
+
 type ResultDeleteCategories struct {
 	Status string             `json:"status"`
 	Code   int                `json:"code"`
@@ -18,6 +41,14 @@ type ResultDeleteCategories struct {
 }
 
 func (ResultDeleteCategories) IsResultInsert() {}
+
+type ResultDeleteProducts struct {
+	Status string           `json:"status"`
+	Code   int              `json:"code"`
+	Data   *domain.Products `json:"data"`
+}
+
+func (ResultDeleteProducts) IsResultInsert() {}
 
 type ResultFetchCategories struct {
 	Status string               `json:"status"`
@@ -35,6 +66,14 @@ type ResultGetCategories struct {
 
 func (ResultGetCategories) IsResultInsert() {}
 
+type ResultInsertBrands struct {
+	Status string         `json:"status"`
+	Code   int            `json:"code"`
+	Data   *domain.Brands `json:"data"`
+}
+
+func (ResultInsertBrands) IsResultInsert() {}
+
 type ResultInsertCategories struct {
 	Status string             `json:"status"`
 	Code   int                `json:"code"`
@@ -43,6 +82,38 @@ type ResultInsertCategories struct {
 
 func (ResultInsertCategories) IsResultInsert() {}
 
+type ResultInsertProducts struct {
+	Status string           `json:"status"`
+	Code   int              `json:"code"`
+	Data   *domain.Products `json:"data"`
+}
+
+func (ResultInsertProducts) IsResultInsert() {}
+
+type ResultSingleBrands struct {
+	Status string         `json:"status"`
+	Code   int            `json:"code"`
+	Data   *domain.Brands `json:"data"`
+}
+
+func (ResultSingleBrands) IsResultInsert() {}
+
+type ResultSingleProducts struct {
+	Status string           `json:"status"`
+	Code   int              `json:"code"`
+	Data   *domain.Products `json:"data"`
+}
+
+func (ResultSingleProducts) IsResultInsert() {}
+
+type ResultUpdateBrands struct {
+	Status string         `json:"status"`
+	Code   int            `json:"code"`
+	Data   *domain.Brands `json:"data"`
+}
+
+func (ResultUpdateBrands) IsResultInsert() {}
+
 type ResultUpdateCategories struct {
 	Status string             `json:"status"`
 	Code   int                `json:"code"`
@@ -50,6 +121,14 @@ type ResultUpdateCategories struct {
 }
 
 func (ResultUpdateCategories) IsResultInsert() {}
+
+type ResultUpdateProducts struct {
+	Status string           `json:"status"`
+	Code   int              `json:"code"`
+	Data   *domain.Products `json:"data"`
+}
+
+func (ResultUpdateProducts) IsResultInsert() {}
 
 type ResultGetAllJenisBarang struct {
 	Status string                `json:"status"`

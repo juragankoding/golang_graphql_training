@@ -1,0 +1,44 @@
+type Brands {
+  ID: Int!
+  Name: String!
+}
+
+type ResultSingleBrands implements resultInsert {
+  status: String!
+  code: Int!
+  data: Brands!
+}
+
+type ResultAllBrands implements resultInsert {
+  status: String!
+  code: Int!
+  data: [Brands]!
+}
+
+type ResultInsertBrands implements resultInsert {
+  status: String!
+  code: Int!
+  data: Brands!
+}
+
+type ResultUpdateBrands implements resultInsert {
+  status: String!
+  code: Int!
+  data: Brands!
+}
+
+type ResultDeleteBrands implements resultInsert {
+  status: String!
+  code: Int!
+}
+
+extend type Query {
+  SingleBrands(ID: Int!): ResultSingleBrands!
+  AllBrands: ResultAllBrands!
+}
+
+extend type Mutation {
+  InsertBrands(nama: String!): ResultInsertBrands!
+  UpdateBrands(id: Int!, nama: String!): ResultUpdateBrands!
+  DeleteBrands(id: Int!): ResultDeleteBrands!
+}

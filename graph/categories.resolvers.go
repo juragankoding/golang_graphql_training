@@ -5,6 +5,7 @@ package graph
 
 import (
 	"context"
+	"fmt"
 	"log"
 
 	"github.com/juragankoding/golang_graphql_training/domain"
@@ -12,30 +13,7 @@ import (
 )
 
 func (r *mutationResolver) Categories(ctx context.Context, nama string) (*model.ResultInsertCategories, error) {
-	resultInserCategories := model.ResultInsertCategories{
-		Status: "",
-		Code:   404,
-		Data:   nil,
-	}
-
-	categories := domain.Categories{
-		Name: nama,
-	}
-
-	lastID, _, err := r.DomainCategoriUseCase.Insert(categories)
-
-	if err != nil {
-		log.Fatal(err)
-		return nil, err
-	}
-
-	categories.ID = int(lastID)
-
-	resultInserCategories.Data = &categories
-	resultInserCategories.Code = 200
-	resultInserCategories.Status = "Success insert into categories"
-
-	return &resultInserCategories, nil
+	panic(fmt.Errorf("not implemented"))
 }
 
 func (r *mutationResolver) UpdateCategories(ctx context.Context, id int, nama string) (*model.ResultUpdateCategories, error) {
@@ -96,18 +74,42 @@ func (r *queryResolver) Categories(ctx context.Context) (*model.ResultFetchCateg
 }
 
 func (r *queryResolver) Category(ctx context.Context, id *int) (*model.ResultGetCategories, error) {
-	var categories *domain.Categories
-	var err error
+	panic(fmt.Errorf("not implemented"))
+}
 
-	categories, _, err = r.DomainCategoriUseCase.Get(*id)
-
-	if err != nil {
-		return nil, err
+// !!! WARNING !!!
+// The code below was going to be deleted when updating resolvers. It has been copied here so you have
+// one last chance to move it out of harms way if you want. There are two reasons this happens:
+//  - When renaming or deleting a resolver the old code will be put in here. You can safely delete
+//    it when you're done.
+//  - You have helper methods in this file. Move them out to keep these resolver files clean.
+func (r *mutationResolver) InsertCategories(ctx context.Context, nama string) (*model.ResultInsertCategories, error) {
+	resultInsertCategories := model.ResultInsertCategories{
+		Status: "",
+		Code:   404,
+		Data:   nil,
 	}
 
-	return &model.ResultGetCategories{
-		Status: "Success Gettering data",
-		Code:   200,
-		Data:   categories,
-	}, nil
+	categories := domain.Categories{
+		Name: nama,
+	}
+
+	lastId, _, err := r.DomainCategoriUseCase.Insert(categories)
+
+	if err != nil {
+		log.Fatal(err)
+
+		return &resultInsertCategories, err
+	}
+
+	categories.ID = int(lastId)
+
+	resultInsertCategories.Status = "Sucess insert categories"
+	resultInsertCategories.Code = 200
+	resultInsertCategories.Data = &categories
+
+	return &resultInsertCategories, nil
+}
+func (r *queryResolver) Fetch(ctx context.Context) (*model.ResultFetchCategories, error) {
+	panic(fmt.Errorf("not implemented"))
 }
