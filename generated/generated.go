@@ -83,14 +83,17 @@ type ComplexityRoot struct {
 		Categories        func(childComplexity int, nama string) int
 		DeleteBrands      func(childComplexity int, id int) int
 		DeleteCategories  func(childComplexity int, id int) int
-		DeleteProdcuts    func(childComplexity int, id int) int
+		DeleteProducts    func(childComplexity int, id int) int
+		DeleteStores      func(childComplexity int, id int) int
 		InsertBarang      func(childComplexity int, id int, nama string, description string, jenisBarang int) int
 		InsertBrands      func(childComplexity int, nama string) int
 		InsertJenisBarang func(childComplexity int, jenisBarang string) int
 		InsertProducts    func(childComplexity int, name string, brandID int, categoryID int, modelyear int, listPrice int) int
+		InsertStores      func(childComplexity int, storeName string, phone string, email string, city string, state string, zipCode string) int
 		UpdateBrands      func(childComplexity int, id int, nama string) int
 		UpdateCategories  func(childComplexity int, id int, nama string) int
 		UpdateProducts    func(childComplexity int, id int, name string, brandID int, categoryID int, modelyear int, listPrice int) int
+		UpdateStores      func(childComplexity int, storeID int, storeName string, phone string, email string, city string, state string, zipCode string) int
 	}
 
 	Products struct {
@@ -107,6 +110,7 @@ type ComplexityRoot struct {
 	Query struct {
 		AllBrands         func(childComplexity int) int
 		AllProducts       func(childComplexity int) int
+		AllStores         func(childComplexity int) int
 		Categories        func(childComplexity int) int
 		Category          func(childComplexity int, id *int) int
 		GetAllJenisBarang func(childComplexity int) int
@@ -114,6 +118,7 @@ type ComplexityRoot struct {
 		GetInfoKaryawan   func(childComplexity int, id int) int
 		SingleBrands      func(childComplexity int, id int) int
 		SingleProducts    func(childComplexity int, id *int) int
+		SingleStores      func(childComplexity int, id *int) int
 	}
 
 	ResultAllBrands struct {
@@ -123,6 +128,12 @@ type ComplexityRoot struct {
 	}
 
 	ResultAllProducts struct {
+		Code   func(childComplexity int) int
+		Data   func(childComplexity int) int
+		Status func(childComplexity int) int
+	}
+
+	ResultAllStores struct {
 		Code   func(childComplexity int) int
 		Data   func(childComplexity int) int
 		Status func(childComplexity int) int
@@ -140,6 +151,12 @@ type ComplexityRoot struct {
 	}
 
 	ResultDeleteProducts struct {
+		Code   func(childComplexity int) int
+		Data   func(childComplexity int) int
+		Status func(childComplexity int) int
+	}
+
+	ResultDeleteStores struct {
 		Code   func(childComplexity int) int
 		Data   func(childComplexity int) int
 		Status func(childComplexity int) int
@@ -181,6 +198,12 @@ type ComplexityRoot struct {
 		Status func(childComplexity int) int
 	}
 
+	ResultInsertStores struct {
+		Code   func(childComplexity int) int
+		Data   func(childComplexity int) int
+		Status func(childComplexity int) int
+	}
+
 	ResultSingleBrands struct {
 		Code   func(childComplexity int) int
 		Data   func(childComplexity int) int
@@ -188,6 +211,12 @@ type ComplexityRoot struct {
 	}
 
 	ResultSingleProducts struct {
+		Code   func(childComplexity int) int
+		Data   func(childComplexity int) int
+		Status func(childComplexity int) int
+	}
+
+	ResultSingleStores struct {
 		Code   func(childComplexity int) int
 		Data   func(childComplexity int) int
 		Status func(childComplexity int) int
@@ -209,6 +238,22 @@ type ComplexityRoot struct {
 		Code   func(childComplexity int) int
 		Data   func(childComplexity int) int
 		Status func(childComplexity int) int
+	}
+
+	ResultUpdateStores struct {
+		Code   func(childComplexity int) int
+		Data   func(childComplexity int) int
+		Status func(childComplexity int) int
+	}
+
+	Stores struct {
+		City      func(childComplexity int) int
+		Email     func(childComplexity int) int
+		Phone     func(childComplexity int) int
+		State     func(childComplexity int) int
+		StoreID   func(childComplexity int) int
+		StoreName func(childComplexity int) int
+		ZipCode   func(childComplexity int) int
 	}
 
 	ResultGetAllJenisBarang struct {
@@ -235,7 +280,10 @@ type MutationResolver interface {
 	InsertJenisBarang(ctx context.Context, jenisBarang string) (*model1.ResultJenisBarang, error)
 	InsertProducts(ctx context.Context, name string, brandID int, categoryID int, modelyear int, listPrice int) (*model1.ResultInsertProducts, error)
 	UpdateProducts(ctx context.Context, id int, name string, brandID int, categoryID int, modelyear int, listPrice int) (*model1.ResultUpdateProducts, error)
-	DeleteProdcuts(ctx context.Context, id int) (*model1.ResultDeleteProducts, error)
+	DeleteProducts(ctx context.Context, id int) (*model1.ResultDeleteProducts, error)
+	InsertStores(ctx context.Context, storeName string, phone string, email string, city string, state string, zipCode string) (*model1.ResultInsertStores, error)
+	UpdateStores(ctx context.Context, storeID int, storeName string, phone string, email string, city string, state string, zipCode string) (*model1.ResultUpdateStores, error)
+	DeleteStores(ctx context.Context, id int) (*model1.ResultDeleteStores, error)
 }
 type ProductsResolver interface {
 	ProductName(ctx context.Context, obj *domain.Products) (int, error)
@@ -250,6 +298,8 @@ type QueryResolver interface {
 	AllProducts(ctx context.Context) (*model1.ResultAllProducts, error)
 	SingleProducts(ctx context.Context, id *int) (*model1.ResultSingleProducts, error)
 	GetInfoKaryawan(ctx context.Context, id int) (*model.Karyawan, error)
+	AllStores(ctx context.Context) (*model1.ResultAllStores, error)
+	SingleStores(ctx context.Context, id *int) (*model1.ResultSingleStores, error)
 }
 
 type executableSchema struct {
@@ -415,17 +465,29 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Mutation.DeleteCategories(childComplexity, args["id"].(int)), true
 
-	case "Mutation.DeleteProdcuts":
-		if e.complexity.Mutation.DeleteProdcuts == nil {
+	case "Mutation.DeleteProducts":
+		if e.complexity.Mutation.DeleteProducts == nil {
 			break
 		}
 
-		args, err := ec.field_Mutation_DeleteProdcuts_args(context.TODO(), rawArgs)
+		args, err := ec.field_Mutation_DeleteProducts_args(context.TODO(), rawArgs)
 		if err != nil {
 			return 0, false
 		}
 
-		return e.complexity.Mutation.DeleteProdcuts(childComplexity, args["id"].(int)), true
+		return e.complexity.Mutation.DeleteProducts(childComplexity, args["id"].(int)), true
+
+	case "Mutation.DeleteStores":
+		if e.complexity.Mutation.DeleteStores == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_DeleteStores_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.DeleteStores(childComplexity, args["id"].(int)), true
 
 	case "Mutation.insertBarang":
 		if e.complexity.Mutation.InsertBarang == nil {
@@ -475,6 +537,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Mutation.InsertProducts(childComplexity, args["name"].(string), args["brandID"].(int), args["categoryID"].(int), args["modelyear"].(int), args["ListPrice"].(int)), true
 
+	case "Mutation.InsertStores":
+		if e.complexity.Mutation.InsertStores == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_InsertStores_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.InsertStores(childComplexity, args["StoreName"].(string), args["Phone"].(string), args["Email"].(string), args["City"].(string), args["State"].(string), args["ZipCode"].(string)), true
+
 	case "Mutation.UpdateBrands":
 		if e.complexity.Mutation.UpdateBrands == nil {
 			break
@@ -510,6 +584,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Mutation.UpdateProducts(childComplexity, args["id"].(int), args["name"].(string), args["brandID"].(int), args["categoryID"].(int), args["modelyear"].(int), args["ListPrice"].(int)), true
+
+	case "Mutation.UpdateStores":
+		if e.complexity.Mutation.UpdateStores == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_UpdateStores_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.UpdateStores(childComplexity, args["StoreID"].(int), args["StoreName"].(string), args["Phone"].(string), args["Email"].(string), args["City"].(string), args["State"].(string), args["ZipCode"].(string)), true
 
 	case "Products.BrandID":
 		if e.complexity.Products.BrandID == nil {
@@ -581,6 +667,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Query.AllProducts(childComplexity), true
 
+	case "Query.AllStores":
+		if e.complexity.Query.AllStores == nil {
+			break
+		}
+
+		return e.complexity.Query.AllStores(childComplexity), true
+
 	case "Query.Categories":
 		if e.complexity.Query.Categories == nil {
 			break
@@ -650,6 +743,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Query.SingleProducts(childComplexity, args["id"].(*int)), true
 
+	case "Query.SingleStores":
+		if e.complexity.Query.SingleStores == nil {
+			break
+		}
+
+		args, err := ec.field_Query_SingleStores_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.SingleStores(childComplexity, args["id"].(*int)), true
+
 	case "ResultAllBrands.code":
 		if e.complexity.ResultAllBrands.Code == nil {
 			break
@@ -691,6 +796,27 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.ResultAllProducts.Status(childComplexity), true
+
+	case "ResultAllStores.code":
+		if e.complexity.ResultAllStores.Code == nil {
+			break
+		}
+
+		return e.complexity.ResultAllStores.Code(childComplexity), true
+
+	case "ResultAllStores.data":
+		if e.complexity.ResultAllStores.Data == nil {
+			break
+		}
+
+		return e.complexity.ResultAllStores.Data(childComplexity), true
+
+	case "ResultAllStores.status":
+		if e.complexity.ResultAllStores.Status == nil {
+			break
+		}
+
+		return e.complexity.ResultAllStores.Status(childComplexity), true
 
 	case "ResultDeleteBrands.code":
 		if e.complexity.ResultDeleteBrands.Code == nil {
@@ -747,6 +873,27 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.ResultDeleteProducts.Status(childComplexity), true
+
+	case "ResultDeleteStores.code":
+		if e.complexity.ResultDeleteStores.Code == nil {
+			break
+		}
+
+		return e.complexity.ResultDeleteStores.Code(childComplexity), true
+
+	case "ResultDeleteStores.data":
+		if e.complexity.ResultDeleteStores.Data == nil {
+			break
+		}
+
+		return e.complexity.ResultDeleteStores.Data(childComplexity), true
+
+	case "ResultDeleteStores.status":
+		if e.complexity.ResultDeleteStores.Status == nil {
+			break
+		}
+
+		return e.complexity.ResultDeleteStores.Status(childComplexity), true
 
 	case "ResultFetchCategories.code":
 		if e.complexity.ResultFetchCategories.Code == nil {
@@ -874,6 +1021,27 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.ResultInsertProducts.Status(childComplexity), true
 
+	case "ResultInsertStores.code":
+		if e.complexity.ResultInsertStores.Code == nil {
+			break
+		}
+
+		return e.complexity.ResultInsertStores.Code(childComplexity), true
+
+	case "ResultInsertStores.data":
+		if e.complexity.ResultInsertStores.Data == nil {
+			break
+		}
+
+		return e.complexity.ResultInsertStores.Data(childComplexity), true
+
+	case "ResultInsertStores.status":
+		if e.complexity.ResultInsertStores.Status == nil {
+			break
+		}
+
+		return e.complexity.ResultInsertStores.Status(childComplexity), true
+
 	case "ResultSingleBrands.code":
 		if e.complexity.ResultSingleBrands.Code == nil {
 			break
@@ -915,6 +1083,27 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.ResultSingleProducts.Status(childComplexity), true
+
+	case "ResultSingleStores.code":
+		if e.complexity.ResultSingleStores.Code == nil {
+			break
+		}
+
+		return e.complexity.ResultSingleStores.Code(childComplexity), true
+
+	case "ResultSingleStores.data":
+		if e.complexity.ResultSingleStores.Data == nil {
+			break
+		}
+
+		return e.complexity.ResultSingleStores.Data(childComplexity), true
+
+	case "ResultSingleStores.status":
+		if e.complexity.ResultSingleStores.Status == nil {
+			break
+		}
+
+		return e.complexity.ResultSingleStores.Status(childComplexity), true
 
 	case "ResultUpdateBrands.code":
 		if e.complexity.ResultUpdateBrands.Code == nil {
@@ -978,6 +1167,76 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.ResultUpdateProducts.Status(childComplexity), true
+
+	case "ResultUpdateStores.code":
+		if e.complexity.ResultUpdateStores.Code == nil {
+			break
+		}
+
+		return e.complexity.ResultUpdateStores.Code(childComplexity), true
+
+	case "ResultUpdateStores.data":
+		if e.complexity.ResultUpdateStores.Data == nil {
+			break
+		}
+
+		return e.complexity.ResultUpdateStores.Data(childComplexity), true
+
+	case "ResultUpdateStores.status":
+		if e.complexity.ResultUpdateStores.Status == nil {
+			break
+		}
+
+		return e.complexity.ResultUpdateStores.Status(childComplexity), true
+
+	case "Stores.City":
+		if e.complexity.Stores.City == nil {
+			break
+		}
+
+		return e.complexity.Stores.City(childComplexity), true
+
+	case "Stores.Email":
+		if e.complexity.Stores.Email == nil {
+			break
+		}
+
+		return e.complexity.Stores.Email(childComplexity), true
+
+	case "Stores.Phone":
+		if e.complexity.Stores.Phone == nil {
+			break
+		}
+
+		return e.complexity.Stores.Phone(childComplexity), true
+
+	case "Stores.State":
+		if e.complexity.Stores.State == nil {
+			break
+		}
+
+		return e.complexity.Stores.State(childComplexity), true
+
+	case "Stores.StoreID":
+		if e.complexity.Stores.StoreID == nil {
+			break
+		}
+
+		return e.complexity.Stores.StoreID(childComplexity), true
+
+	case "Stores.StoreName":
+		if e.complexity.Stores.StoreName == nil {
+			break
+		}
+
+		return e.complexity.Stores.StoreName(childComplexity), true
+
+	case "Stores.ZipCode":
+		if e.complexity.Stores.ZipCode == nil {
+			break
+		}
+
+		return e.complexity.Stores.ZipCode(childComplexity), true
 
 	case "resultGetAllJenisBarang.code":
 		if e.complexity.ResultGetAllJenisBarang.Code == nil {
@@ -1296,7 +1555,7 @@ extend type Mutation {
     modelyear: Int!
     ListPrice: Int!
   ): ResultUpdateProducts!
-  DeleteProdcuts(id: Int!): ResultDeleteProducts!
+  DeleteProducts(id: Int!): ResultDeleteProducts!
 }
 `, BuiltIn: false},
 	{Name: "schema/schema.graphqls", Input: `# GraphQL schema example
@@ -1313,6 +1572,72 @@ type Karyawan {
   nama: String!
   email: String!
   noHp: String!
+}
+`, BuiltIn: false},
+	{Name: "schema/stores.graphqls", Input: `type Stores {
+  StoreID: Int!
+  StoreName: String!
+  Phone: String!
+  Email: String!
+  City: String!
+  State: String!
+  ZipCode: String!
+}
+
+type ResultInsertStores implements resultInsert {
+  status: String!
+  code: Int!
+  data: Stores!
+}
+
+type ResultUpdateStores implements resultInsert {
+  status: String!
+  code: Int!
+  data: Stores!
+}
+
+type ResultDeleteStores implements resultInsert {
+  status: String!
+  code: Int!
+  data: Stores!
+}
+
+type ResultSingleStores implements resultInsert {
+  status: String!
+  code: Int!
+  data: Stores!
+}
+
+type ResultAllStores implements resultInsert {
+  status: String!
+  code: Int!
+  data: [Stores]!
+}
+
+extend type Query {
+  AllStores: ResultAllStores!
+  SingleStores(id: Int): ResultSingleStores!
+}
+
+extend type Mutation {
+  InsertStores(
+    StoreName: String!
+    Phone: String!
+    Email: String!
+    City: String!
+    State: String!
+    ZipCode: String!
+  ): ResultInsertStores!
+  UpdateStores(
+    StoreID: Int!
+    StoreName: String!
+    Phone: String!
+    Email: String!
+    City: String!
+    State: String!
+    ZipCode: String!
+  ): ResultUpdateStores!
+  DeleteStores(id: Int!): ResultDeleteStores!
 }
 `, BuiltIn: false},
 }
@@ -1367,7 +1692,22 @@ func (ec *executionContext) field_Mutation_DeleteCategories_args(ctx context.Con
 	return args, nil
 }
 
-func (ec *executionContext) field_Mutation_DeleteProdcuts_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+func (ec *executionContext) field_Mutation_DeleteProducts_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 int
+	if tmp, ok := rawArgs["id"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+		arg0, err = ec.unmarshalNInt2int(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["id"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_DeleteStores_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
 	var arg0 int
@@ -1445,6 +1785,66 @@ func (ec *executionContext) field_Mutation_InsertProducts_args(ctx context.Conte
 		}
 	}
 	args["ListPrice"] = arg4
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_InsertStores_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 string
+	if tmp, ok := rawArgs["StoreName"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("StoreName"))
+		arg0, err = ec.unmarshalNString2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["StoreName"] = arg0
+	var arg1 string
+	if tmp, ok := rawArgs["Phone"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("Phone"))
+		arg1, err = ec.unmarshalNString2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["Phone"] = arg1
+	var arg2 string
+	if tmp, ok := rawArgs["Email"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("Email"))
+		arg2, err = ec.unmarshalNString2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["Email"] = arg2
+	var arg3 string
+	if tmp, ok := rawArgs["City"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("City"))
+		arg3, err = ec.unmarshalNString2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["City"] = arg3
+	var arg4 string
+	if tmp, ok := rawArgs["State"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("State"))
+		arg4, err = ec.unmarshalNString2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["State"] = arg4
+	var arg5 string
+	if tmp, ok := rawArgs["ZipCode"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("ZipCode"))
+		arg5, err = ec.unmarshalNString2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["ZipCode"] = arg5
 	return args, nil
 }
 
@@ -1556,6 +1956,75 @@ func (ec *executionContext) field_Mutation_UpdateProducts_args(ctx context.Conte
 	return args, nil
 }
 
+func (ec *executionContext) field_Mutation_UpdateStores_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 int
+	if tmp, ok := rawArgs["StoreID"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("StoreID"))
+		arg0, err = ec.unmarshalNInt2int(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["StoreID"] = arg0
+	var arg1 string
+	if tmp, ok := rawArgs["StoreName"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("StoreName"))
+		arg1, err = ec.unmarshalNString2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["StoreName"] = arg1
+	var arg2 string
+	if tmp, ok := rawArgs["Phone"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("Phone"))
+		arg2, err = ec.unmarshalNString2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["Phone"] = arg2
+	var arg3 string
+	if tmp, ok := rawArgs["Email"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("Email"))
+		arg3, err = ec.unmarshalNString2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["Email"] = arg3
+	var arg4 string
+	if tmp, ok := rawArgs["City"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("City"))
+		arg4, err = ec.unmarshalNString2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["City"] = arg4
+	var arg5 string
+	if tmp, ok := rawArgs["State"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("State"))
+		arg5, err = ec.unmarshalNString2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["State"] = arg5
+	var arg6 string
+	if tmp, ok := rawArgs["ZipCode"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("ZipCode"))
+		arg6, err = ec.unmarshalNString2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["ZipCode"] = arg6
+	return args, nil
+}
+
 func (ec *executionContext) field_Mutation_insertBarang_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
@@ -1644,6 +2113,21 @@ func (ec *executionContext) field_Query_SingleBrands_args(ctx context.Context, r
 }
 
 func (ec *executionContext) field_Query_SingleProducts_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 *int
+	if tmp, ok := rawArgs["id"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+		arg0, err = ec.unmarshalOInt2ᚖint(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["id"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Query_SingleStores_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
 	var arg0 *int
@@ -2706,7 +3190,7 @@ func (ec *executionContext) _Mutation_UpdateProducts(ctx context.Context, field 
 	return ec.marshalNResultUpdateProducts2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultUpdateProducts(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Mutation_DeleteProdcuts(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+func (ec *executionContext) _Mutation_DeleteProducts(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -2723,7 +3207,7 @@ func (ec *executionContext) _Mutation_DeleteProdcuts(ctx context.Context, field 
 
 	ctx = graphql.WithFieldContext(ctx, fc)
 	rawArgs := field.ArgumentMap(ec.Variables)
-	args, err := ec.field_Mutation_DeleteProdcuts_args(ctx, rawArgs)
+	args, err := ec.field_Mutation_DeleteProducts_args(ctx, rawArgs)
 	if err != nil {
 		ec.Error(ctx, err)
 		return graphql.Null
@@ -2731,7 +3215,7 @@ func (ec *executionContext) _Mutation_DeleteProdcuts(ctx context.Context, field 
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().DeleteProdcuts(rctx, args["id"].(int))
+		return ec.resolvers.Mutation().DeleteProducts(rctx, args["id"].(int))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -2746,6 +3230,132 @@ func (ec *executionContext) _Mutation_DeleteProdcuts(ctx context.Context, field 
 	res := resTmp.(*model1.ResultDeleteProducts)
 	fc.Result = res
 	return ec.marshalNResultDeleteProducts2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultDeleteProducts(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Mutation_InsertStores(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_InsertStores_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().InsertStores(rctx, args["StoreName"].(string), args["Phone"].(string), args["Email"].(string), args["City"].(string), args["State"].(string), args["ZipCode"].(string))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*model1.ResultInsertStores)
+	fc.Result = res
+	return ec.marshalNResultInsertStores2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultInsertStores(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Mutation_UpdateStores(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_UpdateStores_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().UpdateStores(rctx, args["StoreID"].(int), args["StoreName"].(string), args["Phone"].(string), args["Email"].(string), args["City"].(string), args["State"].(string), args["ZipCode"].(string))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*model1.ResultUpdateStores)
+	fc.Result = res
+	return ec.marshalNResultUpdateStores2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultUpdateStores(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Mutation_DeleteStores(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_DeleteStores_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().DeleteStores(rctx, args["id"].(int))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*model1.ResultDeleteStores)
+	fc.Result = res
+	return ec.marshalNResultDeleteStores2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultDeleteStores(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Products_ProductID(ctx context.Context, field graphql.CollectedField, obj *domain.Products) (ret graphql.Marshaler) {
@@ -3365,6 +3975,83 @@ func (ec *executionContext) _Query_getInfoKaryawan(ctx context.Context, field gr
 	return ec.marshalOKaryawan2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋgraphᚋmodelᚐKaryawan(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _Query_AllStores(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().AllStores(rctx)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*model1.ResultAllStores)
+	fc.Result = res
+	return ec.marshalNResultAllStores2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultAllStores(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Query_SingleStores(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Query_SingleStores_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().SingleStores(rctx, args["id"].(*int))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*model1.ResultSingleStores)
+	fc.Result = res
+	return ec.marshalNResultSingleStores2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultSingleStores(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _Query___type(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -3646,6 +4333,111 @@ func (ec *executionContext) _ResultAllProducts_data(ctx context.Context, field g
 	return ec.marshalNProducts2ᚕᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋdomainᚐProducts(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _ResultAllStores_status(ctx context.Context, field graphql.CollectedField, obj *model1.ResultAllStores) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "ResultAllStores",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Status, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _ResultAllStores_code(ctx context.Context, field graphql.CollectedField, obj *model1.ResultAllStores) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "ResultAllStores",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Code, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNInt2int(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _ResultAllStores_data(ctx context.Context, field graphql.CollectedField, obj *model1.ResultAllStores) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "ResultAllStores",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Data, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.([]*model1.Stores)
+	fc.Result = res
+	return ec.marshalNStores2ᚕᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐStores(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _ResultDeleteBrands_status(ctx context.Context, field graphql.CollectedField, obj *model1.ResultDeleteBrands) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -3924,6 +4716,111 @@ func (ec *executionContext) _ResultDeleteProducts_data(ctx context.Context, fiel
 	res := resTmp.(*domain.Products)
 	fc.Result = res
 	return ec.marshalNProducts2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋdomainᚐProducts(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _ResultDeleteStores_status(ctx context.Context, field graphql.CollectedField, obj *model1.ResultDeleteStores) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "ResultDeleteStores",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Status, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _ResultDeleteStores_code(ctx context.Context, field graphql.CollectedField, obj *model1.ResultDeleteStores) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "ResultDeleteStores",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Code, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNInt2int(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _ResultDeleteStores_data(ctx context.Context, field graphql.CollectedField, obj *model1.ResultDeleteStores) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "ResultDeleteStores",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Data, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*model1.Stores)
+	fc.Result = res
+	return ec.marshalNStores2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐStores(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _ResultFetchCategories_status(ctx context.Context, field graphql.CollectedField, obj *model1.ResultFetchCategories) (ret graphql.Marshaler) {
@@ -4556,6 +5453,111 @@ func (ec *executionContext) _ResultInsertProducts_data(ctx context.Context, fiel
 	return ec.marshalNProducts2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋdomainᚐProducts(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _ResultInsertStores_status(ctx context.Context, field graphql.CollectedField, obj *model1.ResultInsertStores) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "ResultInsertStores",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Status, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _ResultInsertStores_code(ctx context.Context, field graphql.CollectedField, obj *model1.ResultInsertStores) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "ResultInsertStores",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Code, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNInt2int(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _ResultInsertStores_data(ctx context.Context, field graphql.CollectedField, obj *model1.ResultInsertStores) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "ResultInsertStores",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Data, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*model1.Stores)
+	fc.Result = res
+	return ec.marshalNStores2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐStores(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _ResultSingleBrands_status(ctx context.Context, field graphql.CollectedField, obj *model1.ResultSingleBrands) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -4764,6 +5766,111 @@ func (ec *executionContext) _ResultSingleProducts_data(ctx context.Context, fiel
 	res := resTmp.(*domain.Products)
 	fc.Result = res
 	return ec.marshalNProducts2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋdomainᚐProducts(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _ResultSingleStores_status(ctx context.Context, field graphql.CollectedField, obj *model1.ResultSingleStores) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "ResultSingleStores",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Status, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _ResultSingleStores_code(ctx context.Context, field graphql.CollectedField, obj *model1.ResultSingleStores) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "ResultSingleStores",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Code, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNInt2int(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _ResultSingleStores_data(ctx context.Context, field graphql.CollectedField, obj *model1.ResultSingleStores) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "ResultSingleStores",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Data, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*model1.Stores)
+	fc.Result = res
+	return ec.marshalNStores2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐStores(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _ResultUpdateBrands_status(ctx context.Context, field graphql.CollectedField, obj *model1.ResultUpdateBrands) (ret graphql.Marshaler) {
@@ -5079,6 +6186,356 @@ func (ec *executionContext) _ResultUpdateProducts_data(ctx context.Context, fiel
 	res := resTmp.(*domain.Products)
 	fc.Result = res
 	return ec.marshalNProducts2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋdomainᚐProducts(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _ResultUpdateStores_status(ctx context.Context, field graphql.CollectedField, obj *model1.ResultUpdateStores) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "ResultUpdateStores",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Status, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _ResultUpdateStores_code(ctx context.Context, field graphql.CollectedField, obj *model1.ResultUpdateStores) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "ResultUpdateStores",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Code, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNInt2int(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _ResultUpdateStores_data(ctx context.Context, field graphql.CollectedField, obj *model1.ResultUpdateStores) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "ResultUpdateStores",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Data, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*model1.Stores)
+	fc.Result = res
+	return ec.marshalNStores2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐStores(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Stores_StoreID(ctx context.Context, field graphql.CollectedField, obj *model1.Stores) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Stores",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.StoreID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNInt2int(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Stores_StoreName(ctx context.Context, field graphql.CollectedField, obj *model1.Stores) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Stores",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.StoreName, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Stores_Phone(ctx context.Context, field graphql.CollectedField, obj *model1.Stores) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Stores",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Phone, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Stores_Email(ctx context.Context, field graphql.CollectedField, obj *model1.Stores) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Stores",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Email, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Stores_City(ctx context.Context, field graphql.CollectedField, obj *model1.Stores) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Stores",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.City, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Stores_State(ctx context.Context, field graphql.CollectedField, obj *model1.Stores) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Stores",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.State, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Stores_ZipCode(ctx context.Context, field graphql.CollectedField, obj *model1.Stores) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Stores",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ZipCode, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) ___Directive_name(ctx context.Context, field graphql.CollectedField, obj *introspection.Directive) (ret graphql.Marshaler) {
@@ -6512,6 +7969,41 @@ func (ec *executionContext) _resultInsert(ctx context.Context, sel ast.Selection
 			return graphql.Null
 		}
 		return ec._ResultAllProducts(ctx, sel, obj)
+	case model1.ResultInsertStores:
+		return ec._ResultInsertStores(ctx, sel, &obj)
+	case *model1.ResultInsertStores:
+		if obj == nil {
+			return graphql.Null
+		}
+		return ec._ResultInsertStores(ctx, sel, obj)
+	case model1.ResultUpdateStores:
+		return ec._ResultUpdateStores(ctx, sel, &obj)
+	case *model1.ResultUpdateStores:
+		if obj == nil {
+			return graphql.Null
+		}
+		return ec._ResultUpdateStores(ctx, sel, obj)
+	case model1.ResultDeleteStores:
+		return ec._ResultDeleteStores(ctx, sel, &obj)
+	case *model1.ResultDeleteStores:
+		if obj == nil {
+			return graphql.Null
+		}
+		return ec._ResultDeleteStores(ctx, sel, obj)
+	case model1.ResultSingleStores:
+		return ec._ResultSingleStores(ctx, sel, &obj)
+	case *model1.ResultSingleStores:
+		if obj == nil {
+			return graphql.Null
+		}
+		return ec._ResultSingleStores(ctx, sel, obj)
+	case model1.ResultAllStores:
+		return ec._ResultAllStores(ctx, sel, &obj)
+	case *model1.ResultAllStores:
+		if obj == nil {
+			return graphql.Null
+		}
+		return ec._ResultAllStores(ctx, sel, obj)
 	default:
 		panic(fmt.Errorf("unexpected type %T", obj))
 	}
@@ -6776,8 +8268,23 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
-		case "DeleteProdcuts":
-			out.Values[i] = ec._Mutation_DeleteProdcuts(ctx, field)
+		case "DeleteProducts":
+			out.Values[i] = ec._Mutation_DeleteProducts(ctx, field)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "InsertStores":
+			out.Values[i] = ec._Mutation_InsertStores(ctx, field)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "UpdateStores":
+			out.Values[i] = ec._Mutation_UpdateStores(ctx, field)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "DeleteStores":
+			out.Values[i] = ec._Mutation_DeleteStores(ctx, field)
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
@@ -6998,6 +8505,34 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 				res = ec._Query_getInfoKaryawan(ctx, field)
 				return res
 			})
+		case "AllStores":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_AllStores(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			})
+		case "SingleStores":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_SingleStores(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			})
 		case "__type":
 			out.Values[i] = ec._Query___type(ctx, field)
 		case "__schema":
@@ -7073,6 +8608,43 @@ func (ec *executionContext) _ResultAllProducts(ctx context.Context, sel ast.Sele
 			}
 		case "data":
 			out.Values[i] = ec._ResultAllProducts_data(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var resultAllStoresImplementors = []string{"ResultAllStores", "resultInsert"}
+
+func (ec *executionContext) _ResultAllStores(ctx context.Context, sel ast.SelectionSet, obj *model1.ResultAllStores) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, resultAllStoresImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("ResultAllStores")
+		case "status":
+			out.Values[i] = ec._ResultAllStores_status(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "code":
+			out.Values[i] = ec._ResultAllStores_code(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "data":
+			out.Values[i] = ec._ResultAllStores_data(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
@@ -7179,6 +8751,43 @@ func (ec *executionContext) _ResultDeleteProducts(ctx context.Context, sel ast.S
 			}
 		case "data":
 			out.Values[i] = ec._ResultDeleteProducts_data(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var resultDeleteStoresImplementors = []string{"ResultDeleteStores", "resultInsert"}
+
+func (ec *executionContext) _ResultDeleteStores(ctx context.Context, sel ast.SelectionSet, obj *model1.ResultDeleteStores) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, resultDeleteStoresImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("ResultDeleteStores")
+		case "status":
+			out.Values[i] = ec._ResultDeleteStores_status(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "code":
+			out.Values[i] = ec._ResultDeleteStores_code(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "data":
+			out.Values[i] = ec._ResultDeleteStores_data(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
@@ -7415,6 +9024,43 @@ func (ec *executionContext) _ResultInsertProducts(ctx context.Context, sel ast.S
 	return out
 }
 
+var resultInsertStoresImplementors = []string{"ResultInsertStores", "resultInsert"}
+
+func (ec *executionContext) _ResultInsertStores(ctx context.Context, sel ast.SelectionSet, obj *model1.ResultInsertStores) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, resultInsertStoresImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("ResultInsertStores")
+		case "status":
+			out.Values[i] = ec._ResultInsertStores_status(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "code":
+			out.Values[i] = ec._ResultInsertStores_code(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "data":
+			out.Values[i] = ec._ResultInsertStores_data(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
 var resultSingleBrandsImplementors = []string{"ResultSingleBrands", "resultInsert"}
 
 func (ec *executionContext) _ResultSingleBrands(ctx context.Context, sel ast.SelectionSet, obj *model1.ResultSingleBrands) graphql.Marshaler {
@@ -7475,6 +9121,43 @@ func (ec *executionContext) _ResultSingleProducts(ctx context.Context, sel ast.S
 			}
 		case "data":
 			out.Values[i] = ec._ResultSingleProducts_data(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var resultSingleStoresImplementors = []string{"ResultSingleStores", "resultInsert"}
+
+func (ec *executionContext) _ResultSingleStores(ctx context.Context, sel ast.SelectionSet, obj *model1.ResultSingleStores) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, resultSingleStoresImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("ResultSingleStores")
+		case "status":
+			out.Values[i] = ec._ResultSingleStores_status(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "code":
+			out.Values[i] = ec._ResultSingleStores_code(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "data":
+			out.Values[i] = ec._ResultSingleStores_data(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
@@ -7586,6 +9269,100 @@ func (ec *executionContext) _ResultUpdateProducts(ctx context.Context, sel ast.S
 			}
 		case "data":
 			out.Values[i] = ec._ResultUpdateProducts_data(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var resultUpdateStoresImplementors = []string{"ResultUpdateStores", "resultInsert"}
+
+func (ec *executionContext) _ResultUpdateStores(ctx context.Context, sel ast.SelectionSet, obj *model1.ResultUpdateStores) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, resultUpdateStoresImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("ResultUpdateStores")
+		case "status":
+			out.Values[i] = ec._ResultUpdateStores_status(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "code":
+			out.Values[i] = ec._ResultUpdateStores_code(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "data":
+			out.Values[i] = ec._ResultUpdateStores_data(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var storesImplementors = []string{"Stores"}
+
+func (ec *executionContext) _Stores(ctx context.Context, sel ast.SelectionSet, obj *model1.Stores) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, storesImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("Stores")
+		case "StoreID":
+			out.Values[i] = ec._Stores_StoreID(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "StoreName":
+			out.Values[i] = ec._Stores_StoreName(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "Phone":
+			out.Values[i] = ec._Stores_Phone(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "Email":
+			out.Values[i] = ec._Stores_Email(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "City":
+			out.Values[i] = ec._Stores_City(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "State":
+			out.Values[i] = ec._Stores_State(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "ZipCode":
+			out.Values[i] = ec._Stores_ZipCode(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
@@ -8183,6 +9960,20 @@ func (ec *executionContext) marshalNResultAllProducts2ᚖgithubᚗcomᚋjuragank
 	return ec._ResultAllProducts(ctx, sel, v)
 }
 
+func (ec *executionContext) marshalNResultAllStores2githubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultAllStores(ctx context.Context, sel ast.SelectionSet, v model1.ResultAllStores) graphql.Marshaler {
+	return ec._ResultAllStores(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNResultAllStores2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultAllStores(ctx context.Context, sel ast.SelectionSet, v *model1.ResultAllStores) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	return ec._ResultAllStores(ctx, sel, v)
+}
+
 func (ec *executionContext) marshalNResultDeleteBrands2githubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultDeleteBrands(ctx context.Context, sel ast.SelectionSet, v model1.ResultDeleteBrands) graphql.Marshaler {
 	return ec._ResultDeleteBrands(ctx, sel, &v)
 }
@@ -8223,6 +10014,20 @@ func (ec *executionContext) marshalNResultDeleteProducts2ᚖgithubᚗcomᚋjurag
 		return graphql.Null
 	}
 	return ec._ResultDeleteProducts(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalNResultDeleteStores2githubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultDeleteStores(ctx context.Context, sel ast.SelectionSet, v model1.ResultDeleteStores) graphql.Marshaler {
+	return ec._ResultDeleteStores(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNResultDeleteStores2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultDeleteStores(ctx context.Context, sel ast.SelectionSet, v *model1.ResultDeleteStores) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	return ec._ResultDeleteStores(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalNResultFetchCategories2githubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultFetchCategories(ctx context.Context, sel ast.SelectionSet, v model1.ResultFetchCategories) graphql.Marshaler {
@@ -8309,6 +10114,20 @@ func (ec *executionContext) marshalNResultInsertProducts2ᚖgithubᚗcomᚋjurag
 	return ec._ResultInsertProducts(ctx, sel, v)
 }
 
+func (ec *executionContext) marshalNResultInsertStores2githubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultInsertStores(ctx context.Context, sel ast.SelectionSet, v model1.ResultInsertStores) graphql.Marshaler {
+	return ec._ResultInsertStores(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNResultInsertStores2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultInsertStores(ctx context.Context, sel ast.SelectionSet, v *model1.ResultInsertStores) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	return ec._ResultInsertStores(ctx, sel, v)
+}
+
 func (ec *executionContext) marshalNResultSingleBrands2githubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultSingleBrands(ctx context.Context, sel ast.SelectionSet, v model1.ResultSingleBrands) graphql.Marshaler {
 	return ec._ResultSingleBrands(ctx, sel, &v)
 }
@@ -8335,6 +10154,20 @@ func (ec *executionContext) marshalNResultSingleProducts2ᚖgithubᚗcomᚋjurag
 		return graphql.Null
 	}
 	return ec._ResultSingleProducts(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalNResultSingleStores2githubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultSingleStores(ctx context.Context, sel ast.SelectionSet, v model1.ResultSingleStores) graphql.Marshaler {
+	return ec._ResultSingleStores(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNResultSingleStores2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultSingleStores(ctx context.Context, sel ast.SelectionSet, v *model1.ResultSingleStores) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	return ec._ResultSingleStores(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalNResultUpdateBrands2githubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultUpdateBrands(ctx context.Context, sel ast.SelectionSet, v model1.ResultUpdateBrands) graphql.Marshaler {
@@ -8377,6 +10210,67 @@ func (ec *executionContext) marshalNResultUpdateProducts2ᚖgithubᚗcomᚋjurag
 		return graphql.Null
 	}
 	return ec._ResultUpdateProducts(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalNResultUpdateStores2githubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultUpdateStores(ctx context.Context, sel ast.SelectionSet, v model1.ResultUpdateStores) graphql.Marshaler {
+	return ec._ResultUpdateStores(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNResultUpdateStores2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultUpdateStores(ctx context.Context, sel ast.SelectionSet, v *model1.ResultUpdateStores) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	return ec._ResultUpdateStores(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalNStores2ᚕᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐStores(ctx context.Context, sel ast.SelectionSet, v []*model1.Stores) graphql.Marshaler {
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalOStores2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐStores(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+	return ret
+}
+
+func (ec *executionContext) marshalNStores2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐStores(ctx context.Context, sel ast.SelectionSet, v *model1.Stores) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	return ec._Stores(ctx, sel, v)
 }
 
 func (ec *executionContext) unmarshalNString2string(ctx context.Context, v interface{}) (string, error) {
@@ -8723,6 +10617,13 @@ func (ec *executionContext) marshalOProducts2ᚖgithubᚗcomᚋjuragankodingᚋg
 		return graphql.Null
 	}
 	return ec._Products(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalOStores2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐStores(ctx context.Context, sel ast.SelectionSet, v *model1.Stores) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._Stores(ctx, sel, v)
 }
 
 func (ec *executionContext) unmarshalOString2string(ctx context.Context, v interface{}) (string, error) {

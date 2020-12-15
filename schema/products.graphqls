@@ -60,5 +60,5 @@ extend type Mutation {
     modelyear: Int!
     ListPrice: Int!
   ): ResultUpdateProducts!
-  DeleteProdcuts(id: Int!): ResultDeleteProducts!
+  DeleteProducts(id: Int!): ResultDeleteProducts!
 }

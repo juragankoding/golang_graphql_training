@@ -1,0 +1,65 @@
+type Stores {
+  StoreID: Int!
+  StoreName: String!
+  Phone: String!
+  Email: String!
+  City: String!
+  State: String!
+  ZipCode: String!
+}
+
+type ResultInsertStores implements resultInsert {
+  status: String!
+  code: Int!
+  data: Stores!
+}
+
+type ResultUpdateStores implements resultInsert {
+  status: String!
+  code: Int!
+  data: Stores!
+}
+
+type ResultDeleteStores implements resultInsert {
+  status: String!
+  code: Int!
+  data: Stores!
+}
+
+type ResultSingleStores implements resultInsert {
+  status: String!
+  code: Int!
+  data: Stores!
+}
+
+type ResultAllStores implements resultInsert {
+  status: String!
+  code: Int!
+  data: [Stores]!
+}
+
+extend type Query {
+  AllStores: ResultAllStores!
+  SingleStores(id: Int): ResultSingleStores!
+}
+
+extend type Mutation {
+  InsertStores(
+    StoreName: String!
+    Phone: String!
+    Email: String!
+    City: String!
+    State: String!
+    ZipCode: String!
+  ): ResultInsertStores!
+  UpdateStores(
+    StoreID: Int!
+    StoreName: String!
+    Phone: String!
+    Email: String!
+    City: String!
+    State: String!
+    ZipCode: String!
+  ): ResultUpdateStores!
+  DeleteStores(id: Int!): ResultDeleteStores!
+}

@@ -20,7 +20,7 @@ func (r *mutationResolver) UpdateProducts(ctx context.Context, id int, name stri
 	panic(fmt.Errorf("not implemented"))
 }
 
-func (r *mutationResolver) DeleteProdcuts(ctx context.Context, id int) (*model.ResultDeleteProducts, error) {
+func (r *mutationResolver) DeleteProducts(ctx context.Context, id int) (*model.ResultDeleteProducts, error) {
 	panic(fmt.Errorf("not implemented"))
 }
 

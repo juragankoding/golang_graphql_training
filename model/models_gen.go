@@ -27,6 +27,14 @@ type ResultAllProducts struct {
 
 func (ResultAllProducts) IsResultInsert() {}
 
+type ResultAllStores struct {
+	Status string    `json:"status"`
+	Code   int       `json:"code"`
+	Data   []*Stores `json:"data"`
+}
+
+func (ResultAllStores) IsResultInsert() {}
+
 type ResultDeleteBrands struct {
 	Status string `json:"status"`
 	Code   int    `json:"code"`
@@ -49,6 +57,14 @@ type ResultDeleteProducts struct {
 }
 
 func (ResultDeleteProducts) IsResultInsert() {}
+
+type ResultDeleteStores struct {
+	Status string  `json:"status"`
+	Code   int     `json:"code"`
+	Data   *Stores `json:"data"`
+}
+
+func (ResultDeleteStores) IsResultInsert() {}
 
 type ResultFetchCategories struct {
 	Status string               `json:"status"`
@@ -90,6 +106,14 @@ type ResultInsertProducts struct {
 
 func (ResultInsertProducts) IsResultInsert() {}
 
+type ResultInsertStores struct {
+	Status string  `json:"status"`
+	Code   int     `json:"code"`
+	Data   *Stores `json:"data"`
+}
+
+func (ResultInsertStores) IsResultInsert() {}
+
 type ResultSingleBrands struct {
 	Status string         `json:"status"`
 	Code   int            `json:"code"`
@@ -105,6 +129,14 @@ type ResultSingleProducts struct {
 }
 
 func (ResultSingleProducts) IsResultInsert() {}
+
+type ResultSingleStores struct {
+	Status string  `json:"status"`
+	Code   int     `json:"code"`
+	Data   *Stores `json:"data"`
+}
+
+func (ResultSingleStores) IsResultInsert() {}
 
 type ResultUpdateBrands struct {
 	Status string         `json:"status"`
@@ -129,6 +161,24 @@ type ResultUpdateProducts struct {
 }
 
 func (ResultUpdateProducts) IsResultInsert() {}
+
+type ResultUpdateStores struct {
+	Status string  `json:"status"`
+	Code   int     `json:"code"`
+	Data   *Stores `json:"data"`
+}
+
+func (ResultUpdateStores) IsResultInsert() {}
+
+type Stores struct {
+	StoreID   int    `json:"StoreID"`
+	StoreName string `json:"StoreName"`
+	Phone     string `json:"Phone"`
+	Email     string `json:"Email"`
+	City      string `json:"City"`
+	State     string `json:"State"`
+	ZipCode   string `json:"ZipCode"`
+}
 
 type ResultGetAllJenisBarang struct {
 	Status string                `json:"status"`
