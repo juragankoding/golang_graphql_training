@@ -46,7 +46,7 @@ extend type Query {
 }
 
 extend type Mutation {
-  Customers(nama: String!): ResultInsertCustomers!
+  InsertCustomers(nama: String!): ResultInsertCustomers!
   UpdateCustomers(id: Int!, nama: String!): ResultUpdateCustomers!
   DeleteCustomers(id: Int!): ResultDeleteCustomers!
 }
