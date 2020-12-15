@@ -1,0 +1,74 @@
+type Orders {
+  OrderID: Int!
+  CustormerID: Int!
+  OrderStatus: Int!
+  OrderDate: String!
+  RequiredDate: String!
+  ShippedDate: String!
+  StoreID: Int!
+  StaffID: Int!
+  StoreData: Stores!
+  StaffData: Staffs!
+}
+
+type ResultInsertOrders implements resultInsert {
+  status: String!
+  code: Int!
+  data: Orders!
+}
+
+type ResultUpdateOrders implements resultInsert {
+  status: String!
+  code: Int!
+  data: Orders!
+}
+
+type ResultDeleteOrders implements resultInsert {
+  status: String!
+  code: Int!
+  data: Orders!
+}
+
+type ResultFetchOrders implements resultInsert {
+  status: String!
+  code: Int!
+  data: [Orders]!
+}
+
+type ResultGetOrders implements resultInsert {
+  status: String!
+  code: Int!
+  data: Orders!
+}
+
+extend type Query {
+  AllOrders: ResultFetchOrders!
+  SingelOrders(id: Int): ResultGetOrders!
+}
+
+extend type Mutation {
+  InsertOrders(
+    CustormerID: Int!
+    OrderStatus: Int!
+    OrderDate: String!
+    RequiredDate: String!
+    ShippedDate: String!
+    StoreID: Int!
+    StaffID: Int!
+    StoreData: Stores!
+    StaffData: Staffs!
+  ): ResultInsertOrders!
+  UpdateOrders(
+    OrderID: Int!
+    CustormerID: Int!
+    OrderStatus: Int!
+    OrderDate: String!
+    RequiredDate: String!
+    ShippedDate: String!
+    StoreID: Int!
+    StaffID: Int!
+    StoreData: Stores!
+    StaffData: Staffs!
+  ): ResultUpdateOrders!
+  DeleteOrders(id: Int!): ResultDeleteOrders!
+}
