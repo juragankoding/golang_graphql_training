@@ -2,7 +2,7 @@ package domain
 
 type Products struct {
 	ProductID      int        `json:"product_id"`
-	ProductNamme   string     `json:"product_name"`
+	ProductName    string     `json:"product_name"`
 	BrandID        int        `json:"brand_id"`
 	CategoryID     int        `json:"category_id"`
 	ModelYear      string     `json:"model_year"`
