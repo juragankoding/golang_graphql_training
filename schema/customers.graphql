@@ -1,0 +1,52 @@
+type Customers {
+  CustomerID: Int!
+  FirstName: String!
+  LastName: String!
+  Phone: String!
+  Email: String!
+  Street: String!
+  City: String!
+  State: String!
+  ZipCode: Int!
+}
+
+type ResultInsertCustomers implements resultInsert {
+  status: String!
+  code: Int!
+  data: Customers!
+}
+
+type ResultUpdateCustomers implements resultInsert {
+  status: String!
+  code: Int!
+  data: Customers!
+}
+
+type ResultDeleteCustomers implements resultInsert {
+  status: String!
+  code: Int!
+  data: Customers!
+}
+
+type ResultFetchCustomers implements resultInsert {
+  status: String!
+  code: Int!
+  data: [Customers]!
+}
+
+type ResultGetCustomers implements resultInsert {
+  status: String!
+  code: Int!
+  data: Customers!
+}
+
+extend type Query {
+  Customers: ResultFetchCustomers!
+  Customer(id: Int): ResultGetCustomers!
+}
+
+extend type Mutation {
+  Customers(nama: String!): ResultInsertCustomers!
+  UpdateCustomers(id: Int!, nama: String!): ResultUpdateCustomers!
+  DeleteCustomers(id: Int!): ResultDeleteCustomers!
+}
