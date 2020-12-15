@@ -1,0 +1,62 @@
+type OrderItem {
+  ItemID: Int!
+  OrderID: Int!
+  ProductID: Int!
+  Quantity: Int!
+  ListPrice: Int!
+  Discount: Int!
+}
+
+type ResultInsertOrderItem implements resultInsert {
+  status: String!
+  code: Int!
+  data: OrderItem!
+}
+
+type ResultUpdateOrderItem implements resultInsert {
+  status: String!
+  code: Int!
+  data: OrderItem!
+}
+
+type ResultDeleteOrderItem implements resultInsert {
+  status: String!
+  code: Int!
+  data: OrderItem!
+}
+
+type ResultFetchOrderItem implements resultInsert {
+  status: String!
+  code: Int!
+  data: [OrderItem]!
+}
+
+type ResultGetOrderItem implements resultInsert {
+  status: String!
+  code: Int!
+  data: OrderItem!
+}
+
+extend type Query {
+  AllOrderItem: ResultFetchOrderItem!
+  SingelOrderItem(id: Int): ResultGetOrderItem!
+}
+
+extend type Mutation {
+  InsertOrderItem(
+    OrderID: Int!
+    ProductID: Int!
+    Quantity: Int!
+    ListPrice: Int!
+    Discount: Int!
+  ): ResultInsertOrderItem!
+  UpdateOrderItem(
+    ItemID: Int!
+    OrderID: Int!
+    ProductID: Int!
+    Quantity: Int!
+    ListPrice: Int!
+    Discount: Int!
+  ): ResultUpdateOrderItem!
+  DeleteOrderItem(id: Int!): ResultDeleteOrderItem!
+}
