@@ -6,7 +6,7 @@ type orderItemUseCase struct {
 	orderItemRepository domain.OrderItemRepository
 }
 
-func NewGenerateOderItemRepository(orderItemRepository domain.OrderItemRepository) domain.OrderItemUseCase {
+func NewGenerateOderItemUseCase(orderItemRepository domain.OrderItemRepository) domain.OrderItemUseCase {
 	return &orderItemUseCase{
 		orderItemRepository: orderItemRepository,
 	}

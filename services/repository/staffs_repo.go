@@ -10,7 +10,7 @@ type staffsRepository struct {
 	Conn *sql.DB
 }
 
-func NewStaffsRepository(conn *sql.DB) domain.StaffsRepository {
+func NewGenerateStaffsRepository(conn *sql.DB) domain.StaffsRepository {
 	return &staffsRepository{
 		Conn: conn,
 	}

@@ -7,11 +7,11 @@ import (
 
 	"github.com/99designs/gqlgen/graphql/handler"
 	"github.com/99designs/gqlgen/graphql/playground"
-	"github.com/juragankoding/golang_graphql_training/categories/repository"
-	"github.com/juragankoding/golang_graphql_training/categories/usecase"
 	"github.com/juragankoding/golang_graphql_training/db"
 	"github.com/juragankoding/golang_graphql_training/generated"
 	"github.com/juragankoding/golang_graphql_training/graph"
+	"github.com/juragankoding/golang_graphql_training/services/repository"
+	"github.com/juragankoding/golang_graphql_training/services/usecase"
 )
 
 const defaultPort = "8080"
@@ -33,13 +33,34 @@ func main() {
 	}
 
 	//prepare repository
-	respositoryCategories := repository.NewCategoriesRepository(db)
+	repositoryCategories := repository.NewGenerateCategoriesRepository(db)
+	repositoryCustomers := repository.NewGenerateCustomerRespository(db)
+	repositoryBrands := repository.NewGenerateBrandsRepository(db)
+	repositoryOrderItem := repository.NewGenerateOrderItemRespository(db)
+	repositoryOrders := repository.NewGenerateOrdersRepository(db)
+	repositoryProducts := repository.NewGenerateProductsRepository(db)
+	repositoryStaffs := repository.NewGenerateStaffsRepository(db)
+	repositoryStocks := repository.NewGenerateStocksRepository(db)
 
 	//prepare usecase
-	categoriesUseCase := usecase.NewCategoriesUserCase(respositoryCategories)
+	categoriesUseCase := usecase.NewCategoriesUserCase(repositoryCategories)
+	customersUseCase := usecase.NewGenerateCustomerRespository(repositoryCustomers)
+	brandsUseCase := usecase.NewGenerateBrandsUseCase(repositoryBrands)
+	orderItemUseCase := usecase.NewGenerateOderItemUseCase(repositoryOrderItem)
+	ordersUseCase := usecase.NewGenerateOrdersUseCase(repositoryOrders)
+	productUseCase := usecase.NewGenerateProductUseCase(repositoryProducts)
+	staffsUseCase := usecase.NewGenerateStaffsUseCase(repositoryStaffs)
+	stocksUseCase := usecase.NewGenerateStockUseCase(repositoryStocks)
 
 	srv := handler.NewDefaultServer(generated.NewExecutableSchema(generated.Config{Resolvers: &graph.Resolver{
-		DomainCategoriUseCase: categoriesUseCase,
+		CategoriesUseCase: categoriesUseCase,
+		CustomersUseCase:  customersUseCase,
+		BrandsUseCase:     brandsUseCase,
+		OrderItemUseCase:  orderItemUseCase,
+		OrdersUseCase:     ordersUseCase,
+		ProductUseCase:    productUseCase,
+		StaffsUseCase:     staffsUseCase,
+		StocksUseCase:     stocksUseCase,
 	}}))
 
 	http.Handle("/playground", playground.Handler("GraphQL playground", "/"))

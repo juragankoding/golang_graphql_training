@@ -10,7 +10,7 @@ type categoriesRepository struct {
 	Conn *sql.DB
 }
 
-func NewCategoriesRepository(Conn *sql.DB) domain.CategoriesRepository {
+func NewGenerateCategoriesRepository(Conn *sql.DB) domain.CategoriesRepository {
 	return &categoriesRepository{
 		Conn: Conn,
 	}

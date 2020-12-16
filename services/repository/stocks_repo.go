@@ -10,7 +10,7 @@ type stocksRepository struct {
 	Conn *sql.DB
 }
 
-func NewStocksRepository(Conn *sql.DB) domain.StocksRepository {
+func NewGenerateStocksRepository(Conn *sql.DB) domain.StocksRepository {
 	return &stocksRepository{
 		Conn: Conn,
 	}

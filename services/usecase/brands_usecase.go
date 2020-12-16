@@ -1,18 +1,16 @@
 package usecase
 
 import (
-	"database/sql"
-
 	"github.com/juragankoding/golang_graphql_training/domain"
 )
 
 type brandsUseCase struct {
-	Conn *sql.DB
+	brandsRepository domain.BrandsRepository
 }
 
-func NewBrandsRepository(Conn *sql.DB) domain.BrandsUseCase {
+func NewGenerateBrandsUseCase(brandsRepository domain.BrandsRepository) domain.BrandsUseCase {
 	return &brandsUseCase{
-		Conn: Conn,
+		brandsRepository: brandsRepository,
 	}
 }
 

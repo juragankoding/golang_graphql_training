@@ -1,16 +1,17 @@
 package usecase
 
 import (
-	"database/sql"
-
 	"github.com/juragankoding/golang_graphql_training/domain"
 )
 
 type customersUseCase struct {
+	customers domain.CustomersRepository
 }
 
-func NewCustomerRespository(Conn *sql.DB) domain.CustomersUseCase {
-	return &customersUseCase{}
+func NewGenerateCustomerRespository(customers domain.CustomersRepository) domain.CustomersUseCase {
+	return &customersUseCase{
+		customers: customers,
+	}
 }
 
 func (a *customersUseCase) All() ([]*domain.Customers, error) {

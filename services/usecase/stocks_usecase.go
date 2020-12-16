@@ -6,7 +6,7 @@ type stockUseCase struct {
 	StockRepository domain.StocksRepository
 }
 
-func NewStockUseCase(stockRepository domain.StocksRepository) domain.StocksUseCase {
+func NewGenerateStockUseCase(stockRepository domain.StocksRepository) domain.StocksUseCase {
 	return &stockUseCase{
 		StockRepository: stockRepository,
 	}

@@ -8,7 +8,7 @@ type staffsUseCase struct {
 	StaffsRepo domain.StaffsRepository
 }
 
-func NewStaffsUseCase(staffRepo domain.StaffsRepository) domain.StaffsUseCase {
+func NewGenerateStaffsUseCase(staffRepo domain.StaffsRepository) domain.StaffsUseCase {
 	return &staffsUseCase{
 		StaffsRepo: staffRepo,
 	}

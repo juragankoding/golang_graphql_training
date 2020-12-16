@@ -8,7 +8,7 @@ type ordersUseCase struct {
 	ordersRepo domain.OrdersRepository
 }
 
-func NewOrdersUseCase(orderRepo domain.OrdersRepository) domain.OrdersUseCase {
+func NewGenerateOrdersUseCase(orderRepo domain.OrdersRepository) domain.OrdersUseCase {
 	return &ordersUseCase{
 		ordersRepo: orderRepo,
 	}
