@@ -45,10 +45,10 @@ autobind:
 models:
   Categories:
     model: github.com/juragankoding/golang_graphql_training/domain.Categories
-  Barang:
-    model: github.com/juragankoding/golang_graphql_training/models.Barang
-  JenisBarang:
-    model: github.com/juragankoding/golang_graphql_training/models.JenisBarang
+  # Barang:
+  #   model: github.com/juragankoding/golang_graphql_training/models.Barang
+  # JenisBarang:
+  #   model: github.com/juragankoding/golang_graphql_training/models.JenisBarang
   Products:
     model: github.com/juragankoding/golang_graphql_training/domain.Products
   Brands:

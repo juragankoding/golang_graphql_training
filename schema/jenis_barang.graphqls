@@ -1,24 +1,24 @@
-type JenisBarang {
-  id: Int!
-  jenis_barang: String!
-}
+# type JenisBarang {
+#   id: Int!
+#   jenis_barang: String!
+# }
 
-type resultJenisBarang implements resultInsert {
-  status: String!
-  code: Int!
-  data: JenisBarang!
-}
+# type resultJenisBarang implements resultInsert {
+#   status: String!
+#   code: Int!
+#   data: JenisBarang!
+# }
 
-type resultGetAllJenisBarang implements resultInsert {
-  status: String!
-  code: Int!
-  data: [JenisBarang]!
-}
+# type resultGetAllJenisBarang implements resultInsert {
+#   status: String!
+#   code: Int!
+#   data: [JenisBarang]!
+# }
 
-extend type Query {
-  getAllJenisBarang: resultGetAllJenisBarang!
-}
+# extend type Query {
+#   getAllJenisBarang: resultGetAllJenisBarang!
+# }
 
-extend type Mutation {
-  insertJenisBarang(jenis_barang: String!): resultJenisBarang!
-}
+# extend type Mutation {
+#   insertJenisBarang(jenis_barang: String!): resultJenisBarang!
+# }

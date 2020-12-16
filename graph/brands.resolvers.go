@@ -7,6 +7,7 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/juragankoding/golang_graphql_training/generated"
 	"github.com/juragankoding/golang_graphql_training/model"
 )
 
@@ -29,3 +30,12 @@ func (r *queryResolver) SingleBrands(ctx context.Context, id int) (*model.Result
 func (r *queryResolver) AllBrands(ctx context.Context) (*model.ResultAllBrands, error) {
 	panic(fmt.Errorf("not implemented"))
 }
+
+// Mutation returns generated.MutationResolver implementation.
+func (r *Resolver) Mutation() generated.MutationResolver { return &mutationResolver{r} }
+
+// Query returns generated.QueryResolver implementation.
+func (r *Resolver) Query() generated.QueryResolver { return &queryResolver{r} }
+
+type mutationResolver struct{ *Resolver }
+type queryResolver struct{ *Resolver }

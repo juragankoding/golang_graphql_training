@@ -14,9 +14,8 @@ import (
 	"github.com/99designs/gqlgen/graphql"
 	"github.com/99designs/gqlgen/graphql/introspection"
 	"github.com/juragankoding/golang_graphql_training/domain"
-	"github.com/juragankoding/golang_graphql_training/graph/model"
-	model1 "github.com/juragankoding/golang_graphql_training/model"
-	"github.com/juragankoding/golang_graphql_training/models"
+	model1 "github.com/juragankoding/golang_graphql_training/graph/model"
+	"github.com/juragankoding/golang_graphql_training/model"
 	gqlparser "github.com/vektah/gqlparser/v2"
 	"github.com/vektah/gqlparser/v2/ast"
 )
@@ -50,14 +49,6 @@ type DirectiveRoot struct {
 }
 
 type ComplexityRoot struct {
-	Barang struct {
-		Description func(childComplexity int) int
-		ID          func(childComplexity int) int
-		JenisBarang func(childComplexity int) int
-		Jumlah      func(childComplexity int) int
-		Nama        func(childComplexity int) int
-	}
-
 	Brands struct {
 		ID   func(childComplexity int) int
 		Name func(childComplexity int) int
@@ -66,11 +57,6 @@ type ComplexityRoot struct {
 	Categories struct {
 		ID   func(childComplexity int) int
 		Name func(childComplexity int) int
-	}
-
-	JenisBarang struct {
-		ID          func(childComplexity int) int
-		JenisBarang func(childComplexity int) int
 	}
 
 	Karyawan struct {
@@ -82,29 +68,39 @@ type ComplexityRoot struct {
 	}
 
 	Mutation struct {
-		DeleteBrands      func(childComplexity int, id int) int
-		DeleteCategories  func(childComplexity int, id int) int
-		DeleteOrders      func(childComplexity int, id int) int
-		DeleteProducts    func(childComplexity int, id int) int
-		DeleteStaffs      func(childComplexity int, id int) int
-		DeleteStocks      func(childComplexity int, id int) int
-		DeleteStores      func(childComplexity int, id int) int
-		InsertBarang      func(childComplexity int, id int, nama string, description string, jenisBarang int) int
-		InsertBrands      func(childComplexity int, nama string) int
-		InsertCategories  func(childComplexity int, nama string) int
-		InsertJenisBarang func(childComplexity int, jenisBarang string) int
-		InsertOrders      func(childComplexity int, custormerID int, orderStatus int, orderDate string, requiredDate string, shippedDate string, storeID int, staffID int) int
-		InsertProducts    func(childComplexity int, name string, brandID int, categoryID int, modelyear int, listPrice int) int
-		InsertStaffs      func(childComplexity int, firstName string, lastName string, phone string, email string, active int, storeID int, managerID int) int
-		InsertStocks      func(childComplexity int, productID int, quantity int) int
-		InsertStores      func(childComplexity int, storeName string, phone string, email string, city string, state string, zipCode string) int
-		UpdateBrands      func(childComplexity int, id int, nama string) int
-		UpdateCategories  func(childComplexity int, id int, nama string) int
-		UpdateOrders      func(childComplexity int, orderID int, custormerID int, orderStatus int, orderDate string, requiredDate string, shippedDate string, storeID int, staffID int) int
-		UpdateProducts    func(childComplexity int, id int, name string, brandID int, categoryID int, modelyear int, listPrice int) int
-		UpdateStaffs      func(childComplexity int, staffID int, firstName string, lastName string, phone string, email string, active int, storeID int, managerID int) int
-		UpdateStocks      func(childComplexity int, stockID int, productID int, quantity int) int
-		UpdateStores      func(childComplexity int, storeID int, storeName string, phone string, email string, city string, state string, zipCode string) int
+		DeleteBrands     func(childComplexity int, id int) int
+		DeleteCategories func(childComplexity int, id int) int
+		DeleteOrderItem  func(childComplexity int, id int) int
+		DeleteOrders     func(childComplexity int, id int) int
+		DeleteProducts   func(childComplexity int, id int) int
+		DeleteStaffs     func(childComplexity int, id int) int
+		DeleteStocks     func(childComplexity int, id int) int
+		DeleteStores     func(childComplexity int, id int) int
+		InsertBrands     func(childComplexity int, nama string) int
+		InsertCategories func(childComplexity int, nama string) int
+		InsertOrderItem  func(childComplexity int, orderID int, productID int, quantity int, listPrice int, discount int) int
+		InsertOrders     func(childComplexity int, custormerID int, orderStatus int, orderDate string, requiredDate string, shippedDate string, storeID int, staffID int) int
+		InsertProducts   func(childComplexity int, name string, brandID int, categoryID int, modelyear int, listPrice int) int
+		InsertStaffs     func(childComplexity int, firstName string, lastName string, phone string, email string, active int, storeID int, managerID int) int
+		InsertStocks     func(childComplexity int, productID int, quantity int) int
+		InsertStores     func(childComplexity int, storeName string, phone string, email string, city string, state string, zipCode string) int
+		UpdateBrands     func(childComplexity int, id int, nama string) int
+		UpdateCategories func(childComplexity int, id int, nama string) int
+		UpdateOrderItem  func(childComplexity int, itemID int, orderID int, productID int, quantity int, listPrice int, discount int) int
+		UpdateOrders     func(childComplexity int, orderID int, custormerID int, orderStatus int, orderDate string, requiredDate string, shippedDate string, storeID int, staffID int) int
+		UpdateProducts   func(childComplexity int, id int, name string, brandID int, categoryID int, modelyear int, listPrice int) int
+		UpdateStaffs     func(childComplexity int, staffID int, firstName string, lastName string, phone string, email string, active int, storeID int, managerID int) int
+		UpdateStocks     func(childComplexity int, stockID int, productID int, quantity int) int
+		UpdateStores     func(childComplexity int, storeID int, storeName string, phone string, email string, city string, state string, zipCode string) int
+	}
+
+	OrderItem struct {
+		Discount  func(childComplexity int) int
+		ItemID    func(childComplexity int) int
+		ListPrice func(childComplexity int) int
+		OrderID   func(childComplexity int) int
+		ProductID func(childComplexity int) int
+		Quantity  func(childComplexity int) int
 	}
 
 	Orders struct {
@@ -132,23 +128,23 @@ type ComplexityRoot struct {
 	}
 
 	Query struct {
-		AllBrands         func(childComplexity int) int
-		AllCategories     func(childComplexity int) int
-		AllOrders         func(childComplexity int) int
-		AllProducts       func(childComplexity int) int
-		AllStaffs         func(childComplexity int) int
-		AllStocks         func(childComplexity int) int
-		AllStores         func(childComplexity int) int
-		GetAllJenisBarang func(childComplexity int) int
-		GetBarang         func(childComplexity int) int
-		GetInfoKaryawan   func(childComplexity int, id int) int
-		SingelOrders      func(childComplexity int, id *int) int
-		SingelStaffs      func(childComplexity int, id *int) int
-		SingelStocks      func(childComplexity int, id *int) int
-		SingleBrands      func(childComplexity int, id int) int
-		SingleCategories  func(childComplexity int, id *int) int
-		SingleProducts    func(childComplexity int, id *int) int
-		SingleStores      func(childComplexity int, id *int) int
+		AllBrands        func(childComplexity int) int
+		AllCategories    func(childComplexity int) int
+		AllOrderItem     func(childComplexity int) int
+		AllOrders        func(childComplexity int) int
+		AllProducts      func(childComplexity int) int
+		AllStaffs        func(childComplexity int) int
+		AllStocks        func(childComplexity int) int
+		AllStores        func(childComplexity int) int
+		GetInfoKaryawan  func(childComplexity int, id int) int
+		SingelOrderItem  func(childComplexity int, id *int) int
+		SingelOrders     func(childComplexity int, id *int) int
+		SingelStaffs     func(childComplexity int, id *int) int
+		SingelStocks     func(childComplexity int, id *int) int
+		SingleBrands     func(childComplexity int, id int) int
+		SingleCategories func(childComplexity int, id *int) int
+		SingleProducts   func(childComplexity int, id *int) int
+		SingleStores     func(childComplexity int, id *int) int
 	}
 
 	ResultAllBrands struct {
@@ -175,6 +171,12 @@ type ComplexityRoot struct {
 	}
 
 	ResultDeleteCategories struct {
+		Code   func(childComplexity int) int
+		Data   func(childComplexity int) int
+		Status func(childComplexity int) int
+	}
+
+	ResultDeleteOrderItem struct {
 		Code   func(childComplexity int) int
 		Data   func(childComplexity int) int
 		Status func(childComplexity int) int
@@ -216,6 +218,12 @@ type ComplexityRoot struct {
 		Status func(childComplexity int) int
 	}
 
+	ResultFetchOrderItem struct {
+		Code   func(childComplexity int) int
+		Data   func(childComplexity int) int
+		Status func(childComplexity int) int
+	}
+
 	ResultFetchOrders struct {
 		Code   func(childComplexity int) int
 		Data   func(childComplexity int) int
@@ -240,6 +248,12 @@ type ComplexityRoot struct {
 		Status func(childComplexity int) int
 	}
 
+	ResultGetOrderItem struct {
+		Code   func(childComplexity int) int
+		Data   func(childComplexity int) int
+		Status func(childComplexity int) int
+	}
+
 	ResultGetOrders struct {
 		Code   func(childComplexity int) int
 		Data   func(childComplexity int) int
@@ -258,12 +272,6 @@ type ComplexityRoot struct {
 		Status func(childComplexity int) int
 	}
 
-	ResultInsertBarang struct {
-		Code   func(childComplexity int) int
-		Data   func(childComplexity int) int
-		Status func(childComplexity int) int
-	}
-
 	ResultInsertBrands struct {
 		Code   func(childComplexity int) int
 		Data   func(childComplexity int) int
@@ -271,6 +279,12 @@ type ComplexityRoot struct {
 	}
 
 	ResultInsertCategories struct {
+		Code   func(childComplexity int) int
+		Data   func(childComplexity int) int
+		Status func(childComplexity int) int
+	}
+
+	ResultInsertOrderItem struct {
 		Code   func(childComplexity int) int
 		Data   func(childComplexity int) int
 		Status func(childComplexity int) int
@@ -336,6 +350,12 @@ type ComplexityRoot struct {
 		Status func(childComplexity int) int
 	}
 
+	ResultUpdateOrderItem struct {
+		Code   func(childComplexity int) int
+		Data   func(childComplexity int) int
+		Status func(childComplexity int) int
+	}
+
 	ResultUpdateOrders struct {
 		Code   func(childComplexity int) int
 		Data   func(childComplexity int) int
@@ -394,71 +414,60 @@ type ComplexityRoot struct {
 		StoreName func(childComplexity int) int
 		ZipCode   func(childComplexity int) int
 	}
-
-	ResultGetAllJenisBarang struct {
-		Code   func(childComplexity int) int
-		Data   func(childComplexity int) int
-		Status func(childComplexity int) int
-	}
-
-	ResultJenisBarang struct {
-		Code   func(childComplexity int) int
-		Data   func(childComplexity int) int
-		Status func(childComplexity int) int
-	}
 }
 
 type MutationResolver interface {
-	InsertBarang(ctx context.Context, id int, nama string, description string, jenisBarang int) (*model.ResultInsertBarang, error)
-	InsertBrands(ctx context.Context, nama string) (*model1.ResultInsertBrands, error)
-	UpdateBrands(ctx context.Context, id int, nama string) (*model1.ResultUpdateBrands, error)
-	DeleteBrands(ctx context.Context, id int) (*model1.ResultDeleteBrands, error)
-	InsertCategories(ctx context.Context, nama string) (*model1.ResultInsertCategories, error)
-	UpdateCategories(ctx context.Context, id int, nama string) (*model1.ResultUpdateCategories, error)
-	DeleteCategories(ctx context.Context, id int) (*model1.ResultDeleteCategories, error)
-	InsertJenisBarang(ctx context.Context, jenisBarang string) (*model1.ResultJenisBarang, error)
-	InsertOrders(ctx context.Context, custormerID int, orderStatus int, orderDate string, requiredDate string, shippedDate string, storeID int, staffID int) (*model1.ResultInsertOrders, error)
-	UpdateOrders(ctx context.Context, orderID int, custormerID int, orderStatus int, orderDate string, requiredDate string, shippedDate string, storeID int, staffID int) (*model1.ResultUpdateOrders, error)
-	DeleteOrders(ctx context.Context, id int) (*model1.ResultDeleteOrders, error)
-	InsertProducts(ctx context.Context, name string, brandID int, categoryID int, modelyear int, listPrice int) (*model1.ResultInsertProducts, error)
-	UpdateProducts(ctx context.Context, id int, name string, brandID int, categoryID int, modelyear int, listPrice int) (*model1.ResultUpdateProducts, error)
-	DeleteProducts(ctx context.Context, id int) (*model1.ResultDeleteProducts, error)
-	InsertStaffs(ctx context.Context, firstName string, lastName string, phone string, email string, active int, storeID int, managerID int) (*model1.ResultInsertStaffs, error)
-	UpdateStaffs(ctx context.Context, staffID int, firstName string, lastName string, phone string, email string, active int, storeID int, managerID int) (*model1.ResultUpdateStaffs, error)
-	DeleteStaffs(ctx context.Context, id int) (*model1.ResultDeleteStaffs, error)
-	InsertStocks(ctx context.Context, productID int, quantity int) (*model1.ResultInsertStocks, error)
-	UpdateStocks(ctx context.Context, stockID int, productID int, quantity int) (*model1.ResultUpdateStocks, error)
-	DeleteStocks(ctx context.Context, id int) (*model1.ResultDeleteStocks, error)
-	InsertStores(ctx context.Context, storeName string, phone string, email string, city string, state string, zipCode string) (*model1.ResultInsertStores, error)
-	UpdateStores(ctx context.Context, storeID int, storeName string, phone string, email string, city string, state string, zipCode string) (*model1.ResultUpdateStores, error)
-	DeleteStores(ctx context.Context, id int) (*model1.ResultDeleteStores, error)
+	InsertBrands(ctx context.Context, nama string) (*model.ResultInsertBrands, error)
+	UpdateBrands(ctx context.Context, id int, nama string) (*model.ResultUpdateBrands, error)
+	DeleteBrands(ctx context.Context, id int) (*model.ResultDeleteBrands, error)
+	InsertCategories(ctx context.Context, nama string) (*model.ResultInsertCategories, error)
+	UpdateCategories(ctx context.Context, id int, nama string) (*model.ResultUpdateCategories, error)
+	DeleteCategories(ctx context.Context, id int) (*model.ResultDeleteCategories, error)
+	InsertOrderItem(ctx context.Context, orderID int, productID int, quantity int, listPrice int, discount int) (*model.ResultInsertOrderItem, error)
+	UpdateOrderItem(ctx context.Context, itemID int, orderID int, productID int, quantity int, listPrice int, discount int) (*model.ResultUpdateOrderItem, error)
+	DeleteOrderItem(ctx context.Context, id int) (*model.ResultDeleteOrderItem, error)
+	InsertOrders(ctx context.Context, custormerID int, orderStatus int, orderDate string, requiredDate string, shippedDate string, storeID int, staffID int) (*model.ResultInsertOrders, error)
+	UpdateOrders(ctx context.Context, orderID int, custormerID int, orderStatus int, orderDate string, requiredDate string, shippedDate string, storeID int, staffID int) (*model.ResultUpdateOrders, error)
+	DeleteOrders(ctx context.Context, id int) (*model.ResultDeleteOrders, error)
+	InsertProducts(ctx context.Context, name string, brandID int, categoryID int, modelyear int, listPrice int) (*model.ResultInsertProducts, error)
+	UpdateProducts(ctx context.Context, id int, name string, brandID int, categoryID int, modelyear int, listPrice int) (*model.ResultUpdateProducts, error)
+	DeleteProducts(ctx context.Context, id int) (*model.ResultDeleteProducts, error)
+	InsertStaffs(ctx context.Context, firstName string, lastName string, phone string, email string, active int, storeID int, managerID int) (*model.ResultInsertStaffs, error)
+	UpdateStaffs(ctx context.Context, staffID int, firstName string, lastName string, phone string, email string, active int, storeID int, managerID int) (*model.ResultUpdateStaffs, error)
+	DeleteStaffs(ctx context.Context, id int) (*model.ResultDeleteStaffs, error)
+	InsertStocks(ctx context.Context, productID int, quantity int) (*model.ResultInsertStocks, error)
+	UpdateStocks(ctx context.Context, stockID int, productID int, quantity int) (*model.ResultUpdateStocks, error)
+	DeleteStocks(ctx context.Context, id int) (*model.ResultDeleteStocks, error)
+	InsertStores(ctx context.Context, storeName string, phone string, email string, city string, state string, zipCode string) (*model.ResultInsertStores, error)
+	UpdateStores(ctx context.Context, storeID int, storeName string, phone string, email string, city string, state string, zipCode string) (*model.ResultUpdateStores, error)
+	DeleteStores(ctx context.Context, id int) (*model.ResultDeleteStores, error)
 }
 type ProductsResolver interface {
 	ProductName(ctx context.Context, obj *domain.Products) (int, error)
 }
 type QueryResolver interface {
-	GetBarang(ctx context.Context) (*string, error)
-	SingleBrands(ctx context.Context, id int) (*model1.ResultSingleBrands, error)
-	AllBrands(ctx context.Context) (*model1.ResultAllBrands, error)
-	AllCategories(ctx context.Context) (*model1.ResultFetchCategories, error)
-	SingleCategories(ctx context.Context, id *int) (*model1.ResultGetCategories, error)
-	GetAllJenisBarang(ctx context.Context) (*model1.ResultGetAllJenisBarang, error)
-	AllOrders(ctx context.Context) (*model1.ResultFetchOrders, error)
-	SingelOrders(ctx context.Context, id *int) (*model1.ResultGetOrders, error)
-	AllProducts(ctx context.Context) (*model1.ResultAllProducts, error)
-	SingleProducts(ctx context.Context, id *int) (*model1.ResultSingleProducts, error)
-	GetInfoKaryawan(ctx context.Context, id int) (*model.Karyawan, error)
-	AllStaffs(ctx context.Context) (*model1.ResultFetchStaffs, error)
-	SingelStaffs(ctx context.Context, id *int) (*model1.ResultGetStaffs, error)
-	AllStocks(ctx context.Context) (*model1.ResultFetchStocks, error)
-	SingelStocks(ctx context.Context, id *int) (*model1.ResultGetStocks, error)
-	AllStores(ctx context.Context) (*model1.ResultAllStores, error)
-	SingleStores(ctx context.Context, id *int) (*model1.ResultSingleStores, error)
+	SingleBrands(ctx context.Context, id int) (*model.ResultSingleBrands, error)
+	AllBrands(ctx context.Context) (*model.ResultAllBrands, error)
+	AllCategories(ctx context.Context) (*model.ResultFetchCategories, error)
+	SingleCategories(ctx context.Context, id *int) (*model.ResultGetCategories, error)
+	AllOrderItem(ctx context.Context) (*model.ResultFetchOrderItem, error)
+	SingelOrderItem(ctx context.Context, id *int) (*model.ResultGetOrderItem, error)
+	AllOrders(ctx context.Context) (*model.ResultFetchOrders, error)
+	SingelOrders(ctx context.Context, id *int) (*model.ResultGetOrders, error)
+	AllProducts(ctx context.Context) (*model.ResultAllProducts, error)
+	SingleProducts(ctx context.Context, id *int) (*model.ResultSingleProducts, error)
+	GetInfoKaryawan(ctx context.Context, id int) (*model1.Karyawan, error)
+	AllStaffs(ctx context.Context) (*model.ResultFetchStaffs, error)
+	SingelStaffs(ctx context.Context, id *int) (*model.ResultGetStaffs, error)
+	AllStocks(ctx context.Context) (*model.ResultFetchStocks, error)
+	SingelStocks(ctx context.Context, id *int) (*model.ResultGetStocks, error)
+	AllStores(ctx context.Context) (*model.ResultAllStores, error)
+	SingleStores(ctx context.Context, id *int) (*model.ResultSingleStores, error)
 }
 type StaffsResolver interface {
 	Active(ctx context.Context, obj *domain.Staffs) (int, error)
 
-	StoreData(ctx context.Context, obj *domain.Staffs) (*model1.Stores, error)
+	StoreData(ctx context.Context, obj *domain.Staffs) (*model.Stores, error)
 }
 type StocksResolver interface {
 	ProducData(ctx context.Context, obj *domain.Stocks) (*domain.Products, error)
@@ -478,41 +487,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 	ec := executionContext{nil, e}
 	_ = ec
 	switch typeName + "." + field {
-
-	case "Barang.description":
-		if e.complexity.Barang.Description == nil {
-			break
-		}
-
-		return e.complexity.Barang.Description(childComplexity), true
-
-	case "Barang.id":
-		if e.complexity.Barang.ID == nil {
-			break
-		}
-
-		return e.complexity.Barang.ID(childComplexity), true
-
-	case "Barang.jenisBarang":
-		if e.complexity.Barang.JenisBarang == nil {
-			break
-		}
-
-		return e.complexity.Barang.JenisBarang(childComplexity), true
-
-	case "Barang.jumlah":
-		if e.complexity.Barang.Jumlah == nil {
-			break
-		}
-
-		return e.complexity.Barang.Jumlah(childComplexity), true
-
-	case "Barang.nama":
-		if e.complexity.Barang.Nama == nil {
-			break
-		}
-
-		return e.complexity.Barang.Nama(childComplexity), true
 
 	case "Brands.ID":
 		if e.complexity.Brands.ID == nil {
@@ -541,20 +515,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Categories.Name(childComplexity), true
-
-	case "JenisBarang.id":
-		if e.complexity.JenisBarang.ID == nil {
-			break
-		}
-
-		return e.complexity.JenisBarang.ID(childComplexity), true
-
-	case "JenisBarang.jenis_barang":
-		if e.complexity.JenisBarang.JenisBarang == nil {
-			break
-		}
-
-		return e.complexity.JenisBarang.JenisBarang(childComplexity), true
 
 	case "Karyawan.email":
 		if e.complexity.Karyawan.Email == nil {
@@ -614,6 +574,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Mutation.DeleteCategories(childComplexity, args["id"].(int)), true
+
+	case "Mutation.DeleteOrderItem":
+		if e.complexity.Mutation.DeleteOrderItem == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_DeleteOrderItem_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.DeleteOrderItem(childComplexity, args["id"].(int)), true
 
 	case "Mutation.DeleteOrders":
 		if e.complexity.Mutation.DeleteOrders == nil {
@@ -675,18 +647,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Mutation.DeleteStores(childComplexity, args["id"].(int)), true
 
-	case "Mutation.insertBarang":
-		if e.complexity.Mutation.InsertBarang == nil {
-			break
-		}
-
-		args, err := ec.field_Mutation_insertBarang_args(context.TODO(), rawArgs)
-		if err != nil {
-			return 0, false
-		}
-
-		return e.complexity.Mutation.InsertBarang(childComplexity, args["id"].(int), args["nama"].(string), args["description"].(string), args["jenisBarang"].(int)), true
-
 	case "Mutation.InsertBrands":
 		if e.complexity.Mutation.InsertBrands == nil {
 			break
@@ -711,17 +671,17 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Mutation.InsertCategories(childComplexity, args["nama"].(string)), true
 
-	case "Mutation.insertJenisBarang":
-		if e.complexity.Mutation.InsertJenisBarang == nil {
+	case "Mutation.InsertOrderItem":
+		if e.complexity.Mutation.InsertOrderItem == nil {
 			break
 		}
 
-		args, err := ec.field_Mutation_insertJenisBarang_args(context.TODO(), rawArgs)
+		args, err := ec.field_Mutation_InsertOrderItem_args(context.TODO(), rawArgs)
 		if err != nil {
 			return 0, false
 		}
 
-		return e.complexity.Mutation.InsertJenisBarang(childComplexity, args["jenis_barang"].(string)), true
+		return e.complexity.Mutation.InsertOrderItem(childComplexity, args["OrderID"].(int), args["ProductID"].(int), args["Quantity"].(int), args["ListPrice"].(int), args["Discount"].(int)), true
 
 	case "Mutation.InsertOrders":
 		if e.complexity.Mutation.InsertOrders == nil {
@@ -807,6 +767,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Mutation.UpdateCategories(childComplexity, args["id"].(int), args["nama"].(string)), true
 
+	case "Mutation.UpdateOrderItem":
+		if e.complexity.Mutation.UpdateOrderItem == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_UpdateOrderItem_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.UpdateOrderItem(childComplexity, args["ItemID"].(int), args["OrderID"].(int), args["ProductID"].(int), args["Quantity"].(int), args["ListPrice"].(int), args["Discount"].(int)), true
+
 	case "Mutation.UpdateOrders":
 		if e.complexity.Mutation.UpdateOrders == nil {
 			break
@@ -866,6 +838,48 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Mutation.UpdateStores(childComplexity, args["StoreID"].(int), args["StoreName"].(string), args["Phone"].(string), args["Email"].(string), args["City"].(string), args["State"].(string), args["ZipCode"].(string)), true
+
+	case "OrderItem.Discount":
+		if e.complexity.OrderItem.Discount == nil {
+			break
+		}
+
+		return e.complexity.OrderItem.Discount(childComplexity), true
+
+	case "OrderItem.ItemID":
+		if e.complexity.OrderItem.ItemID == nil {
+			break
+		}
+
+		return e.complexity.OrderItem.ItemID(childComplexity), true
+
+	case "OrderItem.ListPrice":
+		if e.complexity.OrderItem.ListPrice == nil {
+			break
+		}
+
+		return e.complexity.OrderItem.ListPrice(childComplexity), true
+
+	case "OrderItem.OrderID":
+		if e.complexity.OrderItem.OrderID == nil {
+			break
+		}
+
+		return e.complexity.OrderItem.OrderID(childComplexity), true
+
+	case "OrderItem.ProductID":
+		if e.complexity.OrderItem.ProductID == nil {
+			break
+		}
+
+		return e.complexity.OrderItem.ProductID(childComplexity), true
+
+	case "OrderItem.Quantity":
+		if e.complexity.OrderItem.Quantity == nil {
+			break
+		}
+
+		return e.complexity.OrderItem.Quantity(childComplexity), true
 
 	case "Orders.CustormerID":
 		if e.complexity.Orders.CustormerID == nil {
@@ -1007,6 +1021,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Query.AllCategories(childComplexity), true
 
+	case "Query.AllOrderItem":
+		if e.complexity.Query.AllOrderItem == nil {
+			break
+		}
+
+		return e.complexity.Query.AllOrderItem(childComplexity), true
+
 	case "Query.AllOrders":
 		if e.complexity.Query.AllOrders == nil {
 			break
@@ -1042,20 +1063,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Query.AllStores(childComplexity), true
 
-	case "Query.getAllJenisBarang":
-		if e.complexity.Query.GetAllJenisBarang == nil {
-			break
-		}
-
-		return e.complexity.Query.GetAllJenisBarang(childComplexity), true
-
-	case "Query.getBarang":
-		if e.complexity.Query.GetBarang == nil {
-			break
-		}
-
-		return e.complexity.Query.GetBarang(childComplexity), true
-
 	case "Query.getInfoKaryawan":
 		if e.complexity.Query.GetInfoKaryawan == nil {
 			break
@@ -1067,6 +1074,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Query.GetInfoKaryawan(childComplexity, args["id"].(int)), true
+
+	case "Query.SingelOrderItem":
+		if e.complexity.Query.SingelOrderItem == nil {
+			break
+		}
+
+		args, err := ec.field_Query_SingelOrderItem_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.SingelOrderItem(childComplexity, args["id"].(*int)), true
 
 	case "Query.SingelOrders":
 		if e.complexity.Query.SingelOrders == nil {
@@ -1250,6 +1269,27 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.ResultDeleteCategories.Status(childComplexity), true
 
+	case "ResultDeleteOrderItem.code":
+		if e.complexity.ResultDeleteOrderItem.Code == nil {
+			break
+		}
+
+		return e.complexity.ResultDeleteOrderItem.Code(childComplexity), true
+
+	case "ResultDeleteOrderItem.data":
+		if e.complexity.ResultDeleteOrderItem.Data == nil {
+			break
+		}
+
+		return e.complexity.ResultDeleteOrderItem.Data(childComplexity), true
+
+	case "ResultDeleteOrderItem.status":
+		if e.complexity.ResultDeleteOrderItem.Status == nil {
+			break
+		}
+
+		return e.complexity.ResultDeleteOrderItem.Status(childComplexity), true
+
 	case "ResultDeleteOrders.code":
 		if e.complexity.ResultDeleteOrders.Code == nil {
 			break
@@ -1376,6 +1416,27 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.ResultFetchCategories.Status(childComplexity), true
 
+	case "ResultFetchOrderItem.code":
+		if e.complexity.ResultFetchOrderItem.Code == nil {
+			break
+		}
+
+		return e.complexity.ResultFetchOrderItem.Code(childComplexity), true
+
+	case "ResultFetchOrderItem.data":
+		if e.complexity.ResultFetchOrderItem.Data == nil {
+			break
+		}
+
+		return e.complexity.ResultFetchOrderItem.Data(childComplexity), true
+
+	case "ResultFetchOrderItem.status":
+		if e.complexity.ResultFetchOrderItem.Status == nil {
+			break
+		}
+
+		return e.complexity.ResultFetchOrderItem.Status(childComplexity), true
+
 	case "ResultFetchOrders.code":
 		if e.complexity.ResultFetchOrders.Code == nil {
 			break
@@ -1460,6 +1521,27 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.ResultGetCategories.Status(childComplexity), true
 
+	case "ResultGetOrderItem.code":
+		if e.complexity.ResultGetOrderItem.Code == nil {
+			break
+		}
+
+		return e.complexity.ResultGetOrderItem.Code(childComplexity), true
+
+	case "ResultGetOrderItem.data":
+		if e.complexity.ResultGetOrderItem.Data == nil {
+			break
+		}
+
+		return e.complexity.ResultGetOrderItem.Data(childComplexity), true
+
+	case "ResultGetOrderItem.status":
+		if e.complexity.ResultGetOrderItem.Status == nil {
+			break
+		}
+
+		return e.complexity.ResultGetOrderItem.Status(childComplexity), true
+
 	case "ResultGetOrders.code":
 		if e.complexity.ResultGetOrders.Code == nil {
 			break
@@ -1523,27 +1605,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.ResultGetStocks.Status(childComplexity), true
 
-	case "ResultInsertBarang.code":
-		if e.complexity.ResultInsertBarang.Code == nil {
-			break
-		}
-
-		return e.complexity.ResultInsertBarang.Code(childComplexity), true
-
-	case "ResultInsertBarang.data":
-		if e.complexity.ResultInsertBarang.Data == nil {
-			break
-		}
-
-		return e.complexity.ResultInsertBarang.Data(childComplexity), true
-
-	case "ResultInsertBarang.status":
-		if e.complexity.ResultInsertBarang.Status == nil {
-			break
-		}
-
-		return e.complexity.ResultInsertBarang.Status(childComplexity), true
-
 	case "ResultInsertBrands.code":
 		if e.complexity.ResultInsertBrands.Code == nil {
 			break
@@ -1585,6 +1646,27 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.ResultInsertCategories.Status(childComplexity), true
+
+	case "ResultInsertOrderItem.code":
+		if e.complexity.ResultInsertOrderItem.Code == nil {
+			break
+		}
+
+		return e.complexity.ResultInsertOrderItem.Code(childComplexity), true
+
+	case "ResultInsertOrderItem.data":
+		if e.complexity.ResultInsertOrderItem.Data == nil {
+			break
+		}
+
+		return e.complexity.ResultInsertOrderItem.Data(childComplexity), true
+
+	case "ResultInsertOrderItem.status":
+		if e.complexity.ResultInsertOrderItem.Status == nil {
+			break
+		}
+
+		return e.complexity.ResultInsertOrderItem.Status(childComplexity), true
 
 	case "ResultInsertOrders.code":
 		if e.complexity.ResultInsertOrders.Code == nil {
@@ -1795,6 +1877,27 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.ResultUpdateCategories.Status(childComplexity), true
+
+	case "ResultUpdateOrderItem.code":
+		if e.complexity.ResultUpdateOrderItem.Code == nil {
+			break
+		}
+
+		return e.complexity.ResultUpdateOrderItem.Code(childComplexity), true
+
+	case "ResultUpdateOrderItem.data":
+		if e.complexity.ResultUpdateOrderItem.Data == nil {
+			break
+		}
+
+		return e.complexity.ResultUpdateOrderItem.Data(childComplexity), true
+
+	case "ResultUpdateOrderItem.status":
+		if e.complexity.ResultUpdateOrderItem.Status == nil {
+			break
+		}
+
+		return e.complexity.ResultUpdateOrderItem.Status(childComplexity), true
 
 	case "ResultUpdateOrders.code":
 		if e.complexity.ResultUpdateOrders.Code == nil {
@@ -2041,48 +2144,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Stores.ZipCode(childComplexity), true
 
-	case "resultGetAllJenisBarang.code":
-		if e.complexity.ResultGetAllJenisBarang.Code == nil {
-			break
-		}
-
-		return e.complexity.ResultGetAllJenisBarang.Code(childComplexity), true
-
-	case "resultGetAllJenisBarang.data":
-		if e.complexity.ResultGetAllJenisBarang.Data == nil {
-			break
-		}
-
-		return e.complexity.ResultGetAllJenisBarang.Data(childComplexity), true
-
-	case "resultGetAllJenisBarang.status":
-		if e.complexity.ResultGetAllJenisBarang.Status == nil {
-			break
-		}
-
-		return e.complexity.ResultGetAllJenisBarang.Status(childComplexity), true
-
-	case "resultJenisBarang.code":
-		if e.complexity.ResultJenisBarang.Code == nil {
-			break
-		}
-
-		return e.complexity.ResultJenisBarang.Code(childComplexity), true
-
-	case "resultJenisBarang.data":
-		if e.complexity.ResultJenisBarang.Data == nil {
-			break
-		}
-
-		return e.complexity.ResultJenisBarang.Data(childComplexity), true
-
-	case "resultJenisBarang.status":
-		if e.complexity.ResultJenisBarang.Status == nil {
-			break
-		}
-
-		return e.complexity.ResultJenisBarang.Status(childComplexity), true
-
 	}
 	return 0, false
 }
@@ -2152,32 +2213,32 @@ var sources = []*ast.Source{
   code: Int!
 }
 `, BuiltIn: false},
-	{Name: "schema/barang.graphqls", Input: `type Barang {
-  id: Int!
-  nama: String!
-  description: String!
-  jumlah: Int!
-  jenisBarang: Int!
-}
+	{Name: "schema/barang.graphqls", Input: `# type Barang {
+#   id: Int!
+#   nama: String!
+#   description: String!
+#   jumlah: Int!
+#   jenisBarang: Int!
+# }
 
-type ResultInsertBarang implements resultInsert {
-  status: String!
-  code: Int!
-  data: Barang!
-}
+# type ResultInsertBarang implements resultInsert {
+#   status: String!
+#   code: Int!
+#   data: Barang!
+# }
 
-type Query {
-  getBarang: String
-}
+# type Query {
+#   getBarang: String
+# }
 
-type Mutation {
-  insertBarang(
-    id: Int!
-    nama: String!
-    description: String!
-    jenisBarang: Int!
-  ): ResultInsertBarang!
-}
+# type Mutation {
+#   insertBarang(
+#     id: Int!
+#     nama: String!
+#     description: String!
+#     jenisBarang: Int!
+#   ): ResultInsertBarang!
+# }
 `, BuiltIn: false},
 	{Name: "schema/brands.graphqls", Input: `type Brands {
   ID: Int!
@@ -2271,29 +2332,92 @@ extend type Mutation {
   DeleteCategories(id: Int!): ResultDeleteCategories!
 }
 `, BuiltIn: false},
-	{Name: "schema/jenis_barang.graphqls", Input: `type JenisBarang {
-  id: Int!
-  jenis_barang: String!
+	{Name: "schema/jenis_barang.graphqls", Input: `# type JenisBarang {
+#   id: Int!
+#   jenis_barang: String!
+# }
+
+# type resultJenisBarang implements resultInsert {
+#   status: String!
+#   code: Int!
+#   data: JenisBarang!
+# }
+
+# type resultGetAllJenisBarang implements resultInsert {
+#   status: String!
+#   code: Int!
+#   data: [JenisBarang]!
+# }
+
+# extend type Query {
+#   getAllJenisBarang: resultGetAllJenisBarang!
+# }
+
+# extend type Mutation {
+#   insertJenisBarang(jenis_barang: String!): resultJenisBarang!
+# }
+`, BuiltIn: false},
+	{Name: "schema/order_item.graphqls", Input: `type OrderItem {
+  ItemID: Int!
+  OrderID: Int!
+  ProductID: Int!
+  Quantity: Int!
+  ListPrice: Int!
+  Discount: Int!
 }
 
-type resultJenisBarang implements resultInsert {
+type ResultInsertOrderItem implements resultInsert {
   status: String!
   code: Int!
-  data: JenisBarang!
+  data: OrderItem!
 }
 
-type resultGetAllJenisBarang implements resultInsert {
+type ResultUpdateOrderItem implements resultInsert {
   status: String!
   code: Int!
-  data: [JenisBarang]!
+  data: OrderItem!
+}
+
+type ResultDeleteOrderItem implements resultInsert {
+  status: String!
+  code: Int!
+  data: OrderItem!
+}
+
+type ResultFetchOrderItem implements resultInsert {
+  status: String!
+  code: Int!
+  data: [OrderItem]!
+}
+
+type ResultGetOrderItem implements resultInsert {
+  status: String!
+  code: Int!
+  data: OrderItem!
 }
 
 extend type Query {
-  getAllJenisBarang: resultGetAllJenisBarang!
+  AllOrderItem: ResultFetchOrderItem!
+  SingelOrderItem(id: Int): ResultGetOrderItem!
 }
 
 extend type Mutation {
-  insertJenisBarang(jenis_barang: String!): resultJenisBarang!
+  InsertOrderItem(
+    OrderID: Int!
+    ProductID: Int!
+    Quantity: Int!
+    ListPrice: Int!
+    Discount: Int!
+  ): ResultInsertOrderItem!
+  UpdateOrderItem(
+    ItemID: Int!
+    OrderID: Int!
+    ProductID: Int!
+    Quantity: Int!
+    ListPrice: Int!
+    Discount: Int!
+  ): ResultUpdateOrderItem!
+  DeleteOrderItem(id: Int!): ResultDeleteOrderItem!
 }
 `, BuiltIn: false},
 	{Name: "schema/orders.graphqls", Input: `type Orders {
@@ -2673,6 +2797,21 @@ func (ec *executionContext) field_Mutation_DeleteCategories_args(ctx context.Con
 	return args, nil
 }
 
+func (ec *executionContext) field_Mutation_DeleteOrderItem_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 int
+	if tmp, ok := rawArgs["id"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+		arg0, err = ec.unmarshalNInt2int(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["id"] = arg0
+	return args, nil
+}
+
 func (ec *executionContext) field_Mutation_DeleteOrders_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
@@ -2775,6 +2914,57 @@ func (ec *executionContext) field_Mutation_InsertCategories_args(ctx context.Con
 		}
 	}
 	args["nama"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_InsertOrderItem_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 int
+	if tmp, ok := rawArgs["OrderID"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("OrderID"))
+		arg0, err = ec.unmarshalNInt2int(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["OrderID"] = arg0
+	var arg1 int
+	if tmp, ok := rawArgs["ProductID"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("ProductID"))
+		arg1, err = ec.unmarshalNInt2int(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["ProductID"] = arg1
+	var arg2 int
+	if tmp, ok := rawArgs["Quantity"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("Quantity"))
+		arg2, err = ec.unmarshalNInt2int(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["Quantity"] = arg2
+	var arg3 int
+	if tmp, ok := rawArgs["ListPrice"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("ListPrice"))
+		arg3, err = ec.unmarshalNInt2int(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["ListPrice"] = arg3
+	var arg4 int
+	if tmp, ok := rawArgs["Discount"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("Discount"))
+		arg4, err = ec.unmarshalNInt2int(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["Discount"] = arg4
 	return args, nil
 }
 
@@ -3099,6 +3289,66 @@ func (ec *executionContext) field_Mutation_UpdateCategories_args(ctx context.Con
 	return args, nil
 }
 
+func (ec *executionContext) field_Mutation_UpdateOrderItem_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 int
+	if tmp, ok := rawArgs["ItemID"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("ItemID"))
+		arg0, err = ec.unmarshalNInt2int(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["ItemID"] = arg0
+	var arg1 int
+	if tmp, ok := rawArgs["OrderID"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("OrderID"))
+		arg1, err = ec.unmarshalNInt2int(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["OrderID"] = arg1
+	var arg2 int
+	if tmp, ok := rawArgs["ProductID"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("ProductID"))
+		arg2, err = ec.unmarshalNInt2int(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["ProductID"] = arg2
+	var arg3 int
+	if tmp, ok := rawArgs["Quantity"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("Quantity"))
+		arg3, err = ec.unmarshalNInt2int(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["Quantity"] = arg3
+	var arg4 int
+	if tmp, ok := rawArgs["ListPrice"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("ListPrice"))
+		arg4, err = ec.unmarshalNInt2int(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["ListPrice"] = arg4
+	var arg5 int
+	if tmp, ok := rawArgs["Discount"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("Discount"))
+		arg5, err = ec.unmarshalNInt2int(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["Discount"] = arg5
+	return args, nil
+}
+
 func (ec *executionContext) field_Mutation_UpdateOrders_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
@@ -3417,60 +3667,18 @@ func (ec *executionContext) field_Mutation_UpdateStores_args(ctx context.Context
 	return args, nil
 }
 
-func (ec *executionContext) field_Mutation_insertBarang_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+func (ec *executionContext) field_Query_SingelOrderItem_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 int
+	var arg0 *int
 	if tmp, ok := rawArgs["id"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
-		arg0, err = ec.unmarshalNInt2int(ctx, tmp)
+		arg0, err = ec.unmarshalOInt2ᚖint(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
 	args["id"] = arg0
-	var arg1 string
-	if tmp, ok := rawArgs["nama"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("nama"))
-		arg1, err = ec.unmarshalNString2string(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["nama"] = arg1
-	var arg2 string
-	if tmp, ok := rawArgs["description"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("description"))
-		arg2, err = ec.unmarshalNString2string(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["description"] = arg2
-	var arg3 int
-	if tmp, ok := rawArgs["jenisBarang"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("jenisBarang"))
-		arg3, err = ec.unmarshalNInt2int(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["jenisBarang"] = arg3
-	return args, nil
-}
-
-func (ec *executionContext) field_Mutation_insertJenisBarang_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
-	var err error
-	args := map[string]interface{}{}
-	var arg0 string
-	if tmp, ok := rawArgs["jenis_barang"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("jenis_barang"))
-		arg0, err = ec.unmarshalNString2string(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["jenis_barang"] = arg0
 	return args, nil
 }
 
@@ -3647,181 +3855,6 @@ func (ec *executionContext) field___Type_fields_args(ctx context.Context, rawArg
 
 // region    **************************** field.gotpl *****************************
 
-func (ec *executionContext) _Barang_id(ctx context.Context, field graphql.CollectedField, obj *models.Barang) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "Barang",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.ID, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(int)
-	fc.Result = res
-	return ec.marshalNInt2int(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _Barang_nama(ctx context.Context, field graphql.CollectedField, obj *models.Barang) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "Barang",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Nama, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(string)
-	fc.Result = res
-	return ec.marshalNString2string(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _Barang_description(ctx context.Context, field graphql.CollectedField, obj *models.Barang) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "Barang",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Description, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(string)
-	fc.Result = res
-	return ec.marshalNString2string(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _Barang_jumlah(ctx context.Context, field graphql.CollectedField, obj *models.Barang) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "Barang",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Jumlah, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(int)
-	fc.Result = res
-	return ec.marshalNInt2int(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _Barang_jenisBarang(ctx context.Context, field graphql.CollectedField, obj *models.Barang) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "Barang",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.JenisBarang, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(int)
-	fc.Result = res
-	return ec.marshalNInt2int(ctx, field.Selections, res)
-}
-
 func (ec *executionContext) _Brands_ID(ctx context.Context, field graphql.CollectedField, obj *domain.Brands) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -3962,77 +3995,7 @@ func (ec *executionContext) _Categories_Name(ctx context.Context, field graphql.
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _JenisBarang_id(ctx context.Context, field graphql.CollectedField, obj *models.JenisBarang) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "JenisBarang",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.ID, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(int)
-	fc.Result = res
-	return ec.marshalNInt2int(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _JenisBarang_jenis_barang(ctx context.Context, field graphql.CollectedField, obj *models.JenisBarang) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "JenisBarang",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.JenisBarang, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(string)
-	fc.Result = res
-	return ec.marshalNString2string(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _Karyawan_id(ctx context.Context, field graphql.CollectedField, obj *model.Karyawan) (ret graphql.Marshaler) {
+func (ec *executionContext) _Karyawan_id(ctx context.Context, field graphql.CollectedField, obj *model1.Karyawan) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -4067,7 +4030,7 @@ func (ec *executionContext) _Karyawan_id(ctx context.Context, field graphql.Coll
 	return ec.marshalNInt2int(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Karyawan_idKaryawan(ctx context.Context, field graphql.CollectedField, obj *model.Karyawan) (ret graphql.Marshaler) {
+func (ec *executionContext) _Karyawan_idKaryawan(ctx context.Context, field graphql.CollectedField, obj *model1.Karyawan) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -4102,7 +4065,7 @@ func (ec *executionContext) _Karyawan_idKaryawan(ctx context.Context, field grap
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Karyawan_nama(ctx context.Context, field graphql.CollectedField, obj *model.Karyawan) (ret graphql.Marshaler) {
+func (ec *executionContext) _Karyawan_nama(ctx context.Context, field graphql.CollectedField, obj *model1.Karyawan) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -4137,7 +4100,7 @@ func (ec *executionContext) _Karyawan_nama(ctx context.Context, field graphql.Co
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Karyawan_email(ctx context.Context, field graphql.CollectedField, obj *model.Karyawan) (ret graphql.Marshaler) {
+func (ec *executionContext) _Karyawan_email(ctx context.Context, field graphql.CollectedField, obj *model1.Karyawan) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -4172,7 +4135,7 @@ func (ec *executionContext) _Karyawan_email(ctx context.Context, field graphql.C
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Karyawan_noHp(ctx context.Context, field graphql.CollectedField, obj *model.Karyawan) (ret graphql.Marshaler) {
+func (ec *executionContext) _Karyawan_noHp(ctx context.Context, field graphql.CollectedField, obj *model1.Karyawan) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -4205,48 +4168,6 @@ func (ec *executionContext) _Karyawan_noHp(ctx context.Context, field graphql.Co
 	res := resTmp.(string)
 	fc.Result = res
 	return ec.marshalNString2string(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _Mutation_insertBarang(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "Mutation",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   true,
-		IsResolver: true,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	rawArgs := field.ArgumentMap(ec.Variables)
-	args, err := ec.field_Mutation_insertBarang_args(ctx, rawArgs)
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	fc.Args = args
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().InsertBarang(rctx, args["id"].(int), args["nama"].(string), args["description"].(string), args["jenisBarang"].(int))
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(*model.ResultInsertBarang)
-	fc.Result = res
-	return ec.marshalNResultInsertBarang2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋgraphᚋmodelᚐResultInsertBarang(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Mutation_InsertBrands(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -4286,7 +4207,7 @@ func (ec *executionContext) _Mutation_InsertBrands(ctx context.Context, field gr
 		}
 		return graphql.Null
 	}
-	res := resTmp.(*model1.ResultInsertBrands)
+	res := resTmp.(*model.ResultInsertBrands)
 	fc.Result = res
 	return ec.marshalNResultInsertBrands2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultInsertBrands(ctx, field.Selections, res)
 }
@@ -4328,7 +4249,7 @@ func (ec *executionContext) _Mutation_UpdateBrands(ctx context.Context, field gr
 		}
 		return graphql.Null
 	}
-	res := resTmp.(*model1.ResultUpdateBrands)
+	res := resTmp.(*model.ResultUpdateBrands)
 	fc.Result = res
 	return ec.marshalNResultUpdateBrands2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultUpdateBrands(ctx, field.Selections, res)
 }
@@ -4370,7 +4291,7 @@ func (ec *executionContext) _Mutation_DeleteBrands(ctx context.Context, field gr
 		}
 		return graphql.Null
 	}
-	res := resTmp.(*model1.ResultDeleteBrands)
+	res := resTmp.(*model.ResultDeleteBrands)
 	fc.Result = res
 	return ec.marshalNResultDeleteBrands2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultDeleteBrands(ctx, field.Selections, res)
 }
@@ -4412,7 +4333,7 @@ func (ec *executionContext) _Mutation_InsertCategories(ctx context.Context, fiel
 		}
 		return graphql.Null
 	}
-	res := resTmp.(*model1.ResultInsertCategories)
+	res := resTmp.(*model.ResultInsertCategories)
 	fc.Result = res
 	return ec.marshalNResultInsertCategories2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultInsertCategories(ctx, field.Selections, res)
 }
@@ -4454,7 +4375,7 @@ func (ec *executionContext) _Mutation_UpdateCategories(ctx context.Context, fiel
 		}
 		return graphql.Null
 	}
-	res := resTmp.(*model1.ResultUpdateCategories)
+	res := resTmp.(*model.ResultUpdateCategories)
 	fc.Result = res
 	return ec.marshalNResultUpdateCategories2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultUpdateCategories(ctx, field.Selections, res)
 }
@@ -4496,12 +4417,12 @@ func (ec *executionContext) _Mutation_DeleteCategories(ctx context.Context, fiel
 		}
 		return graphql.Null
 	}
-	res := resTmp.(*model1.ResultDeleteCategories)
+	res := resTmp.(*model.ResultDeleteCategories)
 	fc.Result = res
 	return ec.marshalNResultDeleteCategories2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultDeleteCategories(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Mutation_insertJenisBarang(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+func (ec *executionContext) _Mutation_InsertOrderItem(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -4518,7 +4439,7 @@ func (ec *executionContext) _Mutation_insertJenisBarang(ctx context.Context, fie
 
 	ctx = graphql.WithFieldContext(ctx, fc)
 	rawArgs := field.ArgumentMap(ec.Variables)
-	args, err := ec.field_Mutation_insertJenisBarang_args(ctx, rawArgs)
+	args, err := ec.field_Mutation_InsertOrderItem_args(ctx, rawArgs)
 	if err != nil {
 		ec.Error(ctx, err)
 		return graphql.Null
@@ -4526,7 +4447,7 @@ func (ec *executionContext) _Mutation_insertJenisBarang(ctx context.Context, fie
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().InsertJenisBarang(rctx, args["jenis_barang"].(string))
+		return ec.resolvers.Mutation().InsertOrderItem(rctx, args["OrderID"].(int), args["ProductID"].(int), args["Quantity"].(int), args["ListPrice"].(int), args["Discount"].(int))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -4538,9 +4459,93 @@ func (ec *executionContext) _Mutation_insertJenisBarang(ctx context.Context, fie
 		}
 		return graphql.Null
 	}
-	res := resTmp.(*model1.ResultJenisBarang)
+	res := resTmp.(*model.ResultInsertOrderItem)
 	fc.Result = res
-	return ec.marshalNresultJenisBarang2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultJenisBarang(ctx, field.Selections, res)
+	return ec.marshalNResultInsertOrderItem2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultInsertOrderItem(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Mutation_UpdateOrderItem(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_UpdateOrderItem_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().UpdateOrderItem(rctx, args["ItemID"].(int), args["OrderID"].(int), args["ProductID"].(int), args["Quantity"].(int), args["ListPrice"].(int), args["Discount"].(int))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*model.ResultUpdateOrderItem)
+	fc.Result = res
+	return ec.marshalNResultUpdateOrderItem2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultUpdateOrderItem(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Mutation_DeleteOrderItem(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_DeleteOrderItem_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().DeleteOrderItem(rctx, args["id"].(int))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*model.ResultDeleteOrderItem)
+	fc.Result = res
+	return ec.marshalNResultDeleteOrderItem2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultDeleteOrderItem(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Mutation_InsertOrders(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -4580,7 +4585,7 @@ func (ec *executionContext) _Mutation_InsertOrders(ctx context.Context, field gr
 		}
 		return graphql.Null
 	}
-	res := resTmp.(*model1.ResultInsertOrders)
+	res := resTmp.(*model.ResultInsertOrders)
 	fc.Result = res
 	return ec.marshalNResultInsertOrders2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultInsertOrders(ctx, field.Selections, res)
 }
@@ -4622,7 +4627,7 @@ func (ec *executionContext) _Mutation_UpdateOrders(ctx context.Context, field gr
 		}
 		return graphql.Null
 	}
-	res := resTmp.(*model1.ResultUpdateOrders)
+	res := resTmp.(*model.ResultUpdateOrders)
 	fc.Result = res
 	return ec.marshalNResultUpdateOrders2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultUpdateOrders(ctx, field.Selections, res)
 }
@@ -4664,7 +4669,7 @@ func (ec *executionContext) _Mutation_DeleteOrders(ctx context.Context, field gr
 		}
 		return graphql.Null
 	}
-	res := resTmp.(*model1.ResultDeleteOrders)
+	res := resTmp.(*model.ResultDeleteOrders)
 	fc.Result = res
 	return ec.marshalNResultDeleteOrders2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultDeleteOrders(ctx, field.Selections, res)
 }
@@ -4706,7 +4711,7 @@ func (ec *executionContext) _Mutation_InsertProducts(ctx context.Context, field 
 		}
 		return graphql.Null
 	}
-	res := resTmp.(*model1.ResultInsertProducts)
+	res := resTmp.(*model.ResultInsertProducts)
 	fc.Result = res
 	return ec.marshalNResultInsertProducts2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultInsertProducts(ctx, field.Selections, res)
 }
@@ -4748,7 +4753,7 @@ func (ec *executionContext) _Mutation_UpdateProducts(ctx context.Context, field 
 		}
 		return graphql.Null
 	}
-	res := resTmp.(*model1.ResultUpdateProducts)
+	res := resTmp.(*model.ResultUpdateProducts)
 	fc.Result = res
 	return ec.marshalNResultUpdateProducts2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultUpdateProducts(ctx, field.Selections, res)
 }
@@ -4790,7 +4795,7 @@ func (ec *executionContext) _Mutation_DeleteProducts(ctx context.Context, field 
 		}
 		return graphql.Null
 	}
-	res := resTmp.(*model1.ResultDeleteProducts)
+	res := resTmp.(*model.ResultDeleteProducts)
 	fc.Result = res
 	return ec.marshalNResultDeleteProducts2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultDeleteProducts(ctx, field.Selections, res)
 }
@@ -4832,7 +4837,7 @@ func (ec *executionContext) _Mutation_InsertStaffs(ctx context.Context, field gr
 		}
 		return graphql.Null
 	}
-	res := resTmp.(*model1.ResultInsertStaffs)
+	res := resTmp.(*model.ResultInsertStaffs)
 	fc.Result = res
 	return ec.marshalNResultInsertStaffs2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultInsertStaffs(ctx, field.Selections, res)
 }
@@ -4874,7 +4879,7 @@ func (ec *executionContext) _Mutation_UpdateStaffs(ctx context.Context, field gr
 		}
 		return graphql.Null
 	}
-	res := resTmp.(*model1.ResultUpdateStaffs)
+	res := resTmp.(*model.ResultUpdateStaffs)
 	fc.Result = res
 	return ec.marshalNResultUpdateStaffs2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultUpdateStaffs(ctx, field.Selections, res)
 }
@@ -4916,7 +4921,7 @@ func (ec *executionContext) _Mutation_DeleteStaffs(ctx context.Context, field gr
 		}
 		return graphql.Null
 	}
-	res := resTmp.(*model1.ResultDeleteStaffs)
+	res := resTmp.(*model.ResultDeleteStaffs)
 	fc.Result = res
 	return ec.marshalNResultDeleteStaffs2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultDeleteStaffs(ctx, field.Selections, res)
 }
@@ -4958,7 +4963,7 @@ func (ec *executionContext) _Mutation_InsertStocks(ctx context.Context, field gr
 		}
 		return graphql.Null
 	}
-	res := resTmp.(*model1.ResultInsertStocks)
+	res := resTmp.(*model.ResultInsertStocks)
 	fc.Result = res
 	return ec.marshalNResultInsertStocks2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultInsertStocks(ctx, field.Selections, res)
 }
@@ -5000,7 +5005,7 @@ func (ec *executionContext) _Mutation_UpdateStocks(ctx context.Context, field gr
 		}
 		return graphql.Null
 	}
-	res := resTmp.(*model1.ResultUpdateStocks)
+	res := resTmp.(*model.ResultUpdateStocks)
 	fc.Result = res
 	return ec.marshalNResultUpdateStocks2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultUpdateStocks(ctx, field.Selections, res)
 }
@@ -5042,7 +5047,7 @@ func (ec *executionContext) _Mutation_DeleteStocks(ctx context.Context, field gr
 		}
 		return graphql.Null
 	}
-	res := resTmp.(*model1.ResultDeleteStocks)
+	res := resTmp.(*model.ResultDeleteStocks)
 	fc.Result = res
 	return ec.marshalNResultDeleteStocks2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultDeleteStocks(ctx, field.Selections, res)
 }
@@ -5084,7 +5089,7 @@ func (ec *executionContext) _Mutation_InsertStores(ctx context.Context, field gr
 		}
 		return graphql.Null
 	}
-	res := resTmp.(*model1.ResultInsertStores)
+	res := resTmp.(*model.ResultInsertStores)
 	fc.Result = res
 	return ec.marshalNResultInsertStores2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultInsertStores(ctx, field.Selections, res)
 }
@@ -5126,7 +5131,7 @@ func (ec *executionContext) _Mutation_UpdateStores(ctx context.Context, field gr
 		}
 		return graphql.Null
 	}
-	res := resTmp.(*model1.ResultUpdateStores)
+	res := resTmp.(*model.ResultUpdateStores)
 	fc.Result = res
 	return ec.marshalNResultUpdateStores2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultUpdateStores(ctx, field.Selections, res)
 }
@@ -5168,12 +5173,222 @@ func (ec *executionContext) _Mutation_DeleteStores(ctx context.Context, field gr
 		}
 		return graphql.Null
 	}
-	res := resTmp.(*model1.ResultDeleteStores)
+	res := resTmp.(*model.ResultDeleteStores)
 	fc.Result = res
 	return ec.marshalNResultDeleteStores2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultDeleteStores(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Orders_OrderID(ctx context.Context, field graphql.CollectedField, obj *model1.Orders) (ret graphql.Marshaler) {
+func (ec *executionContext) _OrderItem_ItemID(ctx context.Context, field graphql.CollectedField, obj *model.OrderItem) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "OrderItem",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ItemID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNInt2int(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _OrderItem_OrderID(ctx context.Context, field graphql.CollectedField, obj *model.OrderItem) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "OrderItem",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.OrderID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNInt2int(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _OrderItem_ProductID(ctx context.Context, field graphql.CollectedField, obj *model.OrderItem) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "OrderItem",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ProductID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNInt2int(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _OrderItem_Quantity(ctx context.Context, field graphql.CollectedField, obj *model.OrderItem) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "OrderItem",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Quantity, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNInt2int(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _OrderItem_ListPrice(ctx context.Context, field graphql.CollectedField, obj *model.OrderItem) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "OrderItem",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ListPrice, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNInt2int(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _OrderItem_Discount(ctx context.Context, field graphql.CollectedField, obj *model.OrderItem) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "OrderItem",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Discount, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNInt2int(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Orders_OrderID(ctx context.Context, field graphql.CollectedField, obj *model.Orders) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -5208,7 +5423,7 @@ func (ec *executionContext) _Orders_OrderID(ctx context.Context, field graphql.C
 	return ec.marshalNInt2int(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Orders_CustormerID(ctx context.Context, field graphql.CollectedField, obj *model1.Orders) (ret graphql.Marshaler) {
+func (ec *executionContext) _Orders_CustormerID(ctx context.Context, field graphql.CollectedField, obj *model.Orders) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -5243,7 +5458,7 @@ func (ec *executionContext) _Orders_CustormerID(ctx context.Context, field graph
 	return ec.marshalNInt2int(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Orders_OrderStatus(ctx context.Context, field graphql.CollectedField, obj *model1.Orders) (ret graphql.Marshaler) {
+func (ec *executionContext) _Orders_OrderStatus(ctx context.Context, field graphql.CollectedField, obj *model.Orders) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -5278,7 +5493,7 @@ func (ec *executionContext) _Orders_OrderStatus(ctx context.Context, field graph
 	return ec.marshalNInt2int(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Orders_OrderDate(ctx context.Context, field graphql.CollectedField, obj *model1.Orders) (ret graphql.Marshaler) {
+func (ec *executionContext) _Orders_OrderDate(ctx context.Context, field graphql.CollectedField, obj *model.Orders) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -5313,7 +5528,7 @@ func (ec *executionContext) _Orders_OrderDate(ctx context.Context, field graphql
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Orders_RequiredDate(ctx context.Context, field graphql.CollectedField, obj *model1.Orders) (ret graphql.Marshaler) {
+func (ec *executionContext) _Orders_RequiredDate(ctx context.Context, field graphql.CollectedField, obj *model.Orders) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -5348,7 +5563,7 @@ func (ec *executionContext) _Orders_RequiredDate(ctx context.Context, field grap
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Orders_ShippedDate(ctx context.Context, field graphql.CollectedField, obj *model1.Orders) (ret graphql.Marshaler) {
+func (ec *executionContext) _Orders_ShippedDate(ctx context.Context, field graphql.CollectedField, obj *model.Orders) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -5383,7 +5598,7 @@ func (ec *executionContext) _Orders_ShippedDate(ctx context.Context, field graph
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Orders_StoreID(ctx context.Context, field graphql.CollectedField, obj *model1.Orders) (ret graphql.Marshaler) {
+func (ec *executionContext) _Orders_StoreID(ctx context.Context, field graphql.CollectedField, obj *model.Orders) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -5418,7 +5633,7 @@ func (ec *executionContext) _Orders_StoreID(ctx context.Context, field graphql.C
 	return ec.marshalNInt2int(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Orders_StaffID(ctx context.Context, field graphql.CollectedField, obj *model1.Orders) (ret graphql.Marshaler) {
+func (ec *executionContext) _Orders_StaffID(ctx context.Context, field graphql.CollectedField, obj *model.Orders) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -5453,7 +5668,7 @@ func (ec *executionContext) _Orders_StaffID(ctx context.Context, field graphql.C
 	return ec.marshalNInt2int(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Orders_StoreData(ctx context.Context, field graphql.CollectedField, obj *model1.Orders) (ret graphql.Marshaler) {
+func (ec *executionContext) _Orders_StoreData(ctx context.Context, field graphql.CollectedField, obj *model.Orders) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -5483,12 +5698,12 @@ func (ec *executionContext) _Orders_StoreData(ctx context.Context, field graphql
 		}
 		return graphql.Null
 	}
-	res := resTmp.(*model1.Stores)
+	res := resTmp.(*model.Stores)
 	fc.Result = res
 	return ec.marshalNStores2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐStores(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Orders_StaffData(ctx context.Context, field graphql.CollectedField, obj *model1.Orders) (ret graphql.Marshaler) {
+func (ec *executionContext) _Orders_StaffData(ctx context.Context, field graphql.CollectedField, obj *model.Orders) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -5803,38 +6018,6 @@ func (ec *executionContext) _Products_BrandsData(ctx context.Context, field grap
 	return ec.marshalNBrands2githubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋdomainᚐBrands(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Query_getBarang(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "Query",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   true,
-		IsResolver: true,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().GetBarang(rctx)
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*string)
-	fc.Result = res
-	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
-}
-
 func (ec *executionContext) _Query_SingleBrands(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -5872,7 +6055,7 @@ func (ec *executionContext) _Query_SingleBrands(ctx context.Context, field graph
 		}
 		return graphql.Null
 	}
-	res := resTmp.(*model1.ResultSingleBrands)
+	res := resTmp.(*model.ResultSingleBrands)
 	fc.Result = res
 	return ec.marshalNResultSingleBrands2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultSingleBrands(ctx, field.Selections, res)
 }
@@ -5907,7 +6090,7 @@ func (ec *executionContext) _Query_AllBrands(ctx context.Context, field graphql.
 		}
 		return graphql.Null
 	}
-	res := resTmp.(*model1.ResultAllBrands)
+	res := resTmp.(*model.ResultAllBrands)
 	fc.Result = res
 	return ec.marshalNResultAllBrands2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultAllBrands(ctx, field.Selections, res)
 }
@@ -5942,7 +6125,7 @@ func (ec *executionContext) _Query_AllCategories(ctx context.Context, field grap
 		}
 		return graphql.Null
 	}
-	res := resTmp.(*model1.ResultFetchCategories)
+	res := resTmp.(*model.ResultFetchCategories)
 	fc.Result = res
 	return ec.marshalNResultFetchCategories2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultFetchCategories(ctx, field.Selections, res)
 }
@@ -5984,12 +6167,12 @@ func (ec *executionContext) _Query_SingleCategories(ctx context.Context, field g
 		}
 		return graphql.Null
 	}
-	res := resTmp.(*model1.ResultGetCategories)
+	res := resTmp.(*model.ResultGetCategories)
 	fc.Result = res
 	return ec.marshalNResultGetCategories2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultGetCategories(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Query_getAllJenisBarang(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+func (ec *executionContext) _Query_AllOrderItem(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -6007,7 +6190,7 @@ func (ec *executionContext) _Query_getAllJenisBarang(ctx context.Context, field 
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().GetAllJenisBarang(rctx)
+		return ec.resolvers.Query().AllOrderItem(rctx)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -6019,9 +6202,51 @@ func (ec *executionContext) _Query_getAllJenisBarang(ctx context.Context, field 
 		}
 		return graphql.Null
 	}
-	res := resTmp.(*model1.ResultGetAllJenisBarang)
+	res := resTmp.(*model.ResultFetchOrderItem)
 	fc.Result = res
-	return ec.marshalNresultGetAllJenisBarang2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultGetAllJenisBarang(ctx, field.Selections, res)
+	return ec.marshalNResultFetchOrderItem2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultFetchOrderItem(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Query_SingelOrderItem(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Query_SingelOrderItem_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().SingelOrderItem(rctx, args["id"].(*int))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*model.ResultGetOrderItem)
+	fc.Result = res
+	return ec.marshalNResultGetOrderItem2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultGetOrderItem(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query_AllOrders(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -6054,7 +6279,7 @@ func (ec *executionContext) _Query_AllOrders(ctx context.Context, field graphql.
 		}
 		return graphql.Null
 	}
-	res := resTmp.(*model1.ResultFetchOrders)
+	res := resTmp.(*model.ResultFetchOrders)
 	fc.Result = res
 	return ec.marshalNResultFetchOrders2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultFetchOrders(ctx, field.Selections, res)
 }
@@ -6096,7 +6321,7 @@ func (ec *executionContext) _Query_SingelOrders(ctx context.Context, field graph
 		}
 		return graphql.Null
 	}
-	res := resTmp.(*model1.ResultGetOrders)
+	res := resTmp.(*model.ResultGetOrders)
 	fc.Result = res
 	return ec.marshalNResultGetOrders2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultGetOrders(ctx, field.Selections, res)
 }
@@ -6131,7 +6356,7 @@ func (ec *executionContext) _Query_AllProducts(ctx context.Context, field graphq
 		}
 		return graphql.Null
 	}
-	res := resTmp.(*model1.ResultAllProducts)
+	res := resTmp.(*model.ResultAllProducts)
 	fc.Result = res
 	return ec.marshalNResultAllProducts2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultAllProducts(ctx, field.Selections, res)
 }
@@ -6173,7 +6398,7 @@ func (ec *executionContext) _Query_SingleProducts(ctx context.Context, field gra
 		}
 		return graphql.Null
 	}
-	res := resTmp.(*model1.ResultSingleProducts)
+	res := resTmp.(*model.ResultSingleProducts)
 	fc.Result = res
 	return ec.marshalNResultSingleProducts2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultSingleProducts(ctx, field.Selections, res)
 }
@@ -6212,7 +6437,7 @@ func (ec *executionContext) _Query_getInfoKaryawan(ctx context.Context, field gr
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(*model.Karyawan)
+	res := resTmp.(*model1.Karyawan)
 	fc.Result = res
 	return ec.marshalOKaryawan2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋgraphᚋmodelᚐKaryawan(ctx, field.Selections, res)
 }
@@ -6247,7 +6472,7 @@ func (ec *executionContext) _Query_AllStaffs(ctx context.Context, field graphql.
 		}
 		return graphql.Null
 	}
-	res := resTmp.(*model1.ResultFetchStaffs)
+	res := resTmp.(*model.ResultFetchStaffs)
 	fc.Result = res
 	return ec.marshalNResultFetchStaffs2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultFetchStaffs(ctx, field.Selections, res)
 }
@@ -6289,7 +6514,7 @@ func (ec *executionContext) _Query_SingelStaffs(ctx context.Context, field graph
 		}
 		return graphql.Null
 	}
-	res := resTmp.(*model1.ResultGetStaffs)
+	res := resTmp.(*model.ResultGetStaffs)
 	fc.Result = res
 	return ec.marshalNResultGetStaffs2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultGetStaffs(ctx, field.Selections, res)
 }
@@ -6324,7 +6549,7 @@ func (ec *executionContext) _Query_AllStocks(ctx context.Context, field graphql.
 		}
 		return graphql.Null
 	}
-	res := resTmp.(*model1.ResultFetchStocks)
+	res := resTmp.(*model.ResultFetchStocks)
 	fc.Result = res
 	return ec.marshalNResultFetchStocks2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultFetchStocks(ctx, field.Selections, res)
 }
@@ -6366,7 +6591,7 @@ func (ec *executionContext) _Query_SingelStocks(ctx context.Context, field graph
 		}
 		return graphql.Null
 	}
-	res := resTmp.(*model1.ResultGetStocks)
+	res := resTmp.(*model.ResultGetStocks)
 	fc.Result = res
 	return ec.marshalNResultGetStocks2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultGetStocks(ctx, field.Selections, res)
 }
@@ -6401,7 +6626,7 @@ func (ec *executionContext) _Query_AllStores(ctx context.Context, field graphql.
 		}
 		return graphql.Null
 	}
-	res := resTmp.(*model1.ResultAllStores)
+	res := resTmp.(*model.ResultAllStores)
 	fc.Result = res
 	return ec.marshalNResultAllStores2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultAllStores(ctx, field.Selections, res)
 }
@@ -6443,7 +6668,7 @@ func (ec *executionContext) _Query_SingleStores(ctx context.Context, field graph
 		}
 		return graphql.Null
 	}
-	res := resTmp.(*model1.ResultSingleStores)
+	res := resTmp.(*model.ResultSingleStores)
 	fc.Result = res
 	return ec.marshalNResultSingleStores2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultSingleStores(ctx, field.Selections, res)
 }
@@ -6519,7 +6744,7 @@ func (ec *executionContext) _Query___schema(ctx context.Context, field graphql.C
 	return ec.marshalO__Schema2ᚖgithubᚗcomᚋ99designsᚋgqlgenᚋgraphqlᚋintrospectionᚐSchema(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _ResultAllBrands_status(ctx context.Context, field graphql.CollectedField, obj *model1.ResultAllBrands) (ret graphql.Marshaler) {
+func (ec *executionContext) _ResultAllBrands_status(ctx context.Context, field graphql.CollectedField, obj *model.ResultAllBrands) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -6554,7 +6779,7 @@ func (ec *executionContext) _ResultAllBrands_status(ctx context.Context, field g
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _ResultAllBrands_code(ctx context.Context, field graphql.CollectedField, obj *model1.ResultAllBrands) (ret graphql.Marshaler) {
+func (ec *executionContext) _ResultAllBrands_code(ctx context.Context, field graphql.CollectedField, obj *model.ResultAllBrands) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -6589,7 +6814,7 @@ func (ec *executionContext) _ResultAllBrands_code(ctx context.Context, field gra
 	return ec.marshalNInt2int(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _ResultAllBrands_data(ctx context.Context, field graphql.CollectedField, obj *model1.ResultAllBrands) (ret graphql.Marshaler) {
+func (ec *executionContext) _ResultAllBrands_data(ctx context.Context, field graphql.CollectedField, obj *model.ResultAllBrands) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -6624,7 +6849,7 @@ func (ec *executionContext) _ResultAllBrands_data(ctx context.Context, field gra
 	return ec.marshalNBrands2ᚕᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋdomainᚐBrands(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _ResultAllProducts_status(ctx context.Context, field graphql.CollectedField, obj *model1.ResultAllProducts) (ret graphql.Marshaler) {
+func (ec *executionContext) _ResultAllProducts_status(ctx context.Context, field graphql.CollectedField, obj *model.ResultAllProducts) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -6659,7 +6884,7 @@ func (ec *executionContext) _ResultAllProducts_status(ctx context.Context, field
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _ResultAllProducts_code(ctx context.Context, field graphql.CollectedField, obj *model1.ResultAllProducts) (ret graphql.Marshaler) {
+func (ec *executionContext) _ResultAllProducts_code(ctx context.Context, field graphql.CollectedField, obj *model.ResultAllProducts) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -6694,7 +6919,7 @@ func (ec *executionContext) _ResultAllProducts_code(ctx context.Context, field g
 	return ec.marshalNInt2int(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _ResultAllProducts_data(ctx context.Context, field graphql.CollectedField, obj *model1.ResultAllProducts) (ret graphql.Marshaler) {
+func (ec *executionContext) _ResultAllProducts_data(ctx context.Context, field graphql.CollectedField, obj *model.ResultAllProducts) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -6729,7 +6954,7 @@ func (ec *executionContext) _ResultAllProducts_data(ctx context.Context, field g
 	return ec.marshalNProducts2ᚕᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋdomainᚐProducts(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _ResultAllStores_status(ctx context.Context, field graphql.CollectedField, obj *model1.ResultAllStores) (ret graphql.Marshaler) {
+func (ec *executionContext) _ResultAllStores_status(ctx context.Context, field graphql.CollectedField, obj *model.ResultAllStores) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -6764,7 +6989,7 @@ func (ec *executionContext) _ResultAllStores_status(ctx context.Context, field g
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _ResultAllStores_code(ctx context.Context, field graphql.CollectedField, obj *model1.ResultAllStores) (ret graphql.Marshaler) {
+func (ec *executionContext) _ResultAllStores_code(ctx context.Context, field graphql.CollectedField, obj *model.ResultAllStores) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -6799,7 +7024,7 @@ func (ec *executionContext) _ResultAllStores_code(ctx context.Context, field gra
 	return ec.marshalNInt2int(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _ResultAllStores_data(ctx context.Context, field graphql.CollectedField, obj *model1.ResultAllStores) (ret graphql.Marshaler) {
+func (ec *executionContext) _ResultAllStores_data(ctx context.Context, field graphql.CollectedField, obj *model.ResultAllStores) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -6829,12 +7054,12 @@ func (ec *executionContext) _ResultAllStores_data(ctx context.Context, field gra
 		}
 		return graphql.Null
 	}
-	res := resTmp.([]*model1.Stores)
+	res := resTmp.([]*model.Stores)
 	fc.Result = res
 	return ec.marshalNStores2ᚕᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐStores(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _ResultDeleteBrands_status(ctx context.Context, field graphql.CollectedField, obj *model1.ResultDeleteBrands) (ret graphql.Marshaler) {
+func (ec *executionContext) _ResultDeleteBrands_status(ctx context.Context, field graphql.CollectedField, obj *model.ResultDeleteBrands) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -6869,7 +7094,7 @@ func (ec *executionContext) _ResultDeleteBrands_status(ctx context.Context, fiel
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _ResultDeleteBrands_code(ctx context.Context, field graphql.CollectedField, obj *model1.ResultDeleteBrands) (ret graphql.Marshaler) {
+func (ec *executionContext) _ResultDeleteBrands_code(ctx context.Context, field graphql.CollectedField, obj *model.ResultDeleteBrands) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -6904,7 +7129,7 @@ func (ec *executionContext) _ResultDeleteBrands_code(ctx context.Context, field 
 	return ec.marshalNInt2int(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _ResultDeleteCategories_status(ctx context.Context, field graphql.CollectedField, obj *model1.ResultDeleteCategories) (ret graphql.Marshaler) {
+func (ec *executionContext) _ResultDeleteCategories_status(ctx context.Context, field graphql.CollectedField, obj *model.ResultDeleteCategories) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -6939,7 +7164,7 @@ func (ec *executionContext) _ResultDeleteCategories_status(ctx context.Context, 
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _ResultDeleteCategories_code(ctx context.Context, field graphql.CollectedField, obj *model1.ResultDeleteCategories) (ret graphql.Marshaler) {
+func (ec *executionContext) _ResultDeleteCategories_code(ctx context.Context, field graphql.CollectedField, obj *model.ResultDeleteCategories) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -6974,7 +7199,7 @@ func (ec *executionContext) _ResultDeleteCategories_code(ctx context.Context, fi
 	return ec.marshalNInt2int(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _ResultDeleteCategories_data(ctx context.Context, field graphql.CollectedField, obj *model1.ResultDeleteCategories) (ret graphql.Marshaler) {
+func (ec *executionContext) _ResultDeleteCategories_data(ctx context.Context, field graphql.CollectedField, obj *model.ResultDeleteCategories) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -7009,7 +7234,112 @@ func (ec *executionContext) _ResultDeleteCategories_data(ctx context.Context, fi
 	return ec.marshalNCategories2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋdomainᚐCategories(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _ResultDeleteOrders_status(ctx context.Context, field graphql.CollectedField, obj *model1.ResultDeleteOrders) (ret graphql.Marshaler) {
+func (ec *executionContext) _ResultDeleteOrderItem_status(ctx context.Context, field graphql.CollectedField, obj *model.ResultDeleteOrderItem) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "ResultDeleteOrderItem",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Status, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _ResultDeleteOrderItem_code(ctx context.Context, field graphql.CollectedField, obj *model.ResultDeleteOrderItem) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "ResultDeleteOrderItem",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Code, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNInt2int(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _ResultDeleteOrderItem_data(ctx context.Context, field graphql.CollectedField, obj *model.ResultDeleteOrderItem) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "ResultDeleteOrderItem",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Data, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*model.OrderItem)
+	fc.Result = res
+	return ec.marshalNOrderItem2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐOrderItem(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _ResultDeleteOrders_status(ctx context.Context, field graphql.CollectedField, obj *model.ResultDeleteOrders) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -7044,7 +7374,7 @@ func (ec *executionContext) _ResultDeleteOrders_status(ctx context.Context, fiel
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _ResultDeleteOrders_code(ctx context.Context, field graphql.CollectedField, obj *model1.ResultDeleteOrders) (ret graphql.Marshaler) {
+func (ec *executionContext) _ResultDeleteOrders_code(ctx context.Context, field graphql.CollectedField, obj *model.ResultDeleteOrders) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -7079,7 +7409,7 @@ func (ec *executionContext) _ResultDeleteOrders_code(ctx context.Context, field 
 	return ec.marshalNInt2int(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _ResultDeleteOrders_data(ctx context.Context, field graphql.CollectedField, obj *model1.ResultDeleteOrders) (ret graphql.Marshaler) {
+func (ec *executionContext) _ResultDeleteOrders_data(ctx context.Context, field graphql.CollectedField, obj *model.ResultDeleteOrders) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -7109,12 +7439,12 @@ func (ec *executionContext) _ResultDeleteOrders_data(ctx context.Context, field 
 		}
 		return graphql.Null
 	}
-	res := resTmp.(*model1.Orders)
+	res := resTmp.(*model.Orders)
 	fc.Result = res
 	return ec.marshalNOrders2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐOrders(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _ResultDeleteProducts_status(ctx context.Context, field graphql.CollectedField, obj *model1.ResultDeleteProducts) (ret graphql.Marshaler) {
+func (ec *executionContext) _ResultDeleteProducts_status(ctx context.Context, field graphql.CollectedField, obj *model.ResultDeleteProducts) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -7149,7 +7479,7 @@ func (ec *executionContext) _ResultDeleteProducts_status(ctx context.Context, fi
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _ResultDeleteProducts_code(ctx context.Context, field graphql.CollectedField, obj *model1.ResultDeleteProducts) (ret graphql.Marshaler) {
+func (ec *executionContext) _ResultDeleteProducts_code(ctx context.Context, field graphql.CollectedField, obj *model.ResultDeleteProducts) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -7184,7 +7514,7 @@ func (ec *executionContext) _ResultDeleteProducts_code(ctx context.Context, fiel
 	return ec.marshalNInt2int(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _ResultDeleteProducts_data(ctx context.Context, field graphql.CollectedField, obj *model1.ResultDeleteProducts) (ret graphql.Marshaler) {
+func (ec *executionContext) _ResultDeleteProducts_data(ctx context.Context, field graphql.CollectedField, obj *model.ResultDeleteProducts) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -7219,7 +7549,7 @@ func (ec *executionContext) _ResultDeleteProducts_data(ctx context.Context, fiel
 	return ec.marshalNProducts2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋdomainᚐProducts(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _ResultDeleteStaffs_status(ctx context.Context, field graphql.CollectedField, obj *model1.ResultDeleteStaffs) (ret graphql.Marshaler) {
+func (ec *executionContext) _ResultDeleteStaffs_status(ctx context.Context, field graphql.CollectedField, obj *model.ResultDeleteStaffs) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -7254,7 +7584,7 @@ func (ec *executionContext) _ResultDeleteStaffs_status(ctx context.Context, fiel
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _ResultDeleteStaffs_code(ctx context.Context, field graphql.CollectedField, obj *model1.ResultDeleteStaffs) (ret graphql.Marshaler) {
+func (ec *executionContext) _ResultDeleteStaffs_code(ctx context.Context, field graphql.CollectedField, obj *model.ResultDeleteStaffs) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -7289,7 +7619,7 @@ func (ec *executionContext) _ResultDeleteStaffs_code(ctx context.Context, field 
 	return ec.marshalNInt2int(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _ResultDeleteStaffs_data(ctx context.Context, field graphql.CollectedField, obj *model1.ResultDeleteStaffs) (ret graphql.Marshaler) {
+func (ec *executionContext) _ResultDeleteStaffs_data(ctx context.Context, field graphql.CollectedField, obj *model.ResultDeleteStaffs) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -7324,7 +7654,7 @@ func (ec *executionContext) _ResultDeleteStaffs_data(ctx context.Context, field 
 	return ec.marshalNStaffs2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋdomainᚐStaffs(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _ResultDeleteStocks_status(ctx context.Context, field graphql.CollectedField, obj *model1.ResultDeleteStocks) (ret graphql.Marshaler) {
+func (ec *executionContext) _ResultDeleteStocks_status(ctx context.Context, field graphql.CollectedField, obj *model.ResultDeleteStocks) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -7359,7 +7689,7 @@ func (ec *executionContext) _ResultDeleteStocks_status(ctx context.Context, fiel
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _ResultDeleteStocks_code(ctx context.Context, field graphql.CollectedField, obj *model1.ResultDeleteStocks) (ret graphql.Marshaler) {
+func (ec *executionContext) _ResultDeleteStocks_code(ctx context.Context, field graphql.CollectedField, obj *model.ResultDeleteStocks) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -7394,7 +7724,7 @@ func (ec *executionContext) _ResultDeleteStocks_code(ctx context.Context, field 
 	return ec.marshalNInt2int(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _ResultDeleteStocks_data(ctx context.Context, field graphql.CollectedField, obj *model1.ResultDeleteStocks) (ret graphql.Marshaler) {
+func (ec *executionContext) _ResultDeleteStocks_data(ctx context.Context, field graphql.CollectedField, obj *model.ResultDeleteStocks) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -7429,7 +7759,7 @@ func (ec *executionContext) _ResultDeleteStocks_data(ctx context.Context, field 
 	return ec.marshalNStocks2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋdomainᚐStocks(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _ResultDeleteStores_status(ctx context.Context, field graphql.CollectedField, obj *model1.ResultDeleteStores) (ret graphql.Marshaler) {
+func (ec *executionContext) _ResultDeleteStores_status(ctx context.Context, field graphql.CollectedField, obj *model.ResultDeleteStores) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -7464,7 +7794,7 @@ func (ec *executionContext) _ResultDeleteStores_status(ctx context.Context, fiel
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _ResultDeleteStores_code(ctx context.Context, field graphql.CollectedField, obj *model1.ResultDeleteStores) (ret graphql.Marshaler) {
+func (ec *executionContext) _ResultDeleteStores_code(ctx context.Context, field graphql.CollectedField, obj *model.ResultDeleteStores) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -7499,7 +7829,7 @@ func (ec *executionContext) _ResultDeleteStores_code(ctx context.Context, field 
 	return ec.marshalNInt2int(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _ResultDeleteStores_data(ctx context.Context, field graphql.CollectedField, obj *model1.ResultDeleteStores) (ret graphql.Marshaler) {
+func (ec *executionContext) _ResultDeleteStores_data(ctx context.Context, field graphql.CollectedField, obj *model.ResultDeleteStores) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -7529,12 +7859,12 @@ func (ec *executionContext) _ResultDeleteStores_data(ctx context.Context, field 
 		}
 		return graphql.Null
 	}
-	res := resTmp.(*model1.Stores)
+	res := resTmp.(*model.Stores)
 	fc.Result = res
 	return ec.marshalNStores2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐStores(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _ResultFetchCategories_status(ctx context.Context, field graphql.CollectedField, obj *model1.ResultFetchCategories) (ret graphql.Marshaler) {
+func (ec *executionContext) _ResultFetchCategories_status(ctx context.Context, field graphql.CollectedField, obj *model.ResultFetchCategories) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -7569,7 +7899,7 @@ func (ec *executionContext) _ResultFetchCategories_status(ctx context.Context, f
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _ResultFetchCategories_code(ctx context.Context, field graphql.CollectedField, obj *model1.ResultFetchCategories) (ret graphql.Marshaler) {
+func (ec *executionContext) _ResultFetchCategories_code(ctx context.Context, field graphql.CollectedField, obj *model.ResultFetchCategories) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -7604,7 +7934,7 @@ func (ec *executionContext) _ResultFetchCategories_code(ctx context.Context, fie
 	return ec.marshalNInt2int(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _ResultFetchCategories_data(ctx context.Context, field graphql.CollectedField, obj *model1.ResultFetchCategories) (ret graphql.Marshaler) {
+func (ec *executionContext) _ResultFetchCategories_data(ctx context.Context, field graphql.CollectedField, obj *model.ResultFetchCategories) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -7639,7 +7969,112 @@ func (ec *executionContext) _ResultFetchCategories_data(ctx context.Context, fie
 	return ec.marshalNCategories2ᚕᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋdomainᚐCategories(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _ResultFetchOrders_status(ctx context.Context, field graphql.CollectedField, obj *model1.ResultFetchOrders) (ret graphql.Marshaler) {
+func (ec *executionContext) _ResultFetchOrderItem_status(ctx context.Context, field graphql.CollectedField, obj *model.ResultFetchOrderItem) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "ResultFetchOrderItem",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Status, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _ResultFetchOrderItem_code(ctx context.Context, field graphql.CollectedField, obj *model.ResultFetchOrderItem) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "ResultFetchOrderItem",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Code, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNInt2int(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _ResultFetchOrderItem_data(ctx context.Context, field graphql.CollectedField, obj *model.ResultFetchOrderItem) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "ResultFetchOrderItem",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Data, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.([]*model.OrderItem)
+	fc.Result = res
+	return ec.marshalNOrderItem2ᚕᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐOrderItem(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _ResultFetchOrders_status(ctx context.Context, field graphql.CollectedField, obj *model.ResultFetchOrders) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -7674,7 +8109,7 @@ func (ec *executionContext) _ResultFetchOrders_status(ctx context.Context, field
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _ResultFetchOrders_code(ctx context.Context, field graphql.CollectedField, obj *model1.ResultFetchOrders) (ret graphql.Marshaler) {
+func (ec *executionContext) _ResultFetchOrders_code(ctx context.Context, field graphql.CollectedField, obj *model.ResultFetchOrders) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -7709,7 +8144,7 @@ func (ec *executionContext) _ResultFetchOrders_code(ctx context.Context, field g
 	return ec.marshalNInt2int(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _ResultFetchOrders_data(ctx context.Context, field graphql.CollectedField, obj *model1.ResultFetchOrders) (ret graphql.Marshaler) {
+func (ec *executionContext) _ResultFetchOrders_data(ctx context.Context, field graphql.CollectedField, obj *model.ResultFetchOrders) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -7739,12 +8174,12 @@ func (ec *executionContext) _ResultFetchOrders_data(ctx context.Context, field g
 		}
 		return graphql.Null
 	}
-	res := resTmp.([]*model1.Orders)
+	res := resTmp.([]*model.Orders)
 	fc.Result = res
 	return ec.marshalNOrders2ᚕᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐOrders(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _ResultFetchStaffs_status(ctx context.Context, field graphql.CollectedField, obj *model1.ResultFetchStaffs) (ret graphql.Marshaler) {
+func (ec *executionContext) _ResultFetchStaffs_status(ctx context.Context, field graphql.CollectedField, obj *model.ResultFetchStaffs) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -7779,7 +8214,7 @@ func (ec *executionContext) _ResultFetchStaffs_status(ctx context.Context, field
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _ResultFetchStaffs_code(ctx context.Context, field graphql.CollectedField, obj *model1.ResultFetchStaffs) (ret graphql.Marshaler) {
+func (ec *executionContext) _ResultFetchStaffs_code(ctx context.Context, field graphql.CollectedField, obj *model.ResultFetchStaffs) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -7814,7 +8249,7 @@ func (ec *executionContext) _ResultFetchStaffs_code(ctx context.Context, field g
 	return ec.marshalNInt2int(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _ResultFetchStaffs_data(ctx context.Context, field graphql.CollectedField, obj *model1.ResultFetchStaffs) (ret graphql.Marshaler) {
+func (ec *executionContext) _ResultFetchStaffs_data(ctx context.Context, field graphql.CollectedField, obj *model.ResultFetchStaffs) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -7849,7 +8284,7 @@ func (ec *executionContext) _ResultFetchStaffs_data(ctx context.Context, field g
 	return ec.marshalNStaffs2ᚕᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋdomainᚐStaffs(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _ResultFetchStocks_status(ctx context.Context, field graphql.CollectedField, obj *model1.ResultFetchStocks) (ret graphql.Marshaler) {
+func (ec *executionContext) _ResultFetchStocks_status(ctx context.Context, field graphql.CollectedField, obj *model.ResultFetchStocks) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -7884,7 +8319,7 @@ func (ec *executionContext) _ResultFetchStocks_status(ctx context.Context, field
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _ResultFetchStocks_code(ctx context.Context, field graphql.CollectedField, obj *model1.ResultFetchStocks) (ret graphql.Marshaler) {
+func (ec *executionContext) _ResultFetchStocks_code(ctx context.Context, field graphql.CollectedField, obj *model.ResultFetchStocks) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -7919,7 +8354,7 @@ func (ec *executionContext) _ResultFetchStocks_code(ctx context.Context, field g
 	return ec.marshalNInt2int(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _ResultFetchStocks_data(ctx context.Context, field graphql.CollectedField, obj *model1.ResultFetchStocks) (ret graphql.Marshaler) {
+func (ec *executionContext) _ResultFetchStocks_data(ctx context.Context, field graphql.CollectedField, obj *model.ResultFetchStocks) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -7954,7 +8389,7 @@ func (ec *executionContext) _ResultFetchStocks_data(ctx context.Context, field g
 	return ec.marshalNStocks2ᚕᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋdomainᚐStocks(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _ResultGetCategories_status(ctx context.Context, field graphql.CollectedField, obj *model1.ResultGetCategories) (ret graphql.Marshaler) {
+func (ec *executionContext) _ResultGetCategories_status(ctx context.Context, field graphql.CollectedField, obj *model.ResultGetCategories) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -7989,7 +8424,7 @@ func (ec *executionContext) _ResultGetCategories_status(ctx context.Context, fie
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _ResultGetCategories_code(ctx context.Context, field graphql.CollectedField, obj *model1.ResultGetCategories) (ret graphql.Marshaler) {
+func (ec *executionContext) _ResultGetCategories_code(ctx context.Context, field graphql.CollectedField, obj *model.ResultGetCategories) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -8024,7 +8459,7 @@ func (ec *executionContext) _ResultGetCategories_code(ctx context.Context, field
 	return ec.marshalNInt2int(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _ResultGetCategories_data(ctx context.Context, field graphql.CollectedField, obj *model1.ResultGetCategories) (ret graphql.Marshaler) {
+func (ec *executionContext) _ResultGetCategories_data(ctx context.Context, field graphql.CollectedField, obj *model.ResultGetCategories) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -8059,7 +8494,112 @@ func (ec *executionContext) _ResultGetCategories_data(ctx context.Context, field
 	return ec.marshalNCategories2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋdomainᚐCategories(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _ResultGetOrders_status(ctx context.Context, field graphql.CollectedField, obj *model1.ResultGetOrders) (ret graphql.Marshaler) {
+func (ec *executionContext) _ResultGetOrderItem_status(ctx context.Context, field graphql.CollectedField, obj *model.ResultGetOrderItem) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "ResultGetOrderItem",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Status, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _ResultGetOrderItem_code(ctx context.Context, field graphql.CollectedField, obj *model.ResultGetOrderItem) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "ResultGetOrderItem",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Code, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNInt2int(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _ResultGetOrderItem_data(ctx context.Context, field graphql.CollectedField, obj *model.ResultGetOrderItem) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "ResultGetOrderItem",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Data, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*model.OrderItem)
+	fc.Result = res
+	return ec.marshalNOrderItem2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐOrderItem(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _ResultGetOrders_status(ctx context.Context, field graphql.CollectedField, obj *model.ResultGetOrders) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -8094,7 +8634,7 @@ func (ec *executionContext) _ResultGetOrders_status(ctx context.Context, field g
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _ResultGetOrders_code(ctx context.Context, field graphql.CollectedField, obj *model1.ResultGetOrders) (ret graphql.Marshaler) {
+func (ec *executionContext) _ResultGetOrders_code(ctx context.Context, field graphql.CollectedField, obj *model.ResultGetOrders) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -8129,7 +8669,7 @@ func (ec *executionContext) _ResultGetOrders_code(ctx context.Context, field gra
 	return ec.marshalNInt2int(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _ResultGetOrders_data(ctx context.Context, field graphql.CollectedField, obj *model1.ResultGetOrders) (ret graphql.Marshaler) {
+func (ec *executionContext) _ResultGetOrders_data(ctx context.Context, field graphql.CollectedField, obj *model.ResultGetOrders) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -8159,12 +8699,12 @@ func (ec *executionContext) _ResultGetOrders_data(ctx context.Context, field gra
 		}
 		return graphql.Null
 	}
-	res := resTmp.(*model1.Orders)
+	res := resTmp.(*model.Orders)
 	fc.Result = res
 	return ec.marshalNOrders2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐOrders(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _ResultGetStaffs_status(ctx context.Context, field graphql.CollectedField, obj *model1.ResultGetStaffs) (ret graphql.Marshaler) {
+func (ec *executionContext) _ResultGetStaffs_status(ctx context.Context, field graphql.CollectedField, obj *model.ResultGetStaffs) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -8199,7 +8739,7 @@ func (ec *executionContext) _ResultGetStaffs_status(ctx context.Context, field g
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _ResultGetStaffs_code(ctx context.Context, field graphql.CollectedField, obj *model1.ResultGetStaffs) (ret graphql.Marshaler) {
+func (ec *executionContext) _ResultGetStaffs_code(ctx context.Context, field graphql.CollectedField, obj *model.ResultGetStaffs) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -8234,7 +8774,7 @@ func (ec *executionContext) _ResultGetStaffs_code(ctx context.Context, field gra
 	return ec.marshalNInt2int(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _ResultGetStaffs_data(ctx context.Context, field graphql.CollectedField, obj *model1.ResultGetStaffs) (ret graphql.Marshaler) {
+func (ec *executionContext) _ResultGetStaffs_data(ctx context.Context, field graphql.CollectedField, obj *model.ResultGetStaffs) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -8269,7 +8809,7 @@ func (ec *executionContext) _ResultGetStaffs_data(ctx context.Context, field gra
 	return ec.marshalNStaffs2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋdomainᚐStaffs(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _ResultGetStocks_status(ctx context.Context, field graphql.CollectedField, obj *model1.ResultGetStocks) (ret graphql.Marshaler) {
+func (ec *executionContext) _ResultGetStocks_status(ctx context.Context, field graphql.CollectedField, obj *model.ResultGetStocks) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -8304,7 +8844,7 @@ func (ec *executionContext) _ResultGetStocks_status(ctx context.Context, field g
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _ResultGetStocks_code(ctx context.Context, field graphql.CollectedField, obj *model1.ResultGetStocks) (ret graphql.Marshaler) {
+func (ec *executionContext) _ResultGetStocks_code(ctx context.Context, field graphql.CollectedField, obj *model.ResultGetStocks) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -8339,7 +8879,7 @@ func (ec *executionContext) _ResultGetStocks_code(ctx context.Context, field gra
 	return ec.marshalNInt2int(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _ResultGetStocks_data(ctx context.Context, field graphql.CollectedField, obj *model1.ResultGetStocks) (ret graphql.Marshaler) {
+func (ec *executionContext) _ResultGetStocks_data(ctx context.Context, field graphql.CollectedField, obj *model.ResultGetStocks) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -8374,112 +8914,7 @@ func (ec *executionContext) _ResultGetStocks_data(ctx context.Context, field gra
 	return ec.marshalNStocks2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋdomainᚐStocks(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _ResultInsertBarang_status(ctx context.Context, field graphql.CollectedField, obj *model.ResultInsertBarang) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "ResultInsertBarang",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Status, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(string)
-	fc.Result = res
-	return ec.marshalNString2string(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _ResultInsertBarang_code(ctx context.Context, field graphql.CollectedField, obj *model.ResultInsertBarang) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "ResultInsertBarang",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Code, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(int)
-	fc.Result = res
-	return ec.marshalNInt2int(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _ResultInsertBarang_data(ctx context.Context, field graphql.CollectedField, obj *model.ResultInsertBarang) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "ResultInsertBarang",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Data, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(*models.Barang)
-	fc.Result = res
-	return ec.marshalNBarang2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelsᚐBarang(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _ResultInsertBrands_status(ctx context.Context, field graphql.CollectedField, obj *model1.ResultInsertBrands) (ret graphql.Marshaler) {
+func (ec *executionContext) _ResultInsertBrands_status(ctx context.Context, field graphql.CollectedField, obj *model.ResultInsertBrands) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -8514,7 +8949,7 @@ func (ec *executionContext) _ResultInsertBrands_status(ctx context.Context, fiel
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _ResultInsertBrands_code(ctx context.Context, field graphql.CollectedField, obj *model1.ResultInsertBrands) (ret graphql.Marshaler) {
+func (ec *executionContext) _ResultInsertBrands_code(ctx context.Context, field graphql.CollectedField, obj *model.ResultInsertBrands) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -8549,7 +8984,7 @@ func (ec *executionContext) _ResultInsertBrands_code(ctx context.Context, field 
 	return ec.marshalNInt2int(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _ResultInsertBrands_data(ctx context.Context, field graphql.CollectedField, obj *model1.ResultInsertBrands) (ret graphql.Marshaler) {
+func (ec *executionContext) _ResultInsertBrands_data(ctx context.Context, field graphql.CollectedField, obj *model.ResultInsertBrands) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -8584,7 +9019,7 @@ func (ec *executionContext) _ResultInsertBrands_data(ctx context.Context, field 
 	return ec.marshalNBrands2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋdomainᚐBrands(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _ResultInsertCategories_status(ctx context.Context, field graphql.CollectedField, obj *model1.ResultInsertCategories) (ret graphql.Marshaler) {
+func (ec *executionContext) _ResultInsertCategories_status(ctx context.Context, field graphql.CollectedField, obj *model.ResultInsertCategories) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -8619,7 +9054,7 @@ func (ec *executionContext) _ResultInsertCategories_status(ctx context.Context, 
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _ResultInsertCategories_code(ctx context.Context, field graphql.CollectedField, obj *model1.ResultInsertCategories) (ret graphql.Marshaler) {
+func (ec *executionContext) _ResultInsertCategories_code(ctx context.Context, field graphql.CollectedField, obj *model.ResultInsertCategories) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -8654,7 +9089,7 @@ func (ec *executionContext) _ResultInsertCategories_code(ctx context.Context, fi
 	return ec.marshalNInt2int(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _ResultInsertCategories_data(ctx context.Context, field graphql.CollectedField, obj *model1.ResultInsertCategories) (ret graphql.Marshaler) {
+func (ec *executionContext) _ResultInsertCategories_data(ctx context.Context, field graphql.CollectedField, obj *model.ResultInsertCategories) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -8689,7 +9124,112 @@ func (ec *executionContext) _ResultInsertCategories_data(ctx context.Context, fi
 	return ec.marshalNCategories2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋdomainᚐCategories(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _ResultInsertOrders_status(ctx context.Context, field graphql.CollectedField, obj *model1.ResultInsertOrders) (ret graphql.Marshaler) {
+func (ec *executionContext) _ResultInsertOrderItem_status(ctx context.Context, field graphql.CollectedField, obj *model.ResultInsertOrderItem) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "ResultInsertOrderItem",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Status, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _ResultInsertOrderItem_code(ctx context.Context, field graphql.CollectedField, obj *model.ResultInsertOrderItem) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "ResultInsertOrderItem",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Code, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNInt2int(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _ResultInsertOrderItem_data(ctx context.Context, field graphql.CollectedField, obj *model.ResultInsertOrderItem) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "ResultInsertOrderItem",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Data, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*model.OrderItem)
+	fc.Result = res
+	return ec.marshalNOrderItem2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐOrderItem(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _ResultInsertOrders_status(ctx context.Context, field graphql.CollectedField, obj *model.ResultInsertOrders) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -8724,7 +9264,7 @@ func (ec *executionContext) _ResultInsertOrders_status(ctx context.Context, fiel
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _ResultInsertOrders_code(ctx context.Context, field graphql.CollectedField, obj *model1.ResultInsertOrders) (ret graphql.Marshaler) {
+func (ec *executionContext) _ResultInsertOrders_code(ctx context.Context, field graphql.CollectedField, obj *model.ResultInsertOrders) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -8759,7 +9299,7 @@ func (ec *executionContext) _ResultInsertOrders_code(ctx context.Context, field 
 	return ec.marshalNInt2int(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _ResultInsertOrders_data(ctx context.Context, field graphql.CollectedField, obj *model1.ResultInsertOrders) (ret graphql.Marshaler) {
+func (ec *executionContext) _ResultInsertOrders_data(ctx context.Context, field graphql.CollectedField, obj *model.ResultInsertOrders) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -8789,12 +9329,12 @@ func (ec *executionContext) _ResultInsertOrders_data(ctx context.Context, field 
 		}
 		return graphql.Null
 	}
-	res := resTmp.(*model1.Orders)
+	res := resTmp.(*model.Orders)
 	fc.Result = res
 	return ec.marshalNOrders2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐOrders(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _ResultInsertProducts_status(ctx context.Context, field graphql.CollectedField, obj *model1.ResultInsertProducts) (ret graphql.Marshaler) {
+func (ec *executionContext) _ResultInsertProducts_status(ctx context.Context, field graphql.CollectedField, obj *model.ResultInsertProducts) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -8829,7 +9369,7 @@ func (ec *executionContext) _ResultInsertProducts_status(ctx context.Context, fi
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _ResultInsertProducts_code(ctx context.Context, field graphql.CollectedField, obj *model1.ResultInsertProducts) (ret graphql.Marshaler) {
+func (ec *executionContext) _ResultInsertProducts_code(ctx context.Context, field graphql.CollectedField, obj *model.ResultInsertProducts) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -8864,7 +9404,7 @@ func (ec *executionContext) _ResultInsertProducts_code(ctx context.Context, fiel
 	return ec.marshalNInt2int(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _ResultInsertProducts_data(ctx context.Context, field graphql.CollectedField, obj *model1.ResultInsertProducts) (ret graphql.Marshaler) {
+func (ec *executionContext) _ResultInsertProducts_data(ctx context.Context, field graphql.CollectedField, obj *model.ResultInsertProducts) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -8899,7 +9439,7 @@ func (ec *executionContext) _ResultInsertProducts_data(ctx context.Context, fiel
 	return ec.marshalNProducts2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋdomainᚐProducts(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _ResultInsertStaffs_status(ctx context.Context, field graphql.CollectedField, obj *model1.ResultInsertStaffs) (ret graphql.Marshaler) {
+func (ec *executionContext) _ResultInsertStaffs_status(ctx context.Context, field graphql.CollectedField, obj *model.ResultInsertStaffs) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -8934,7 +9474,7 @@ func (ec *executionContext) _ResultInsertStaffs_status(ctx context.Context, fiel
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _ResultInsertStaffs_code(ctx context.Context, field graphql.CollectedField, obj *model1.ResultInsertStaffs) (ret graphql.Marshaler) {
+func (ec *executionContext) _ResultInsertStaffs_code(ctx context.Context, field graphql.CollectedField, obj *model.ResultInsertStaffs) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -8969,7 +9509,7 @@ func (ec *executionContext) _ResultInsertStaffs_code(ctx context.Context, field 
 	return ec.marshalNInt2int(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _ResultInsertStaffs_data(ctx context.Context, field graphql.CollectedField, obj *model1.ResultInsertStaffs) (ret graphql.Marshaler) {
+func (ec *executionContext) _ResultInsertStaffs_data(ctx context.Context, field graphql.CollectedField, obj *model.ResultInsertStaffs) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -9004,7 +9544,7 @@ func (ec *executionContext) _ResultInsertStaffs_data(ctx context.Context, field 
 	return ec.marshalNStaffs2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋdomainᚐStaffs(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _ResultInsertStocks_status(ctx context.Context, field graphql.CollectedField, obj *model1.ResultInsertStocks) (ret graphql.Marshaler) {
+func (ec *executionContext) _ResultInsertStocks_status(ctx context.Context, field graphql.CollectedField, obj *model.ResultInsertStocks) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -9039,7 +9579,7 @@ func (ec *executionContext) _ResultInsertStocks_status(ctx context.Context, fiel
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _ResultInsertStocks_code(ctx context.Context, field graphql.CollectedField, obj *model1.ResultInsertStocks) (ret graphql.Marshaler) {
+func (ec *executionContext) _ResultInsertStocks_code(ctx context.Context, field graphql.CollectedField, obj *model.ResultInsertStocks) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -9074,7 +9614,7 @@ func (ec *executionContext) _ResultInsertStocks_code(ctx context.Context, field 
 	return ec.marshalNInt2int(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _ResultInsertStocks_data(ctx context.Context, field graphql.CollectedField, obj *model1.ResultInsertStocks) (ret graphql.Marshaler) {
+func (ec *executionContext) _ResultInsertStocks_data(ctx context.Context, field graphql.CollectedField, obj *model.ResultInsertStocks) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -9109,7 +9649,7 @@ func (ec *executionContext) _ResultInsertStocks_data(ctx context.Context, field 
 	return ec.marshalNStocks2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋdomainᚐStocks(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _ResultInsertStores_status(ctx context.Context, field graphql.CollectedField, obj *model1.ResultInsertStores) (ret graphql.Marshaler) {
+func (ec *executionContext) _ResultInsertStores_status(ctx context.Context, field graphql.CollectedField, obj *model.ResultInsertStores) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -9144,7 +9684,7 @@ func (ec *executionContext) _ResultInsertStores_status(ctx context.Context, fiel
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _ResultInsertStores_code(ctx context.Context, field graphql.CollectedField, obj *model1.ResultInsertStores) (ret graphql.Marshaler) {
+func (ec *executionContext) _ResultInsertStores_code(ctx context.Context, field graphql.CollectedField, obj *model.ResultInsertStores) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -9179,7 +9719,7 @@ func (ec *executionContext) _ResultInsertStores_code(ctx context.Context, field 
 	return ec.marshalNInt2int(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _ResultInsertStores_data(ctx context.Context, field graphql.CollectedField, obj *model1.ResultInsertStores) (ret graphql.Marshaler) {
+func (ec *executionContext) _ResultInsertStores_data(ctx context.Context, field graphql.CollectedField, obj *model.ResultInsertStores) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -9209,12 +9749,12 @@ func (ec *executionContext) _ResultInsertStores_data(ctx context.Context, field 
 		}
 		return graphql.Null
 	}
-	res := resTmp.(*model1.Stores)
+	res := resTmp.(*model.Stores)
 	fc.Result = res
 	return ec.marshalNStores2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐStores(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _ResultSingleBrands_status(ctx context.Context, field graphql.CollectedField, obj *model1.ResultSingleBrands) (ret graphql.Marshaler) {
+func (ec *executionContext) _ResultSingleBrands_status(ctx context.Context, field graphql.CollectedField, obj *model.ResultSingleBrands) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -9249,7 +9789,7 @@ func (ec *executionContext) _ResultSingleBrands_status(ctx context.Context, fiel
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _ResultSingleBrands_code(ctx context.Context, field graphql.CollectedField, obj *model1.ResultSingleBrands) (ret graphql.Marshaler) {
+func (ec *executionContext) _ResultSingleBrands_code(ctx context.Context, field graphql.CollectedField, obj *model.ResultSingleBrands) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -9284,7 +9824,7 @@ func (ec *executionContext) _ResultSingleBrands_code(ctx context.Context, field 
 	return ec.marshalNInt2int(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _ResultSingleBrands_data(ctx context.Context, field graphql.CollectedField, obj *model1.ResultSingleBrands) (ret graphql.Marshaler) {
+func (ec *executionContext) _ResultSingleBrands_data(ctx context.Context, field graphql.CollectedField, obj *model.ResultSingleBrands) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -9319,7 +9859,7 @@ func (ec *executionContext) _ResultSingleBrands_data(ctx context.Context, field 
 	return ec.marshalNBrands2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋdomainᚐBrands(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _ResultSingleProducts_status(ctx context.Context, field graphql.CollectedField, obj *model1.ResultSingleProducts) (ret graphql.Marshaler) {
+func (ec *executionContext) _ResultSingleProducts_status(ctx context.Context, field graphql.CollectedField, obj *model.ResultSingleProducts) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -9354,7 +9894,7 @@ func (ec *executionContext) _ResultSingleProducts_status(ctx context.Context, fi
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _ResultSingleProducts_code(ctx context.Context, field graphql.CollectedField, obj *model1.ResultSingleProducts) (ret graphql.Marshaler) {
+func (ec *executionContext) _ResultSingleProducts_code(ctx context.Context, field graphql.CollectedField, obj *model.ResultSingleProducts) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -9389,7 +9929,7 @@ func (ec *executionContext) _ResultSingleProducts_code(ctx context.Context, fiel
 	return ec.marshalNInt2int(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _ResultSingleProducts_data(ctx context.Context, field graphql.CollectedField, obj *model1.ResultSingleProducts) (ret graphql.Marshaler) {
+func (ec *executionContext) _ResultSingleProducts_data(ctx context.Context, field graphql.CollectedField, obj *model.ResultSingleProducts) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -9424,7 +9964,7 @@ func (ec *executionContext) _ResultSingleProducts_data(ctx context.Context, fiel
 	return ec.marshalNProducts2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋdomainᚐProducts(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _ResultSingleStores_status(ctx context.Context, field graphql.CollectedField, obj *model1.ResultSingleStores) (ret graphql.Marshaler) {
+func (ec *executionContext) _ResultSingleStores_status(ctx context.Context, field graphql.CollectedField, obj *model.ResultSingleStores) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -9459,7 +9999,7 @@ func (ec *executionContext) _ResultSingleStores_status(ctx context.Context, fiel
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _ResultSingleStores_code(ctx context.Context, field graphql.CollectedField, obj *model1.ResultSingleStores) (ret graphql.Marshaler) {
+func (ec *executionContext) _ResultSingleStores_code(ctx context.Context, field graphql.CollectedField, obj *model.ResultSingleStores) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -9494,7 +10034,7 @@ func (ec *executionContext) _ResultSingleStores_code(ctx context.Context, field 
 	return ec.marshalNInt2int(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _ResultSingleStores_data(ctx context.Context, field graphql.CollectedField, obj *model1.ResultSingleStores) (ret graphql.Marshaler) {
+func (ec *executionContext) _ResultSingleStores_data(ctx context.Context, field graphql.CollectedField, obj *model.ResultSingleStores) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -9524,12 +10064,12 @@ func (ec *executionContext) _ResultSingleStores_data(ctx context.Context, field 
 		}
 		return graphql.Null
 	}
-	res := resTmp.(*model1.Stores)
+	res := resTmp.(*model.Stores)
 	fc.Result = res
 	return ec.marshalNStores2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐStores(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _ResultUpdateBrands_status(ctx context.Context, field graphql.CollectedField, obj *model1.ResultUpdateBrands) (ret graphql.Marshaler) {
+func (ec *executionContext) _ResultUpdateBrands_status(ctx context.Context, field graphql.CollectedField, obj *model.ResultUpdateBrands) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -9564,7 +10104,7 @@ func (ec *executionContext) _ResultUpdateBrands_status(ctx context.Context, fiel
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _ResultUpdateBrands_code(ctx context.Context, field graphql.CollectedField, obj *model1.ResultUpdateBrands) (ret graphql.Marshaler) {
+func (ec *executionContext) _ResultUpdateBrands_code(ctx context.Context, field graphql.CollectedField, obj *model.ResultUpdateBrands) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -9599,7 +10139,7 @@ func (ec *executionContext) _ResultUpdateBrands_code(ctx context.Context, field 
 	return ec.marshalNInt2int(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _ResultUpdateBrands_data(ctx context.Context, field graphql.CollectedField, obj *model1.ResultUpdateBrands) (ret graphql.Marshaler) {
+func (ec *executionContext) _ResultUpdateBrands_data(ctx context.Context, field graphql.CollectedField, obj *model.ResultUpdateBrands) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -9634,7 +10174,7 @@ func (ec *executionContext) _ResultUpdateBrands_data(ctx context.Context, field 
 	return ec.marshalNBrands2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋdomainᚐBrands(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _ResultUpdateCategories_status(ctx context.Context, field graphql.CollectedField, obj *model1.ResultUpdateCategories) (ret graphql.Marshaler) {
+func (ec *executionContext) _ResultUpdateCategories_status(ctx context.Context, field graphql.CollectedField, obj *model.ResultUpdateCategories) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -9669,7 +10209,7 @@ func (ec *executionContext) _ResultUpdateCategories_status(ctx context.Context, 
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _ResultUpdateCategories_code(ctx context.Context, field graphql.CollectedField, obj *model1.ResultUpdateCategories) (ret graphql.Marshaler) {
+func (ec *executionContext) _ResultUpdateCategories_code(ctx context.Context, field graphql.CollectedField, obj *model.ResultUpdateCategories) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -9704,7 +10244,7 @@ func (ec *executionContext) _ResultUpdateCategories_code(ctx context.Context, fi
 	return ec.marshalNInt2int(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _ResultUpdateCategories_data(ctx context.Context, field graphql.CollectedField, obj *model1.ResultUpdateCategories) (ret graphql.Marshaler) {
+func (ec *executionContext) _ResultUpdateCategories_data(ctx context.Context, field graphql.CollectedField, obj *model.ResultUpdateCategories) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -9739,7 +10279,112 @@ func (ec *executionContext) _ResultUpdateCategories_data(ctx context.Context, fi
 	return ec.marshalNCategories2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋdomainᚐCategories(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _ResultUpdateOrders_status(ctx context.Context, field graphql.CollectedField, obj *model1.ResultUpdateOrders) (ret graphql.Marshaler) {
+func (ec *executionContext) _ResultUpdateOrderItem_status(ctx context.Context, field graphql.CollectedField, obj *model.ResultUpdateOrderItem) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "ResultUpdateOrderItem",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Status, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _ResultUpdateOrderItem_code(ctx context.Context, field graphql.CollectedField, obj *model.ResultUpdateOrderItem) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "ResultUpdateOrderItem",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Code, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNInt2int(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _ResultUpdateOrderItem_data(ctx context.Context, field graphql.CollectedField, obj *model.ResultUpdateOrderItem) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "ResultUpdateOrderItem",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Data, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*model.OrderItem)
+	fc.Result = res
+	return ec.marshalNOrderItem2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐOrderItem(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _ResultUpdateOrders_status(ctx context.Context, field graphql.CollectedField, obj *model.ResultUpdateOrders) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -9774,7 +10419,7 @@ func (ec *executionContext) _ResultUpdateOrders_status(ctx context.Context, fiel
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _ResultUpdateOrders_code(ctx context.Context, field graphql.CollectedField, obj *model1.ResultUpdateOrders) (ret graphql.Marshaler) {
+func (ec *executionContext) _ResultUpdateOrders_code(ctx context.Context, field graphql.CollectedField, obj *model.ResultUpdateOrders) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -9809,7 +10454,7 @@ func (ec *executionContext) _ResultUpdateOrders_code(ctx context.Context, field 
 	return ec.marshalNInt2int(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _ResultUpdateOrders_data(ctx context.Context, field graphql.CollectedField, obj *model1.ResultUpdateOrders) (ret graphql.Marshaler) {
+func (ec *executionContext) _ResultUpdateOrders_data(ctx context.Context, field graphql.CollectedField, obj *model.ResultUpdateOrders) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -9839,12 +10484,12 @@ func (ec *executionContext) _ResultUpdateOrders_data(ctx context.Context, field 
 		}
 		return graphql.Null
 	}
-	res := resTmp.(*model1.Orders)
+	res := resTmp.(*model.Orders)
 	fc.Result = res
 	return ec.marshalNOrders2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐOrders(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _ResultUpdateProducts_status(ctx context.Context, field graphql.CollectedField, obj *model1.ResultUpdateProducts) (ret graphql.Marshaler) {
+func (ec *executionContext) _ResultUpdateProducts_status(ctx context.Context, field graphql.CollectedField, obj *model.ResultUpdateProducts) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -9879,7 +10524,7 @@ func (ec *executionContext) _ResultUpdateProducts_status(ctx context.Context, fi
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _ResultUpdateProducts_code(ctx context.Context, field graphql.CollectedField, obj *model1.ResultUpdateProducts) (ret graphql.Marshaler) {
+func (ec *executionContext) _ResultUpdateProducts_code(ctx context.Context, field graphql.CollectedField, obj *model.ResultUpdateProducts) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -9914,7 +10559,7 @@ func (ec *executionContext) _ResultUpdateProducts_code(ctx context.Context, fiel
 	return ec.marshalNInt2int(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _ResultUpdateProducts_data(ctx context.Context, field graphql.CollectedField, obj *model1.ResultUpdateProducts) (ret graphql.Marshaler) {
+func (ec *executionContext) _ResultUpdateProducts_data(ctx context.Context, field graphql.CollectedField, obj *model.ResultUpdateProducts) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -9949,7 +10594,7 @@ func (ec *executionContext) _ResultUpdateProducts_data(ctx context.Context, fiel
 	return ec.marshalNProducts2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋdomainᚐProducts(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _ResultUpdateStaffs_status(ctx context.Context, field graphql.CollectedField, obj *model1.ResultUpdateStaffs) (ret graphql.Marshaler) {
+func (ec *executionContext) _ResultUpdateStaffs_status(ctx context.Context, field graphql.CollectedField, obj *model.ResultUpdateStaffs) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -9984,7 +10629,7 @@ func (ec *executionContext) _ResultUpdateStaffs_status(ctx context.Context, fiel
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _ResultUpdateStaffs_code(ctx context.Context, field graphql.CollectedField, obj *model1.ResultUpdateStaffs) (ret graphql.Marshaler) {
+func (ec *executionContext) _ResultUpdateStaffs_code(ctx context.Context, field graphql.CollectedField, obj *model.ResultUpdateStaffs) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -10019,7 +10664,7 @@ func (ec *executionContext) _ResultUpdateStaffs_code(ctx context.Context, field 
 	return ec.marshalNInt2int(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _ResultUpdateStaffs_data(ctx context.Context, field graphql.CollectedField, obj *model1.ResultUpdateStaffs) (ret graphql.Marshaler) {
+func (ec *executionContext) _ResultUpdateStaffs_data(ctx context.Context, field graphql.CollectedField, obj *model.ResultUpdateStaffs) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -10054,7 +10699,7 @@ func (ec *executionContext) _ResultUpdateStaffs_data(ctx context.Context, field 
 	return ec.marshalNStaffs2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋdomainᚐStaffs(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _ResultUpdateStocks_status(ctx context.Context, field graphql.CollectedField, obj *model1.ResultUpdateStocks) (ret graphql.Marshaler) {
+func (ec *executionContext) _ResultUpdateStocks_status(ctx context.Context, field graphql.CollectedField, obj *model.ResultUpdateStocks) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -10089,7 +10734,7 @@ func (ec *executionContext) _ResultUpdateStocks_status(ctx context.Context, fiel
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _ResultUpdateStocks_code(ctx context.Context, field graphql.CollectedField, obj *model1.ResultUpdateStocks) (ret graphql.Marshaler) {
+func (ec *executionContext) _ResultUpdateStocks_code(ctx context.Context, field graphql.CollectedField, obj *model.ResultUpdateStocks) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -10124,7 +10769,7 @@ func (ec *executionContext) _ResultUpdateStocks_code(ctx context.Context, field 
 	return ec.marshalNInt2int(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _ResultUpdateStocks_data(ctx context.Context, field graphql.CollectedField, obj *model1.ResultUpdateStocks) (ret graphql.Marshaler) {
+func (ec *executionContext) _ResultUpdateStocks_data(ctx context.Context, field graphql.CollectedField, obj *model.ResultUpdateStocks) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -10159,7 +10804,7 @@ func (ec *executionContext) _ResultUpdateStocks_data(ctx context.Context, field 
 	return ec.marshalNStocks2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋdomainᚐStocks(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _ResultUpdateStores_status(ctx context.Context, field graphql.CollectedField, obj *model1.ResultUpdateStores) (ret graphql.Marshaler) {
+func (ec *executionContext) _ResultUpdateStores_status(ctx context.Context, field graphql.CollectedField, obj *model.ResultUpdateStores) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -10194,7 +10839,7 @@ func (ec *executionContext) _ResultUpdateStores_status(ctx context.Context, fiel
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _ResultUpdateStores_code(ctx context.Context, field graphql.CollectedField, obj *model1.ResultUpdateStores) (ret graphql.Marshaler) {
+func (ec *executionContext) _ResultUpdateStores_code(ctx context.Context, field graphql.CollectedField, obj *model.ResultUpdateStores) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -10229,7 +10874,7 @@ func (ec *executionContext) _ResultUpdateStores_code(ctx context.Context, field 
 	return ec.marshalNInt2int(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _ResultUpdateStores_data(ctx context.Context, field graphql.CollectedField, obj *model1.ResultUpdateStores) (ret graphql.Marshaler) {
+func (ec *executionContext) _ResultUpdateStores_data(ctx context.Context, field graphql.CollectedField, obj *model.ResultUpdateStores) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -10259,7 +10904,7 @@ func (ec *executionContext) _ResultUpdateStores_data(ctx context.Context, field 
 		}
 		return graphql.Null
 	}
-	res := resTmp.(*model1.Stores)
+	res := resTmp.(*model.Stores)
 	fc.Result = res
 	return ec.marshalNStores2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐStores(ctx, field.Selections, res)
 }
@@ -10574,7 +11219,7 @@ func (ec *executionContext) _Staffs_StoreData(ctx context.Context, field graphql
 		}
 		return graphql.Null
 	}
-	res := resTmp.(*model1.Stores)
+	res := resTmp.(*model.Stores)
 	fc.Result = res
 	return ec.marshalNStores2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐStores(ctx, field.Selections, res)
 }
@@ -10719,7 +11364,7 @@ func (ec *executionContext) _Stocks_Quantity(ctx context.Context, field graphql.
 	return ec.marshalNInt2int(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Stores_StoreID(ctx context.Context, field graphql.CollectedField, obj *model1.Stores) (ret graphql.Marshaler) {
+func (ec *executionContext) _Stores_StoreID(ctx context.Context, field graphql.CollectedField, obj *model.Stores) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -10754,7 +11399,7 @@ func (ec *executionContext) _Stores_StoreID(ctx context.Context, field graphql.C
 	return ec.marshalNInt2int(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Stores_StoreName(ctx context.Context, field graphql.CollectedField, obj *model1.Stores) (ret graphql.Marshaler) {
+func (ec *executionContext) _Stores_StoreName(ctx context.Context, field graphql.CollectedField, obj *model.Stores) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -10789,7 +11434,7 @@ func (ec *executionContext) _Stores_StoreName(ctx context.Context, field graphql
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Stores_Phone(ctx context.Context, field graphql.CollectedField, obj *model1.Stores) (ret graphql.Marshaler) {
+func (ec *executionContext) _Stores_Phone(ctx context.Context, field graphql.CollectedField, obj *model.Stores) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -10824,7 +11469,7 @@ func (ec *executionContext) _Stores_Phone(ctx context.Context, field graphql.Col
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Stores_Email(ctx context.Context, field graphql.CollectedField, obj *model1.Stores) (ret graphql.Marshaler) {
+func (ec *executionContext) _Stores_Email(ctx context.Context, field graphql.CollectedField, obj *model.Stores) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -10859,7 +11504,7 @@ func (ec *executionContext) _Stores_Email(ctx context.Context, field graphql.Col
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Stores_City(ctx context.Context, field graphql.CollectedField, obj *model1.Stores) (ret graphql.Marshaler) {
+func (ec *executionContext) _Stores_City(ctx context.Context, field graphql.CollectedField, obj *model.Stores) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -10894,7 +11539,7 @@ func (ec *executionContext) _Stores_City(ctx context.Context, field graphql.Coll
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Stores_State(ctx context.Context, field graphql.CollectedField, obj *model1.Stores) (ret graphql.Marshaler) {
+func (ec *executionContext) _Stores_State(ctx context.Context, field graphql.CollectedField, obj *model.Stores) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -10929,7 +11574,7 @@ func (ec *executionContext) _Stores_State(ctx context.Context, field graphql.Col
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Stores_ZipCode(ctx context.Context, field graphql.CollectedField, obj *model1.Stores) (ret graphql.Marshaler) {
+func (ec *executionContext) _Stores_ZipCode(ctx context.Context, field graphql.CollectedField, obj *model.Stores) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -12047,216 +12692,6 @@ func (ec *executionContext) ___Type_ofType(ctx context.Context, field graphql.Co
 	return ec.marshalO__Type2ᚖgithubᚗcomᚋ99designsᚋgqlgenᚋgraphqlᚋintrospectionᚐType(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _resultGetAllJenisBarang_status(ctx context.Context, field graphql.CollectedField, obj *model1.ResultGetAllJenisBarang) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "resultGetAllJenisBarang",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Status, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(string)
-	fc.Result = res
-	return ec.marshalNString2string(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _resultGetAllJenisBarang_code(ctx context.Context, field graphql.CollectedField, obj *model1.ResultGetAllJenisBarang) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "resultGetAllJenisBarang",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Code, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(int)
-	fc.Result = res
-	return ec.marshalNInt2int(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _resultGetAllJenisBarang_data(ctx context.Context, field graphql.CollectedField, obj *model1.ResultGetAllJenisBarang) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "resultGetAllJenisBarang",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Data, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.([]*models.JenisBarang)
-	fc.Result = res
-	return ec.marshalNJenisBarang2ᚕᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelsᚐJenisBarang(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _resultJenisBarang_status(ctx context.Context, field graphql.CollectedField, obj *model1.ResultJenisBarang) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "resultJenisBarang",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Status, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(string)
-	fc.Result = res
-	return ec.marshalNString2string(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _resultJenisBarang_code(ctx context.Context, field graphql.CollectedField, obj *model1.ResultJenisBarang) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "resultJenisBarang",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Code, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(int)
-	fc.Result = res
-	return ec.marshalNInt2int(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _resultJenisBarang_data(ctx context.Context, field graphql.CollectedField, obj *model1.ResultJenisBarang) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "resultJenisBarang",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Data, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(*models.JenisBarang)
-	fc.Result = res
-	return ec.marshalNJenisBarang2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelsᚐJenisBarang(ctx, field.Selections, res)
-}
-
 // endregion **************************** field.gotpl *****************************
 
 // region    **************************** input.gotpl *****************************
@@ -12265,272 +12700,286 @@ func (ec *executionContext) _resultJenisBarang_data(ctx context.Context, field g
 
 // region    ************************** interface.gotpl ***************************
 
-func (ec *executionContext) _resultInsert(ctx context.Context, sel ast.SelectionSet, obj model1.ResultInsert) graphql.Marshaler {
+func (ec *executionContext) _resultInsert(ctx context.Context, sel ast.SelectionSet, obj model.ResultInsert) graphql.Marshaler {
 	switch obj := (obj).(type) {
 	case nil:
 		return graphql.Null
-	case model.ResultInsertBarang:
-		return ec._ResultInsertBarang(ctx, sel, &obj)
-	case *model.ResultInsertBarang:
-		if obj == nil {
-			return graphql.Null
-		}
-		return ec._ResultInsertBarang(ctx, sel, obj)
-	case model1.ResultSingleBrands:
+	case model.ResultSingleBrands:
 		return ec._ResultSingleBrands(ctx, sel, &obj)
-	case *model1.ResultSingleBrands:
+	case *model.ResultSingleBrands:
 		if obj == nil {
 			return graphql.Null
 		}
 		return ec._ResultSingleBrands(ctx, sel, obj)
-	case model1.ResultAllBrands:
+	case model.ResultAllBrands:
 		return ec._ResultAllBrands(ctx, sel, &obj)
-	case *model1.ResultAllBrands:
+	case *model.ResultAllBrands:
 		if obj == nil {
 			return graphql.Null
 		}
 		return ec._ResultAllBrands(ctx, sel, obj)
-	case model1.ResultInsertBrands:
+	case model.ResultInsertBrands:
 		return ec._ResultInsertBrands(ctx, sel, &obj)
-	case *model1.ResultInsertBrands:
+	case *model.ResultInsertBrands:
 		if obj == nil {
 			return graphql.Null
 		}
 		return ec._ResultInsertBrands(ctx, sel, obj)
-	case model1.ResultUpdateBrands:
+	case model.ResultUpdateBrands:
 		return ec._ResultUpdateBrands(ctx, sel, &obj)
-	case *model1.ResultUpdateBrands:
+	case *model.ResultUpdateBrands:
 		if obj == nil {
 			return graphql.Null
 		}
 		return ec._ResultUpdateBrands(ctx, sel, obj)
-	case model1.ResultDeleteBrands:
+	case model.ResultDeleteBrands:
 		return ec._ResultDeleteBrands(ctx, sel, &obj)
-	case *model1.ResultDeleteBrands:
+	case *model.ResultDeleteBrands:
 		if obj == nil {
 			return graphql.Null
 		}
 		return ec._ResultDeleteBrands(ctx, sel, obj)
-	case model1.ResultInsertCategories:
+	case model.ResultInsertCategories:
 		return ec._ResultInsertCategories(ctx, sel, &obj)
-	case *model1.ResultInsertCategories:
+	case *model.ResultInsertCategories:
 		if obj == nil {
 			return graphql.Null
 		}
 		return ec._ResultInsertCategories(ctx, sel, obj)
-	case model1.ResultUpdateCategories:
+	case model.ResultUpdateCategories:
 		return ec._ResultUpdateCategories(ctx, sel, &obj)
-	case *model1.ResultUpdateCategories:
+	case *model.ResultUpdateCategories:
 		if obj == nil {
 			return graphql.Null
 		}
 		return ec._ResultUpdateCategories(ctx, sel, obj)
-	case model1.ResultDeleteCategories:
+	case model.ResultDeleteCategories:
 		return ec._ResultDeleteCategories(ctx, sel, &obj)
-	case *model1.ResultDeleteCategories:
+	case *model.ResultDeleteCategories:
 		if obj == nil {
 			return graphql.Null
 		}
 		return ec._ResultDeleteCategories(ctx, sel, obj)
-	case model1.ResultFetchCategories:
+	case model.ResultFetchCategories:
 		return ec._ResultFetchCategories(ctx, sel, &obj)
-	case *model1.ResultFetchCategories:
+	case *model.ResultFetchCategories:
 		if obj == nil {
 			return graphql.Null
 		}
 		return ec._ResultFetchCategories(ctx, sel, obj)
-	case model1.ResultGetCategories:
+	case model.ResultGetCategories:
 		return ec._ResultGetCategories(ctx, sel, &obj)
-	case *model1.ResultGetCategories:
+	case *model.ResultGetCategories:
 		if obj == nil {
 			return graphql.Null
 		}
 		return ec._ResultGetCategories(ctx, sel, obj)
-	case model1.ResultJenisBarang:
-		return ec._resultJenisBarang(ctx, sel, &obj)
-	case *model1.ResultJenisBarang:
+	case model.ResultInsertOrderItem:
+		return ec._ResultInsertOrderItem(ctx, sel, &obj)
+	case *model.ResultInsertOrderItem:
 		if obj == nil {
 			return graphql.Null
 		}
-		return ec._resultJenisBarang(ctx, sel, obj)
-	case model1.ResultGetAllJenisBarang:
-		return ec._resultGetAllJenisBarang(ctx, sel, &obj)
-	case *model1.ResultGetAllJenisBarang:
+		return ec._ResultInsertOrderItem(ctx, sel, obj)
+	case model.ResultUpdateOrderItem:
+		return ec._ResultUpdateOrderItem(ctx, sel, &obj)
+	case *model.ResultUpdateOrderItem:
 		if obj == nil {
 			return graphql.Null
 		}
-		return ec._resultGetAllJenisBarang(ctx, sel, obj)
-	case model1.ResultInsertOrders:
+		return ec._ResultUpdateOrderItem(ctx, sel, obj)
+	case model.ResultDeleteOrderItem:
+		return ec._ResultDeleteOrderItem(ctx, sel, &obj)
+	case *model.ResultDeleteOrderItem:
+		if obj == nil {
+			return graphql.Null
+		}
+		return ec._ResultDeleteOrderItem(ctx, sel, obj)
+	case model.ResultFetchOrderItem:
+		return ec._ResultFetchOrderItem(ctx, sel, &obj)
+	case *model.ResultFetchOrderItem:
+		if obj == nil {
+			return graphql.Null
+		}
+		return ec._ResultFetchOrderItem(ctx, sel, obj)
+	case model.ResultGetOrderItem:
+		return ec._ResultGetOrderItem(ctx, sel, &obj)
+	case *model.ResultGetOrderItem:
+		if obj == nil {
+			return graphql.Null
+		}
+		return ec._ResultGetOrderItem(ctx, sel, obj)
+	case model.ResultInsertOrders:
 		return ec._ResultInsertOrders(ctx, sel, &obj)
-	case *model1.ResultInsertOrders:
+	case *model.ResultInsertOrders:
 		if obj == nil {
 			return graphql.Null
 		}
 		return ec._ResultInsertOrders(ctx, sel, obj)
-	case model1.ResultUpdateOrders:
+	case model.ResultUpdateOrders:
 		return ec._ResultUpdateOrders(ctx, sel, &obj)
-	case *model1.ResultUpdateOrders:
+	case *model.ResultUpdateOrders:
 		if obj == nil {
 			return graphql.Null
 		}
 		return ec._ResultUpdateOrders(ctx, sel, obj)
-	case model1.ResultDeleteOrders:
+	case model.ResultDeleteOrders:
 		return ec._ResultDeleteOrders(ctx, sel, &obj)
-	case *model1.ResultDeleteOrders:
+	case *model.ResultDeleteOrders:
 		if obj == nil {
 			return graphql.Null
 		}
 		return ec._ResultDeleteOrders(ctx, sel, obj)
-	case model1.ResultFetchOrders:
+	case model.ResultFetchOrders:
 		return ec._ResultFetchOrders(ctx, sel, &obj)
-	case *model1.ResultFetchOrders:
+	case *model.ResultFetchOrders:
 		if obj == nil {
 			return graphql.Null
 		}
 		return ec._ResultFetchOrders(ctx, sel, obj)
-	case model1.ResultGetOrders:
+	case model.ResultGetOrders:
 		return ec._ResultGetOrders(ctx, sel, &obj)
-	case *model1.ResultGetOrders:
+	case *model.ResultGetOrders:
 		if obj == nil {
 			return graphql.Null
 		}
 		return ec._ResultGetOrders(ctx, sel, obj)
-	case model1.ResultInsertProducts:
+	case model.ResultInsertProducts:
 		return ec._ResultInsertProducts(ctx, sel, &obj)
-	case *model1.ResultInsertProducts:
+	case *model.ResultInsertProducts:
 		if obj == nil {
 			return graphql.Null
 		}
 		return ec._ResultInsertProducts(ctx, sel, obj)
-	case model1.ResultUpdateProducts:
+	case model.ResultUpdateProducts:
 		return ec._ResultUpdateProducts(ctx, sel, &obj)
-	case *model1.ResultUpdateProducts:
+	case *model.ResultUpdateProducts:
 		if obj == nil {
 			return graphql.Null
 		}
 		return ec._ResultUpdateProducts(ctx, sel, obj)
-	case model1.ResultDeleteProducts:
+	case model.ResultDeleteProducts:
 		return ec._ResultDeleteProducts(ctx, sel, &obj)
-	case *model1.ResultDeleteProducts:
+	case *model.ResultDeleteProducts:
 		if obj == nil {
 			return graphql.Null
 		}
 		return ec._ResultDeleteProducts(ctx, sel, obj)
-	case model1.ResultSingleProducts:
+	case model.ResultSingleProducts:
 		return ec._ResultSingleProducts(ctx, sel, &obj)
-	case *model1.ResultSingleProducts:
+	case *model.ResultSingleProducts:
 		if obj == nil {
 			return graphql.Null
 		}
 		return ec._ResultSingleProducts(ctx, sel, obj)
-	case model1.ResultAllProducts:
+	case model.ResultAllProducts:
 		return ec._ResultAllProducts(ctx, sel, &obj)
-	case *model1.ResultAllProducts:
+	case *model.ResultAllProducts:
 		if obj == nil {
 			return graphql.Null
 		}
 		return ec._ResultAllProducts(ctx, sel, obj)
-	case model1.ResultInsertStaffs:
+	case model.ResultInsertStaffs:
 		return ec._ResultInsertStaffs(ctx, sel, &obj)
-	case *model1.ResultInsertStaffs:
+	case *model.ResultInsertStaffs:
 		if obj == nil {
 			return graphql.Null
 		}
 		return ec._ResultInsertStaffs(ctx, sel, obj)
-	case model1.ResultUpdateStaffs:
+	case model.ResultUpdateStaffs:
 		return ec._ResultUpdateStaffs(ctx, sel, &obj)
-	case *model1.ResultUpdateStaffs:
+	case *model.ResultUpdateStaffs:
 		if obj == nil {
 			return graphql.Null
 		}
 		return ec._ResultUpdateStaffs(ctx, sel, obj)
-	case model1.ResultDeleteStaffs:
+	case model.ResultDeleteStaffs:
 		return ec._ResultDeleteStaffs(ctx, sel, &obj)
-	case *model1.ResultDeleteStaffs:
+	case *model.ResultDeleteStaffs:
 		if obj == nil {
 			return graphql.Null
 		}
 		return ec._ResultDeleteStaffs(ctx, sel, obj)
-	case model1.ResultFetchStaffs:
+	case model.ResultFetchStaffs:
 		return ec._ResultFetchStaffs(ctx, sel, &obj)
-	case *model1.ResultFetchStaffs:
+	case *model.ResultFetchStaffs:
 		if obj == nil {
 			return graphql.Null
 		}
 		return ec._ResultFetchStaffs(ctx, sel, obj)
-	case model1.ResultGetStaffs:
+	case model.ResultGetStaffs:
 		return ec._ResultGetStaffs(ctx, sel, &obj)
-	case *model1.ResultGetStaffs:
+	case *model.ResultGetStaffs:
 		if obj == nil {
 			return graphql.Null
 		}
 		return ec._ResultGetStaffs(ctx, sel, obj)
-	case model1.ResultInsertStocks:
+	case model.ResultInsertStocks:
 		return ec._ResultInsertStocks(ctx, sel, &obj)
-	case *model1.ResultInsertStocks:
+	case *model.ResultInsertStocks:
 		if obj == nil {
 			return graphql.Null
 		}
 		return ec._ResultInsertStocks(ctx, sel, obj)
-	case model1.ResultUpdateStocks:
+	case model.ResultUpdateStocks:
 		return ec._ResultUpdateStocks(ctx, sel, &obj)
-	case *model1.ResultUpdateStocks:
+	case *model.ResultUpdateStocks:
 		if obj == nil {
 			return graphql.Null
 		}
 		return ec._ResultUpdateStocks(ctx, sel, obj)
-	case model1.ResultDeleteStocks:
+	case model.ResultDeleteStocks:
 		return ec._ResultDeleteStocks(ctx, sel, &obj)
-	case *model1.ResultDeleteStocks:
+	case *model.ResultDeleteStocks:
 		if obj == nil {
 			return graphql.Null
 		}
 		return ec._ResultDeleteStocks(ctx, sel, obj)
-	case model1.ResultFetchStocks:
+	case model.ResultFetchStocks:
 		return ec._ResultFetchStocks(ctx, sel, &obj)
-	case *model1.ResultFetchStocks:
+	case *model.ResultFetchStocks:
 		if obj == nil {
 			return graphql.Null
 		}
 		return ec._ResultFetchStocks(ctx, sel, obj)
-	case model1.ResultGetStocks:
+	case model.ResultGetStocks:
 		return ec._ResultGetStocks(ctx, sel, &obj)
-	case *model1.ResultGetStocks:
+	case *model.ResultGetStocks:
 		if obj == nil {
 			return graphql.Null
 		}
 		return ec._ResultGetStocks(ctx, sel, obj)
-	case model1.ResultInsertStores:
+	case model.ResultInsertStores:
 		return ec._ResultInsertStores(ctx, sel, &obj)
-	case *model1.ResultInsertStores:
+	case *model.ResultInsertStores:
 		if obj == nil {
 			return graphql.Null
 		}
 		return ec._ResultInsertStores(ctx, sel, obj)
-	case model1.ResultUpdateStores:
+	case model.ResultUpdateStores:
 		return ec._ResultUpdateStores(ctx, sel, &obj)
-	case *model1.ResultUpdateStores:
+	case *model.ResultUpdateStores:
 		if obj == nil {
 			return graphql.Null
 		}
 		return ec._ResultUpdateStores(ctx, sel, obj)
-	case model1.ResultDeleteStores:
+	case model.ResultDeleteStores:
 		return ec._ResultDeleteStores(ctx, sel, &obj)
-	case *model1.ResultDeleteStores:
+	case *model.ResultDeleteStores:
 		if obj == nil {
 			return graphql.Null
 		}
 		return ec._ResultDeleteStores(ctx, sel, obj)
-	case model1.ResultSingleStores:
+	case model.ResultSingleStores:
 		return ec._ResultSingleStores(ctx, sel, &obj)
-	case *model1.ResultSingleStores:
+	case *model.ResultSingleStores:
 		if obj == nil {
 			return graphql.Null
 		}
 		return ec._ResultSingleStores(ctx, sel, obj)
-	case model1.ResultAllStores:
+	case model.ResultAllStores:
 		return ec._ResultAllStores(ctx, sel, &obj)
-	case *model1.ResultAllStores:
+	case *model.ResultAllStores:
 		if obj == nil {
 			return graphql.Null
 		}
@@ -12543,53 +12992,6 @@ func (ec *executionContext) _resultInsert(ctx context.Context, sel ast.Selection
 // endregion ************************** interface.gotpl ***************************
 
 // region    **************************** object.gotpl ****************************
-
-var barangImplementors = []string{"Barang"}
-
-func (ec *executionContext) _Barang(ctx context.Context, sel ast.SelectionSet, obj *models.Barang) graphql.Marshaler {
-	fields := graphql.CollectFields(ec.OperationContext, sel, barangImplementors)
-
-	out := graphql.NewFieldSet(fields)
-	var invalids uint32
-	for i, field := range fields {
-		switch field.Name {
-		case "__typename":
-			out.Values[i] = graphql.MarshalString("Barang")
-		case "id":
-			out.Values[i] = ec._Barang_id(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
-		case "nama":
-			out.Values[i] = ec._Barang_nama(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
-		case "description":
-			out.Values[i] = ec._Barang_description(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
-		case "jumlah":
-			out.Values[i] = ec._Barang_jumlah(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
-		case "jenisBarang":
-			out.Values[i] = ec._Barang_jenisBarang(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
-		default:
-			panic("unknown field " + strconv.Quote(field.Name))
-		}
-	}
-	out.Dispatch()
-	if invalids > 0 {
-		return graphql.Null
-	}
-	return out
-}
 
 var brandsImplementors = []string{"Brands"}
 
@@ -12655,41 +13057,9 @@ func (ec *executionContext) _Categories(ctx context.Context, sel ast.SelectionSe
 	return out
 }
 
-var jenisBarangImplementors = []string{"JenisBarang"}
-
-func (ec *executionContext) _JenisBarang(ctx context.Context, sel ast.SelectionSet, obj *models.JenisBarang) graphql.Marshaler {
-	fields := graphql.CollectFields(ec.OperationContext, sel, jenisBarangImplementors)
-
-	out := graphql.NewFieldSet(fields)
-	var invalids uint32
-	for i, field := range fields {
-		switch field.Name {
-		case "__typename":
-			out.Values[i] = graphql.MarshalString("JenisBarang")
-		case "id":
-			out.Values[i] = ec._JenisBarang_id(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
-		case "jenis_barang":
-			out.Values[i] = ec._JenisBarang_jenis_barang(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
-		default:
-			panic("unknown field " + strconv.Quote(field.Name))
-		}
-	}
-	out.Dispatch()
-	if invalids > 0 {
-		return graphql.Null
-	}
-	return out
-}
-
 var karyawanImplementors = []string{"Karyawan"}
 
-func (ec *executionContext) _Karyawan(ctx context.Context, sel ast.SelectionSet, obj *model.Karyawan) graphql.Marshaler {
+func (ec *executionContext) _Karyawan(ctx context.Context, sel ast.SelectionSet, obj *model1.Karyawan) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, karyawanImplementors)
 
 	out := graphql.NewFieldSet(fields)
@@ -12749,11 +13119,6 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 		switch field.Name {
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("Mutation")
-		case "insertBarang":
-			out.Values[i] = ec._Mutation_insertBarang(ctx, field)
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
 		case "InsertBrands":
 			out.Values[i] = ec._Mutation_InsertBrands(ctx, field)
 			if out.Values[i] == graphql.Null {
@@ -12784,8 +13149,18 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
-		case "insertJenisBarang":
-			out.Values[i] = ec._Mutation_insertJenisBarang(ctx, field)
+		case "InsertOrderItem":
+			out.Values[i] = ec._Mutation_InsertOrderItem(ctx, field)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "UpdateOrderItem":
+			out.Values[i] = ec._Mutation_UpdateOrderItem(ctx, field)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "DeleteOrderItem":
+			out.Values[i] = ec._Mutation_DeleteOrderItem(ctx, field)
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
@@ -12875,9 +13250,61 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 	return out
 }
 
+var orderItemImplementors = []string{"OrderItem"}
+
+func (ec *executionContext) _OrderItem(ctx context.Context, sel ast.SelectionSet, obj *model.OrderItem) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, orderItemImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("OrderItem")
+		case "ItemID":
+			out.Values[i] = ec._OrderItem_ItemID(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "OrderID":
+			out.Values[i] = ec._OrderItem_OrderID(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "ProductID":
+			out.Values[i] = ec._OrderItem_ProductID(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "Quantity":
+			out.Values[i] = ec._OrderItem_Quantity(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "ListPrice":
+			out.Values[i] = ec._OrderItem_ListPrice(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "Discount":
+			out.Values[i] = ec._OrderItem_Discount(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
 var ordersImplementors = []string{"Orders"}
 
-func (ec *executionContext) _Orders(ctx context.Context, sel ast.SelectionSet, obj *model1.Orders) graphql.Marshaler {
+func (ec *executionContext) _Orders(ctx context.Context, sel ast.SelectionSet, obj *model.Orders) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, ordersImplementors)
 
 	out := graphql.NewFieldSet(fields)
@@ -13033,17 +13460,6 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 		switch field.Name {
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("Query")
-		case "getBarang":
-			field := field
-			out.Concurrently(i, func() (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._Query_getBarang(ctx, field)
-				return res
-			})
 		case "SingleBrands":
 			field := field
 			out.Concurrently(i, func() (res graphql.Marshaler) {
@@ -13100,7 +13516,7 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 				}
 				return res
 			})
-		case "getAllJenisBarang":
+		case "AllOrderItem":
 			field := field
 			out.Concurrently(i, func() (res graphql.Marshaler) {
 				defer func() {
@@ -13108,7 +13524,21 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 						ec.Error(ctx, ec.Recover(ctx, r))
 					}
 				}()
-				res = ec._Query_getAllJenisBarang(ctx, field)
+				res = ec._Query_AllOrderItem(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			})
+		case "SingelOrderItem":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_SingelOrderItem(ctx, field)
 				if res == graphql.Null {
 					atomic.AddUint32(&invalids, 1)
 				}
@@ -13282,7 +13712,7 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 
 var resultAllBrandsImplementors = []string{"ResultAllBrands", "resultInsert"}
 
-func (ec *executionContext) _ResultAllBrands(ctx context.Context, sel ast.SelectionSet, obj *model1.ResultAllBrands) graphql.Marshaler {
+func (ec *executionContext) _ResultAllBrands(ctx context.Context, sel ast.SelectionSet, obj *model.ResultAllBrands) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, resultAllBrandsImplementors)
 
 	out := graphql.NewFieldSet(fields)
@@ -13319,7 +13749,7 @@ func (ec *executionContext) _ResultAllBrands(ctx context.Context, sel ast.Select
 
 var resultAllProductsImplementors = []string{"ResultAllProducts", "resultInsert"}
 
-func (ec *executionContext) _ResultAllProducts(ctx context.Context, sel ast.SelectionSet, obj *model1.ResultAllProducts) graphql.Marshaler {
+func (ec *executionContext) _ResultAllProducts(ctx context.Context, sel ast.SelectionSet, obj *model.ResultAllProducts) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, resultAllProductsImplementors)
 
 	out := graphql.NewFieldSet(fields)
@@ -13356,7 +13786,7 @@ func (ec *executionContext) _ResultAllProducts(ctx context.Context, sel ast.Sele
 
 var resultAllStoresImplementors = []string{"ResultAllStores", "resultInsert"}
 
-func (ec *executionContext) _ResultAllStores(ctx context.Context, sel ast.SelectionSet, obj *model1.ResultAllStores) graphql.Marshaler {
+func (ec *executionContext) _ResultAllStores(ctx context.Context, sel ast.SelectionSet, obj *model.ResultAllStores) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, resultAllStoresImplementors)
 
 	out := graphql.NewFieldSet(fields)
@@ -13393,7 +13823,7 @@ func (ec *executionContext) _ResultAllStores(ctx context.Context, sel ast.Select
 
 var resultDeleteBrandsImplementors = []string{"ResultDeleteBrands", "resultInsert"}
 
-func (ec *executionContext) _ResultDeleteBrands(ctx context.Context, sel ast.SelectionSet, obj *model1.ResultDeleteBrands) graphql.Marshaler {
+func (ec *executionContext) _ResultDeleteBrands(ctx context.Context, sel ast.SelectionSet, obj *model.ResultDeleteBrands) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, resultDeleteBrandsImplementors)
 
 	out := graphql.NewFieldSet(fields)
@@ -13425,7 +13855,7 @@ func (ec *executionContext) _ResultDeleteBrands(ctx context.Context, sel ast.Sel
 
 var resultDeleteCategoriesImplementors = []string{"ResultDeleteCategories", "resultInsert"}
 
-func (ec *executionContext) _ResultDeleteCategories(ctx context.Context, sel ast.SelectionSet, obj *model1.ResultDeleteCategories) graphql.Marshaler {
+func (ec *executionContext) _ResultDeleteCategories(ctx context.Context, sel ast.SelectionSet, obj *model.ResultDeleteCategories) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, resultDeleteCategoriesImplementors)
 
 	out := graphql.NewFieldSet(fields)
@@ -13460,9 +13890,46 @@ func (ec *executionContext) _ResultDeleteCategories(ctx context.Context, sel ast
 	return out
 }
 
+var resultDeleteOrderItemImplementors = []string{"ResultDeleteOrderItem", "resultInsert"}
+
+func (ec *executionContext) _ResultDeleteOrderItem(ctx context.Context, sel ast.SelectionSet, obj *model.ResultDeleteOrderItem) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, resultDeleteOrderItemImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("ResultDeleteOrderItem")
+		case "status":
+			out.Values[i] = ec._ResultDeleteOrderItem_status(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "code":
+			out.Values[i] = ec._ResultDeleteOrderItem_code(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "data":
+			out.Values[i] = ec._ResultDeleteOrderItem_data(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
 var resultDeleteOrdersImplementors = []string{"ResultDeleteOrders", "resultInsert"}
 
-func (ec *executionContext) _ResultDeleteOrders(ctx context.Context, sel ast.SelectionSet, obj *model1.ResultDeleteOrders) graphql.Marshaler {
+func (ec *executionContext) _ResultDeleteOrders(ctx context.Context, sel ast.SelectionSet, obj *model.ResultDeleteOrders) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, resultDeleteOrdersImplementors)
 
 	out := graphql.NewFieldSet(fields)
@@ -13499,7 +13966,7 @@ func (ec *executionContext) _ResultDeleteOrders(ctx context.Context, sel ast.Sel
 
 var resultDeleteProductsImplementors = []string{"ResultDeleteProducts", "resultInsert"}
 
-func (ec *executionContext) _ResultDeleteProducts(ctx context.Context, sel ast.SelectionSet, obj *model1.ResultDeleteProducts) graphql.Marshaler {
+func (ec *executionContext) _ResultDeleteProducts(ctx context.Context, sel ast.SelectionSet, obj *model.ResultDeleteProducts) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, resultDeleteProductsImplementors)
 
 	out := graphql.NewFieldSet(fields)
@@ -13536,7 +14003,7 @@ func (ec *executionContext) _ResultDeleteProducts(ctx context.Context, sel ast.S
 
 var resultDeleteStaffsImplementors = []string{"ResultDeleteStaffs", "resultInsert"}
 
-func (ec *executionContext) _ResultDeleteStaffs(ctx context.Context, sel ast.SelectionSet, obj *model1.ResultDeleteStaffs) graphql.Marshaler {
+func (ec *executionContext) _ResultDeleteStaffs(ctx context.Context, sel ast.SelectionSet, obj *model.ResultDeleteStaffs) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, resultDeleteStaffsImplementors)
 
 	out := graphql.NewFieldSet(fields)
@@ -13573,7 +14040,7 @@ func (ec *executionContext) _ResultDeleteStaffs(ctx context.Context, sel ast.Sel
 
 var resultDeleteStocksImplementors = []string{"ResultDeleteStocks", "resultInsert"}
 
-func (ec *executionContext) _ResultDeleteStocks(ctx context.Context, sel ast.SelectionSet, obj *model1.ResultDeleteStocks) graphql.Marshaler {
+func (ec *executionContext) _ResultDeleteStocks(ctx context.Context, sel ast.SelectionSet, obj *model.ResultDeleteStocks) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, resultDeleteStocksImplementors)
 
 	out := graphql.NewFieldSet(fields)
@@ -13610,7 +14077,7 @@ func (ec *executionContext) _ResultDeleteStocks(ctx context.Context, sel ast.Sel
 
 var resultDeleteStoresImplementors = []string{"ResultDeleteStores", "resultInsert"}
 
-func (ec *executionContext) _ResultDeleteStores(ctx context.Context, sel ast.SelectionSet, obj *model1.ResultDeleteStores) graphql.Marshaler {
+func (ec *executionContext) _ResultDeleteStores(ctx context.Context, sel ast.SelectionSet, obj *model.ResultDeleteStores) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, resultDeleteStoresImplementors)
 
 	out := graphql.NewFieldSet(fields)
@@ -13647,7 +14114,7 @@ func (ec *executionContext) _ResultDeleteStores(ctx context.Context, sel ast.Sel
 
 var resultFetchCategoriesImplementors = []string{"ResultFetchCategories", "resultInsert"}
 
-func (ec *executionContext) _ResultFetchCategories(ctx context.Context, sel ast.SelectionSet, obj *model1.ResultFetchCategories) graphql.Marshaler {
+func (ec *executionContext) _ResultFetchCategories(ctx context.Context, sel ast.SelectionSet, obj *model.ResultFetchCategories) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, resultFetchCategoriesImplementors)
 
 	out := graphql.NewFieldSet(fields)
@@ -13682,9 +14149,46 @@ func (ec *executionContext) _ResultFetchCategories(ctx context.Context, sel ast.
 	return out
 }
 
+var resultFetchOrderItemImplementors = []string{"ResultFetchOrderItem", "resultInsert"}
+
+func (ec *executionContext) _ResultFetchOrderItem(ctx context.Context, sel ast.SelectionSet, obj *model.ResultFetchOrderItem) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, resultFetchOrderItemImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("ResultFetchOrderItem")
+		case "status":
+			out.Values[i] = ec._ResultFetchOrderItem_status(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "code":
+			out.Values[i] = ec._ResultFetchOrderItem_code(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "data":
+			out.Values[i] = ec._ResultFetchOrderItem_data(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
 var resultFetchOrdersImplementors = []string{"ResultFetchOrders", "resultInsert"}
 
-func (ec *executionContext) _ResultFetchOrders(ctx context.Context, sel ast.SelectionSet, obj *model1.ResultFetchOrders) graphql.Marshaler {
+func (ec *executionContext) _ResultFetchOrders(ctx context.Context, sel ast.SelectionSet, obj *model.ResultFetchOrders) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, resultFetchOrdersImplementors)
 
 	out := graphql.NewFieldSet(fields)
@@ -13721,7 +14225,7 @@ func (ec *executionContext) _ResultFetchOrders(ctx context.Context, sel ast.Sele
 
 var resultFetchStaffsImplementors = []string{"ResultFetchStaffs", "resultInsert"}
 
-func (ec *executionContext) _ResultFetchStaffs(ctx context.Context, sel ast.SelectionSet, obj *model1.ResultFetchStaffs) graphql.Marshaler {
+func (ec *executionContext) _ResultFetchStaffs(ctx context.Context, sel ast.SelectionSet, obj *model.ResultFetchStaffs) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, resultFetchStaffsImplementors)
 
 	out := graphql.NewFieldSet(fields)
@@ -13758,7 +14262,7 @@ func (ec *executionContext) _ResultFetchStaffs(ctx context.Context, sel ast.Sele
 
 var resultFetchStocksImplementors = []string{"ResultFetchStocks", "resultInsert"}
 
-func (ec *executionContext) _ResultFetchStocks(ctx context.Context, sel ast.SelectionSet, obj *model1.ResultFetchStocks) graphql.Marshaler {
+func (ec *executionContext) _ResultFetchStocks(ctx context.Context, sel ast.SelectionSet, obj *model.ResultFetchStocks) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, resultFetchStocksImplementors)
 
 	out := graphql.NewFieldSet(fields)
@@ -13795,7 +14299,7 @@ func (ec *executionContext) _ResultFetchStocks(ctx context.Context, sel ast.Sele
 
 var resultGetCategoriesImplementors = []string{"ResultGetCategories", "resultInsert"}
 
-func (ec *executionContext) _ResultGetCategories(ctx context.Context, sel ast.SelectionSet, obj *model1.ResultGetCategories) graphql.Marshaler {
+func (ec *executionContext) _ResultGetCategories(ctx context.Context, sel ast.SelectionSet, obj *model.ResultGetCategories) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, resultGetCategoriesImplementors)
 
 	out := graphql.NewFieldSet(fields)
@@ -13830,9 +14334,46 @@ func (ec *executionContext) _ResultGetCategories(ctx context.Context, sel ast.Se
 	return out
 }
 
+var resultGetOrderItemImplementors = []string{"ResultGetOrderItem", "resultInsert"}
+
+func (ec *executionContext) _ResultGetOrderItem(ctx context.Context, sel ast.SelectionSet, obj *model.ResultGetOrderItem) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, resultGetOrderItemImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("ResultGetOrderItem")
+		case "status":
+			out.Values[i] = ec._ResultGetOrderItem_status(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "code":
+			out.Values[i] = ec._ResultGetOrderItem_code(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "data":
+			out.Values[i] = ec._ResultGetOrderItem_data(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
 var resultGetOrdersImplementors = []string{"ResultGetOrders", "resultInsert"}
 
-func (ec *executionContext) _ResultGetOrders(ctx context.Context, sel ast.SelectionSet, obj *model1.ResultGetOrders) graphql.Marshaler {
+func (ec *executionContext) _ResultGetOrders(ctx context.Context, sel ast.SelectionSet, obj *model.ResultGetOrders) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, resultGetOrdersImplementors)
 
 	out := graphql.NewFieldSet(fields)
@@ -13869,7 +14410,7 @@ func (ec *executionContext) _ResultGetOrders(ctx context.Context, sel ast.Select
 
 var resultGetStaffsImplementors = []string{"ResultGetStaffs", "resultInsert"}
 
-func (ec *executionContext) _ResultGetStaffs(ctx context.Context, sel ast.SelectionSet, obj *model1.ResultGetStaffs) graphql.Marshaler {
+func (ec *executionContext) _ResultGetStaffs(ctx context.Context, sel ast.SelectionSet, obj *model.ResultGetStaffs) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, resultGetStaffsImplementors)
 
 	out := graphql.NewFieldSet(fields)
@@ -13906,7 +14447,7 @@ func (ec *executionContext) _ResultGetStaffs(ctx context.Context, sel ast.Select
 
 var resultGetStocksImplementors = []string{"ResultGetStocks", "resultInsert"}
 
-func (ec *executionContext) _ResultGetStocks(ctx context.Context, sel ast.SelectionSet, obj *model1.ResultGetStocks) graphql.Marshaler {
+func (ec *executionContext) _ResultGetStocks(ctx context.Context, sel ast.SelectionSet, obj *model.ResultGetStocks) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, resultGetStocksImplementors)
 
 	out := graphql.NewFieldSet(fields)
@@ -13941,46 +14482,9 @@ func (ec *executionContext) _ResultGetStocks(ctx context.Context, sel ast.Select
 	return out
 }
 
-var resultInsertBarangImplementors = []string{"ResultInsertBarang", "resultInsert"}
-
-func (ec *executionContext) _ResultInsertBarang(ctx context.Context, sel ast.SelectionSet, obj *model.ResultInsertBarang) graphql.Marshaler {
-	fields := graphql.CollectFields(ec.OperationContext, sel, resultInsertBarangImplementors)
-
-	out := graphql.NewFieldSet(fields)
-	var invalids uint32
-	for i, field := range fields {
-		switch field.Name {
-		case "__typename":
-			out.Values[i] = graphql.MarshalString("ResultInsertBarang")
-		case "status":
-			out.Values[i] = ec._ResultInsertBarang_status(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
-		case "code":
-			out.Values[i] = ec._ResultInsertBarang_code(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
-		case "data":
-			out.Values[i] = ec._ResultInsertBarang_data(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
-		default:
-			panic("unknown field " + strconv.Quote(field.Name))
-		}
-	}
-	out.Dispatch()
-	if invalids > 0 {
-		return graphql.Null
-	}
-	return out
-}
-
 var resultInsertBrandsImplementors = []string{"ResultInsertBrands", "resultInsert"}
 
-func (ec *executionContext) _ResultInsertBrands(ctx context.Context, sel ast.SelectionSet, obj *model1.ResultInsertBrands) graphql.Marshaler {
+func (ec *executionContext) _ResultInsertBrands(ctx context.Context, sel ast.SelectionSet, obj *model.ResultInsertBrands) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, resultInsertBrandsImplementors)
 
 	out := graphql.NewFieldSet(fields)
@@ -14017,7 +14521,7 @@ func (ec *executionContext) _ResultInsertBrands(ctx context.Context, sel ast.Sel
 
 var resultInsertCategoriesImplementors = []string{"ResultInsertCategories", "resultInsert"}
 
-func (ec *executionContext) _ResultInsertCategories(ctx context.Context, sel ast.SelectionSet, obj *model1.ResultInsertCategories) graphql.Marshaler {
+func (ec *executionContext) _ResultInsertCategories(ctx context.Context, sel ast.SelectionSet, obj *model.ResultInsertCategories) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, resultInsertCategoriesImplementors)
 
 	out := graphql.NewFieldSet(fields)
@@ -14052,9 +14556,46 @@ func (ec *executionContext) _ResultInsertCategories(ctx context.Context, sel ast
 	return out
 }
 
+var resultInsertOrderItemImplementors = []string{"ResultInsertOrderItem", "resultInsert"}
+
+func (ec *executionContext) _ResultInsertOrderItem(ctx context.Context, sel ast.SelectionSet, obj *model.ResultInsertOrderItem) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, resultInsertOrderItemImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("ResultInsertOrderItem")
+		case "status":
+			out.Values[i] = ec._ResultInsertOrderItem_status(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "code":
+			out.Values[i] = ec._ResultInsertOrderItem_code(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "data":
+			out.Values[i] = ec._ResultInsertOrderItem_data(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
 var resultInsertOrdersImplementors = []string{"ResultInsertOrders", "resultInsert"}
 
-func (ec *executionContext) _ResultInsertOrders(ctx context.Context, sel ast.SelectionSet, obj *model1.ResultInsertOrders) graphql.Marshaler {
+func (ec *executionContext) _ResultInsertOrders(ctx context.Context, sel ast.SelectionSet, obj *model.ResultInsertOrders) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, resultInsertOrdersImplementors)
 
 	out := graphql.NewFieldSet(fields)
@@ -14091,7 +14632,7 @@ func (ec *executionContext) _ResultInsertOrders(ctx context.Context, sel ast.Sel
 
 var resultInsertProductsImplementors = []string{"ResultInsertProducts", "resultInsert"}
 
-func (ec *executionContext) _ResultInsertProducts(ctx context.Context, sel ast.SelectionSet, obj *model1.ResultInsertProducts) graphql.Marshaler {
+func (ec *executionContext) _ResultInsertProducts(ctx context.Context, sel ast.SelectionSet, obj *model.ResultInsertProducts) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, resultInsertProductsImplementors)
 
 	out := graphql.NewFieldSet(fields)
@@ -14128,7 +14669,7 @@ func (ec *executionContext) _ResultInsertProducts(ctx context.Context, sel ast.S
 
 var resultInsertStaffsImplementors = []string{"ResultInsertStaffs", "resultInsert"}
 
-func (ec *executionContext) _ResultInsertStaffs(ctx context.Context, sel ast.SelectionSet, obj *model1.ResultInsertStaffs) graphql.Marshaler {
+func (ec *executionContext) _ResultInsertStaffs(ctx context.Context, sel ast.SelectionSet, obj *model.ResultInsertStaffs) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, resultInsertStaffsImplementors)
 
 	out := graphql.NewFieldSet(fields)
@@ -14165,7 +14706,7 @@ func (ec *executionContext) _ResultInsertStaffs(ctx context.Context, sel ast.Sel
 
 var resultInsertStocksImplementors = []string{"ResultInsertStocks", "resultInsert"}
 
-func (ec *executionContext) _ResultInsertStocks(ctx context.Context, sel ast.SelectionSet, obj *model1.ResultInsertStocks) graphql.Marshaler {
+func (ec *executionContext) _ResultInsertStocks(ctx context.Context, sel ast.SelectionSet, obj *model.ResultInsertStocks) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, resultInsertStocksImplementors)
 
 	out := graphql.NewFieldSet(fields)
@@ -14202,7 +14743,7 @@ func (ec *executionContext) _ResultInsertStocks(ctx context.Context, sel ast.Sel
 
 var resultInsertStoresImplementors = []string{"ResultInsertStores", "resultInsert"}
 
-func (ec *executionContext) _ResultInsertStores(ctx context.Context, sel ast.SelectionSet, obj *model1.ResultInsertStores) graphql.Marshaler {
+func (ec *executionContext) _ResultInsertStores(ctx context.Context, sel ast.SelectionSet, obj *model.ResultInsertStores) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, resultInsertStoresImplementors)
 
 	out := graphql.NewFieldSet(fields)
@@ -14239,7 +14780,7 @@ func (ec *executionContext) _ResultInsertStores(ctx context.Context, sel ast.Sel
 
 var resultSingleBrandsImplementors = []string{"ResultSingleBrands", "resultInsert"}
 
-func (ec *executionContext) _ResultSingleBrands(ctx context.Context, sel ast.SelectionSet, obj *model1.ResultSingleBrands) graphql.Marshaler {
+func (ec *executionContext) _ResultSingleBrands(ctx context.Context, sel ast.SelectionSet, obj *model.ResultSingleBrands) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, resultSingleBrandsImplementors)
 
 	out := graphql.NewFieldSet(fields)
@@ -14276,7 +14817,7 @@ func (ec *executionContext) _ResultSingleBrands(ctx context.Context, sel ast.Sel
 
 var resultSingleProductsImplementors = []string{"ResultSingleProducts", "resultInsert"}
 
-func (ec *executionContext) _ResultSingleProducts(ctx context.Context, sel ast.SelectionSet, obj *model1.ResultSingleProducts) graphql.Marshaler {
+func (ec *executionContext) _ResultSingleProducts(ctx context.Context, sel ast.SelectionSet, obj *model.ResultSingleProducts) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, resultSingleProductsImplementors)
 
 	out := graphql.NewFieldSet(fields)
@@ -14313,7 +14854,7 @@ func (ec *executionContext) _ResultSingleProducts(ctx context.Context, sel ast.S
 
 var resultSingleStoresImplementors = []string{"ResultSingleStores", "resultInsert"}
 
-func (ec *executionContext) _ResultSingleStores(ctx context.Context, sel ast.SelectionSet, obj *model1.ResultSingleStores) graphql.Marshaler {
+func (ec *executionContext) _ResultSingleStores(ctx context.Context, sel ast.SelectionSet, obj *model.ResultSingleStores) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, resultSingleStoresImplementors)
 
 	out := graphql.NewFieldSet(fields)
@@ -14350,7 +14891,7 @@ func (ec *executionContext) _ResultSingleStores(ctx context.Context, sel ast.Sel
 
 var resultUpdateBrandsImplementors = []string{"ResultUpdateBrands", "resultInsert"}
 
-func (ec *executionContext) _ResultUpdateBrands(ctx context.Context, sel ast.SelectionSet, obj *model1.ResultUpdateBrands) graphql.Marshaler {
+func (ec *executionContext) _ResultUpdateBrands(ctx context.Context, sel ast.SelectionSet, obj *model.ResultUpdateBrands) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, resultUpdateBrandsImplementors)
 
 	out := graphql.NewFieldSet(fields)
@@ -14387,7 +14928,7 @@ func (ec *executionContext) _ResultUpdateBrands(ctx context.Context, sel ast.Sel
 
 var resultUpdateCategoriesImplementors = []string{"ResultUpdateCategories", "resultInsert"}
 
-func (ec *executionContext) _ResultUpdateCategories(ctx context.Context, sel ast.SelectionSet, obj *model1.ResultUpdateCategories) graphql.Marshaler {
+func (ec *executionContext) _ResultUpdateCategories(ctx context.Context, sel ast.SelectionSet, obj *model.ResultUpdateCategories) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, resultUpdateCategoriesImplementors)
 
 	out := graphql.NewFieldSet(fields)
@@ -14422,9 +14963,46 @@ func (ec *executionContext) _ResultUpdateCategories(ctx context.Context, sel ast
 	return out
 }
 
+var resultUpdateOrderItemImplementors = []string{"ResultUpdateOrderItem", "resultInsert"}
+
+func (ec *executionContext) _ResultUpdateOrderItem(ctx context.Context, sel ast.SelectionSet, obj *model.ResultUpdateOrderItem) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, resultUpdateOrderItemImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("ResultUpdateOrderItem")
+		case "status":
+			out.Values[i] = ec._ResultUpdateOrderItem_status(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "code":
+			out.Values[i] = ec._ResultUpdateOrderItem_code(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "data":
+			out.Values[i] = ec._ResultUpdateOrderItem_data(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
 var resultUpdateOrdersImplementors = []string{"ResultUpdateOrders", "resultInsert"}
 
-func (ec *executionContext) _ResultUpdateOrders(ctx context.Context, sel ast.SelectionSet, obj *model1.ResultUpdateOrders) graphql.Marshaler {
+func (ec *executionContext) _ResultUpdateOrders(ctx context.Context, sel ast.SelectionSet, obj *model.ResultUpdateOrders) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, resultUpdateOrdersImplementors)
 
 	out := graphql.NewFieldSet(fields)
@@ -14461,7 +15039,7 @@ func (ec *executionContext) _ResultUpdateOrders(ctx context.Context, sel ast.Sel
 
 var resultUpdateProductsImplementors = []string{"ResultUpdateProducts", "resultInsert"}
 
-func (ec *executionContext) _ResultUpdateProducts(ctx context.Context, sel ast.SelectionSet, obj *model1.ResultUpdateProducts) graphql.Marshaler {
+func (ec *executionContext) _ResultUpdateProducts(ctx context.Context, sel ast.SelectionSet, obj *model.ResultUpdateProducts) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, resultUpdateProductsImplementors)
 
 	out := graphql.NewFieldSet(fields)
@@ -14498,7 +15076,7 @@ func (ec *executionContext) _ResultUpdateProducts(ctx context.Context, sel ast.S
 
 var resultUpdateStaffsImplementors = []string{"ResultUpdateStaffs", "resultInsert"}
 
-func (ec *executionContext) _ResultUpdateStaffs(ctx context.Context, sel ast.SelectionSet, obj *model1.ResultUpdateStaffs) graphql.Marshaler {
+func (ec *executionContext) _ResultUpdateStaffs(ctx context.Context, sel ast.SelectionSet, obj *model.ResultUpdateStaffs) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, resultUpdateStaffsImplementors)
 
 	out := graphql.NewFieldSet(fields)
@@ -14535,7 +15113,7 @@ func (ec *executionContext) _ResultUpdateStaffs(ctx context.Context, sel ast.Sel
 
 var resultUpdateStocksImplementors = []string{"ResultUpdateStocks", "resultInsert"}
 
-func (ec *executionContext) _ResultUpdateStocks(ctx context.Context, sel ast.SelectionSet, obj *model1.ResultUpdateStocks) graphql.Marshaler {
+func (ec *executionContext) _ResultUpdateStocks(ctx context.Context, sel ast.SelectionSet, obj *model.ResultUpdateStocks) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, resultUpdateStocksImplementors)
 
 	out := graphql.NewFieldSet(fields)
@@ -14572,7 +15150,7 @@ func (ec *executionContext) _ResultUpdateStocks(ctx context.Context, sel ast.Sel
 
 var resultUpdateStoresImplementors = []string{"ResultUpdateStores", "resultInsert"}
 
-func (ec *executionContext) _ResultUpdateStores(ctx context.Context, sel ast.SelectionSet, obj *model1.ResultUpdateStores) graphql.Marshaler {
+func (ec *executionContext) _ResultUpdateStores(ctx context.Context, sel ast.SelectionSet, obj *model.ResultUpdateStores) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, resultUpdateStoresImplementors)
 
 	out := graphql.NewFieldSet(fields)
@@ -14745,7 +15323,7 @@ func (ec *executionContext) _Stocks(ctx context.Context, sel ast.SelectionSet, o
 
 var storesImplementors = []string{"Stores"}
 
-func (ec *executionContext) _Stores(ctx context.Context, sel ast.SelectionSet, obj *model1.Stores) graphql.Marshaler {
+func (ec *executionContext) _Stores(ctx context.Context, sel ast.SelectionSet, obj *model.Stores) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, storesImplementors)
 
 	out := graphql.NewFieldSet(fields)
@@ -15041,93 +15619,9 @@ func (ec *executionContext) ___Type(ctx context.Context, sel ast.SelectionSet, o
 	return out
 }
 
-var resultGetAllJenisBarangImplementors = []string{"resultGetAllJenisBarang", "resultInsert"}
-
-func (ec *executionContext) _resultGetAllJenisBarang(ctx context.Context, sel ast.SelectionSet, obj *model1.ResultGetAllJenisBarang) graphql.Marshaler {
-	fields := graphql.CollectFields(ec.OperationContext, sel, resultGetAllJenisBarangImplementors)
-
-	out := graphql.NewFieldSet(fields)
-	var invalids uint32
-	for i, field := range fields {
-		switch field.Name {
-		case "__typename":
-			out.Values[i] = graphql.MarshalString("resultGetAllJenisBarang")
-		case "status":
-			out.Values[i] = ec._resultGetAllJenisBarang_status(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
-		case "code":
-			out.Values[i] = ec._resultGetAllJenisBarang_code(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
-		case "data":
-			out.Values[i] = ec._resultGetAllJenisBarang_data(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
-		default:
-			panic("unknown field " + strconv.Quote(field.Name))
-		}
-	}
-	out.Dispatch()
-	if invalids > 0 {
-		return graphql.Null
-	}
-	return out
-}
-
-var resultJenisBarangImplementors = []string{"resultJenisBarang", "resultInsert"}
-
-func (ec *executionContext) _resultJenisBarang(ctx context.Context, sel ast.SelectionSet, obj *model1.ResultJenisBarang) graphql.Marshaler {
-	fields := graphql.CollectFields(ec.OperationContext, sel, resultJenisBarangImplementors)
-
-	out := graphql.NewFieldSet(fields)
-	var invalids uint32
-	for i, field := range fields {
-		switch field.Name {
-		case "__typename":
-			out.Values[i] = graphql.MarshalString("resultJenisBarang")
-		case "status":
-			out.Values[i] = ec._resultJenisBarang_status(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
-		case "code":
-			out.Values[i] = ec._resultJenisBarang_code(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
-		case "data":
-			out.Values[i] = ec._resultJenisBarang_data(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
-		default:
-			panic("unknown field " + strconv.Quote(field.Name))
-		}
-	}
-	out.Dispatch()
-	if invalids > 0 {
-		return graphql.Null
-	}
-	return out
-}
-
 // endregion **************************** object.gotpl ****************************
 
 // region    ***************************** type.gotpl *****************************
-
-func (ec *executionContext) marshalNBarang2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelsᚐBarang(ctx context.Context, sel ast.SelectionSet, v *models.Barang) graphql.Marshaler {
-	if v == nil {
-		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	return ec._Barang(ctx, sel, v)
-}
 
 func (ec *executionContext) unmarshalNBoolean2bool(ctx context.Context, v interface{}) (bool, error) {
 	res, err := graphql.UnmarshalBoolean(v)
@@ -15261,7 +15755,7 @@ func (ec *executionContext) marshalNInt2int(ctx context.Context, sel ast.Selecti
 	return res
 }
 
-func (ec *executionContext) marshalNJenisBarang2ᚕᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelsᚐJenisBarang(ctx context.Context, sel ast.SelectionSet, v []*models.JenisBarang) graphql.Marshaler {
+func (ec *executionContext) marshalNOrderItem2ᚕᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐOrderItem(ctx context.Context, sel ast.SelectionSet, v []*model.OrderItem) graphql.Marshaler {
 	ret := make(graphql.Array, len(v))
 	var wg sync.WaitGroup
 	isLen1 := len(v) == 1
@@ -15285,7 +15779,7 @@ func (ec *executionContext) marshalNJenisBarang2ᚕᚖgithubᚗcomᚋjuragankodi
 			if !isLen1 {
 				defer wg.Done()
 			}
-			ret[i] = ec.marshalOJenisBarang2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelsᚐJenisBarang(ctx, sel, v[i])
+			ret[i] = ec.marshalOOrderItem2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐOrderItem(ctx, sel, v[i])
 		}
 		if isLen1 {
 			f(i)
@@ -15298,17 +15792,17 @@ func (ec *executionContext) marshalNJenisBarang2ᚕᚖgithubᚗcomᚋjuragankodi
 	return ret
 }
 
-func (ec *executionContext) marshalNJenisBarang2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelsᚐJenisBarang(ctx context.Context, sel ast.SelectionSet, v *models.JenisBarang) graphql.Marshaler {
+func (ec *executionContext) marshalNOrderItem2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐOrderItem(ctx context.Context, sel ast.SelectionSet, v *model.OrderItem) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "must not be null")
 		}
 		return graphql.Null
 	}
-	return ec._JenisBarang(ctx, sel, v)
+	return ec._OrderItem(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalNOrders2ᚕᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐOrders(ctx context.Context, sel ast.SelectionSet, v []*model1.Orders) graphql.Marshaler {
+func (ec *executionContext) marshalNOrders2ᚕᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐOrders(ctx context.Context, sel ast.SelectionSet, v []*model.Orders) graphql.Marshaler {
 	ret := make(graphql.Array, len(v))
 	var wg sync.WaitGroup
 	isLen1 := len(v) == 1
@@ -15345,7 +15839,7 @@ func (ec *executionContext) marshalNOrders2ᚕᚖgithubᚗcomᚋjuragankodingᚋ
 	return ret
 }
 
-func (ec *executionContext) marshalNOrders2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐOrders(ctx context.Context, sel ast.SelectionSet, v *model1.Orders) graphql.Marshaler {
+func (ec *executionContext) marshalNOrders2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐOrders(ctx context.Context, sel ast.SelectionSet, v *model.Orders) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "must not be null")
@@ -15406,11 +15900,11 @@ func (ec *executionContext) marshalNProducts2ᚖgithubᚗcomᚋjuragankodingᚋg
 	return ec._Products(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalNResultAllBrands2githubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultAllBrands(ctx context.Context, sel ast.SelectionSet, v model1.ResultAllBrands) graphql.Marshaler {
+func (ec *executionContext) marshalNResultAllBrands2githubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultAllBrands(ctx context.Context, sel ast.SelectionSet, v model.ResultAllBrands) graphql.Marshaler {
 	return ec._ResultAllBrands(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNResultAllBrands2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultAllBrands(ctx context.Context, sel ast.SelectionSet, v *model1.ResultAllBrands) graphql.Marshaler {
+func (ec *executionContext) marshalNResultAllBrands2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultAllBrands(ctx context.Context, sel ast.SelectionSet, v *model.ResultAllBrands) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "must not be null")
@@ -15420,11 +15914,11 @@ func (ec *executionContext) marshalNResultAllBrands2ᚖgithubᚗcomᚋjuragankod
 	return ec._ResultAllBrands(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalNResultAllProducts2githubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultAllProducts(ctx context.Context, sel ast.SelectionSet, v model1.ResultAllProducts) graphql.Marshaler {
+func (ec *executionContext) marshalNResultAllProducts2githubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultAllProducts(ctx context.Context, sel ast.SelectionSet, v model.ResultAllProducts) graphql.Marshaler {
 	return ec._ResultAllProducts(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNResultAllProducts2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultAllProducts(ctx context.Context, sel ast.SelectionSet, v *model1.ResultAllProducts) graphql.Marshaler {
+func (ec *executionContext) marshalNResultAllProducts2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultAllProducts(ctx context.Context, sel ast.SelectionSet, v *model.ResultAllProducts) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "must not be null")
@@ -15434,11 +15928,11 @@ func (ec *executionContext) marshalNResultAllProducts2ᚖgithubᚗcomᚋjuragank
 	return ec._ResultAllProducts(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalNResultAllStores2githubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultAllStores(ctx context.Context, sel ast.SelectionSet, v model1.ResultAllStores) graphql.Marshaler {
+func (ec *executionContext) marshalNResultAllStores2githubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultAllStores(ctx context.Context, sel ast.SelectionSet, v model.ResultAllStores) graphql.Marshaler {
 	return ec._ResultAllStores(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNResultAllStores2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultAllStores(ctx context.Context, sel ast.SelectionSet, v *model1.ResultAllStores) graphql.Marshaler {
+func (ec *executionContext) marshalNResultAllStores2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultAllStores(ctx context.Context, sel ast.SelectionSet, v *model.ResultAllStores) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "must not be null")
@@ -15448,11 +15942,11 @@ func (ec *executionContext) marshalNResultAllStores2ᚖgithubᚗcomᚋjuragankod
 	return ec._ResultAllStores(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalNResultDeleteBrands2githubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultDeleteBrands(ctx context.Context, sel ast.SelectionSet, v model1.ResultDeleteBrands) graphql.Marshaler {
+func (ec *executionContext) marshalNResultDeleteBrands2githubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultDeleteBrands(ctx context.Context, sel ast.SelectionSet, v model.ResultDeleteBrands) graphql.Marshaler {
 	return ec._ResultDeleteBrands(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNResultDeleteBrands2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultDeleteBrands(ctx context.Context, sel ast.SelectionSet, v *model1.ResultDeleteBrands) graphql.Marshaler {
+func (ec *executionContext) marshalNResultDeleteBrands2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultDeleteBrands(ctx context.Context, sel ast.SelectionSet, v *model.ResultDeleteBrands) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "must not be null")
@@ -15462,11 +15956,11 @@ func (ec *executionContext) marshalNResultDeleteBrands2ᚖgithubᚗcomᚋjuragan
 	return ec._ResultDeleteBrands(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalNResultDeleteCategories2githubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultDeleteCategories(ctx context.Context, sel ast.SelectionSet, v model1.ResultDeleteCategories) graphql.Marshaler {
+func (ec *executionContext) marshalNResultDeleteCategories2githubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultDeleteCategories(ctx context.Context, sel ast.SelectionSet, v model.ResultDeleteCategories) graphql.Marshaler {
 	return ec._ResultDeleteCategories(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNResultDeleteCategories2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultDeleteCategories(ctx context.Context, sel ast.SelectionSet, v *model1.ResultDeleteCategories) graphql.Marshaler {
+func (ec *executionContext) marshalNResultDeleteCategories2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultDeleteCategories(ctx context.Context, sel ast.SelectionSet, v *model.ResultDeleteCategories) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "must not be null")
@@ -15476,11 +15970,25 @@ func (ec *executionContext) marshalNResultDeleteCategories2ᚖgithubᚗcomᚋjur
 	return ec._ResultDeleteCategories(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalNResultDeleteOrders2githubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultDeleteOrders(ctx context.Context, sel ast.SelectionSet, v model1.ResultDeleteOrders) graphql.Marshaler {
+func (ec *executionContext) marshalNResultDeleteOrderItem2githubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultDeleteOrderItem(ctx context.Context, sel ast.SelectionSet, v model.ResultDeleteOrderItem) graphql.Marshaler {
+	return ec._ResultDeleteOrderItem(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNResultDeleteOrderItem2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultDeleteOrderItem(ctx context.Context, sel ast.SelectionSet, v *model.ResultDeleteOrderItem) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	return ec._ResultDeleteOrderItem(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalNResultDeleteOrders2githubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultDeleteOrders(ctx context.Context, sel ast.SelectionSet, v model.ResultDeleteOrders) graphql.Marshaler {
 	return ec._ResultDeleteOrders(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNResultDeleteOrders2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultDeleteOrders(ctx context.Context, sel ast.SelectionSet, v *model1.ResultDeleteOrders) graphql.Marshaler {
+func (ec *executionContext) marshalNResultDeleteOrders2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultDeleteOrders(ctx context.Context, sel ast.SelectionSet, v *model.ResultDeleteOrders) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "must not be null")
@@ -15490,11 +15998,11 @@ func (ec *executionContext) marshalNResultDeleteOrders2ᚖgithubᚗcomᚋjuragan
 	return ec._ResultDeleteOrders(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalNResultDeleteProducts2githubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultDeleteProducts(ctx context.Context, sel ast.SelectionSet, v model1.ResultDeleteProducts) graphql.Marshaler {
+func (ec *executionContext) marshalNResultDeleteProducts2githubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultDeleteProducts(ctx context.Context, sel ast.SelectionSet, v model.ResultDeleteProducts) graphql.Marshaler {
 	return ec._ResultDeleteProducts(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNResultDeleteProducts2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultDeleteProducts(ctx context.Context, sel ast.SelectionSet, v *model1.ResultDeleteProducts) graphql.Marshaler {
+func (ec *executionContext) marshalNResultDeleteProducts2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultDeleteProducts(ctx context.Context, sel ast.SelectionSet, v *model.ResultDeleteProducts) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "must not be null")
@@ -15504,11 +16012,11 @@ func (ec *executionContext) marshalNResultDeleteProducts2ᚖgithubᚗcomᚋjurag
 	return ec._ResultDeleteProducts(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalNResultDeleteStaffs2githubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultDeleteStaffs(ctx context.Context, sel ast.SelectionSet, v model1.ResultDeleteStaffs) graphql.Marshaler {
+func (ec *executionContext) marshalNResultDeleteStaffs2githubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultDeleteStaffs(ctx context.Context, sel ast.SelectionSet, v model.ResultDeleteStaffs) graphql.Marshaler {
 	return ec._ResultDeleteStaffs(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNResultDeleteStaffs2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultDeleteStaffs(ctx context.Context, sel ast.SelectionSet, v *model1.ResultDeleteStaffs) graphql.Marshaler {
+func (ec *executionContext) marshalNResultDeleteStaffs2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultDeleteStaffs(ctx context.Context, sel ast.SelectionSet, v *model.ResultDeleteStaffs) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "must not be null")
@@ -15518,11 +16026,11 @@ func (ec *executionContext) marshalNResultDeleteStaffs2ᚖgithubᚗcomᚋjuragan
 	return ec._ResultDeleteStaffs(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalNResultDeleteStocks2githubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultDeleteStocks(ctx context.Context, sel ast.SelectionSet, v model1.ResultDeleteStocks) graphql.Marshaler {
+func (ec *executionContext) marshalNResultDeleteStocks2githubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultDeleteStocks(ctx context.Context, sel ast.SelectionSet, v model.ResultDeleteStocks) graphql.Marshaler {
 	return ec._ResultDeleteStocks(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNResultDeleteStocks2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultDeleteStocks(ctx context.Context, sel ast.SelectionSet, v *model1.ResultDeleteStocks) graphql.Marshaler {
+func (ec *executionContext) marshalNResultDeleteStocks2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultDeleteStocks(ctx context.Context, sel ast.SelectionSet, v *model.ResultDeleteStocks) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "must not be null")
@@ -15532,11 +16040,11 @@ func (ec *executionContext) marshalNResultDeleteStocks2ᚖgithubᚗcomᚋjuragan
 	return ec._ResultDeleteStocks(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalNResultDeleteStores2githubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultDeleteStores(ctx context.Context, sel ast.SelectionSet, v model1.ResultDeleteStores) graphql.Marshaler {
+func (ec *executionContext) marshalNResultDeleteStores2githubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultDeleteStores(ctx context.Context, sel ast.SelectionSet, v model.ResultDeleteStores) graphql.Marshaler {
 	return ec._ResultDeleteStores(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNResultDeleteStores2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultDeleteStores(ctx context.Context, sel ast.SelectionSet, v *model1.ResultDeleteStores) graphql.Marshaler {
+func (ec *executionContext) marshalNResultDeleteStores2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultDeleteStores(ctx context.Context, sel ast.SelectionSet, v *model.ResultDeleteStores) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "must not be null")
@@ -15546,11 +16054,11 @@ func (ec *executionContext) marshalNResultDeleteStores2ᚖgithubᚗcomᚋjuragan
 	return ec._ResultDeleteStores(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalNResultFetchCategories2githubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultFetchCategories(ctx context.Context, sel ast.SelectionSet, v model1.ResultFetchCategories) graphql.Marshaler {
+func (ec *executionContext) marshalNResultFetchCategories2githubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultFetchCategories(ctx context.Context, sel ast.SelectionSet, v model.ResultFetchCategories) graphql.Marshaler {
 	return ec._ResultFetchCategories(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNResultFetchCategories2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultFetchCategories(ctx context.Context, sel ast.SelectionSet, v *model1.ResultFetchCategories) graphql.Marshaler {
+func (ec *executionContext) marshalNResultFetchCategories2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultFetchCategories(ctx context.Context, sel ast.SelectionSet, v *model.ResultFetchCategories) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "must not be null")
@@ -15560,11 +16068,25 @@ func (ec *executionContext) marshalNResultFetchCategories2ᚖgithubᚗcomᚋjura
 	return ec._ResultFetchCategories(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalNResultFetchOrders2githubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultFetchOrders(ctx context.Context, sel ast.SelectionSet, v model1.ResultFetchOrders) graphql.Marshaler {
+func (ec *executionContext) marshalNResultFetchOrderItem2githubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultFetchOrderItem(ctx context.Context, sel ast.SelectionSet, v model.ResultFetchOrderItem) graphql.Marshaler {
+	return ec._ResultFetchOrderItem(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNResultFetchOrderItem2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultFetchOrderItem(ctx context.Context, sel ast.SelectionSet, v *model.ResultFetchOrderItem) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	return ec._ResultFetchOrderItem(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalNResultFetchOrders2githubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultFetchOrders(ctx context.Context, sel ast.SelectionSet, v model.ResultFetchOrders) graphql.Marshaler {
 	return ec._ResultFetchOrders(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNResultFetchOrders2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultFetchOrders(ctx context.Context, sel ast.SelectionSet, v *model1.ResultFetchOrders) graphql.Marshaler {
+func (ec *executionContext) marshalNResultFetchOrders2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultFetchOrders(ctx context.Context, sel ast.SelectionSet, v *model.ResultFetchOrders) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "must not be null")
@@ -15574,11 +16096,11 @@ func (ec *executionContext) marshalNResultFetchOrders2ᚖgithubᚗcomᚋjuragank
 	return ec._ResultFetchOrders(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalNResultFetchStaffs2githubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultFetchStaffs(ctx context.Context, sel ast.SelectionSet, v model1.ResultFetchStaffs) graphql.Marshaler {
+func (ec *executionContext) marshalNResultFetchStaffs2githubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultFetchStaffs(ctx context.Context, sel ast.SelectionSet, v model.ResultFetchStaffs) graphql.Marshaler {
 	return ec._ResultFetchStaffs(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNResultFetchStaffs2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultFetchStaffs(ctx context.Context, sel ast.SelectionSet, v *model1.ResultFetchStaffs) graphql.Marshaler {
+func (ec *executionContext) marshalNResultFetchStaffs2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultFetchStaffs(ctx context.Context, sel ast.SelectionSet, v *model.ResultFetchStaffs) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "must not be null")
@@ -15588,11 +16110,11 @@ func (ec *executionContext) marshalNResultFetchStaffs2ᚖgithubᚗcomᚋjuragank
 	return ec._ResultFetchStaffs(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalNResultFetchStocks2githubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultFetchStocks(ctx context.Context, sel ast.SelectionSet, v model1.ResultFetchStocks) graphql.Marshaler {
+func (ec *executionContext) marshalNResultFetchStocks2githubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultFetchStocks(ctx context.Context, sel ast.SelectionSet, v model.ResultFetchStocks) graphql.Marshaler {
 	return ec._ResultFetchStocks(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNResultFetchStocks2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultFetchStocks(ctx context.Context, sel ast.SelectionSet, v *model1.ResultFetchStocks) graphql.Marshaler {
+func (ec *executionContext) marshalNResultFetchStocks2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultFetchStocks(ctx context.Context, sel ast.SelectionSet, v *model.ResultFetchStocks) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "must not be null")
@@ -15602,11 +16124,11 @@ func (ec *executionContext) marshalNResultFetchStocks2ᚖgithubᚗcomᚋjuragank
 	return ec._ResultFetchStocks(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalNResultGetCategories2githubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultGetCategories(ctx context.Context, sel ast.SelectionSet, v model1.ResultGetCategories) graphql.Marshaler {
+func (ec *executionContext) marshalNResultGetCategories2githubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultGetCategories(ctx context.Context, sel ast.SelectionSet, v model.ResultGetCategories) graphql.Marshaler {
 	return ec._ResultGetCategories(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNResultGetCategories2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultGetCategories(ctx context.Context, sel ast.SelectionSet, v *model1.ResultGetCategories) graphql.Marshaler {
+func (ec *executionContext) marshalNResultGetCategories2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultGetCategories(ctx context.Context, sel ast.SelectionSet, v *model.ResultGetCategories) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "must not be null")
@@ -15616,11 +16138,25 @@ func (ec *executionContext) marshalNResultGetCategories2ᚖgithubᚗcomᚋjuraga
 	return ec._ResultGetCategories(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalNResultGetOrders2githubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultGetOrders(ctx context.Context, sel ast.SelectionSet, v model1.ResultGetOrders) graphql.Marshaler {
+func (ec *executionContext) marshalNResultGetOrderItem2githubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultGetOrderItem(ctx context.Context, sel ast.SelectionSet, v model.ResultGetOrderItem) graphql.Marshaler {
+	return ec._ResultGetOrderItem(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNResultGetOrderItem2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultGetOrderItem(ctx context.Context, sel ast.SelectionSet, v *model.ResultGetOrderItem) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	return ec._ResultGetOrderItem(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalNResultGetOrders2githubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultGetOrders(ctx context.Context, sel ast.SelectionSet, v model.ResultGetOrders) graphql.Marshaler {
 	return ec._ResultGetOrders(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNResultGetOrders2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultGetOrders(ctx context.Context, sel ast.SelectionSet, v *model1.ResultGetOrders) graphql.Marshaler {
+func (ec *executionContext) marshalNResultGetOrders2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultGetOrders(ctx context.Context, sel ast.SelectionSet, v *model.ResultGetOrders) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "must not be null")
@@ -15630,11 +16166,11 @@ func (ec *executionContext) marshalNResultGetOrders2ᚖgithubᚗcomᚋjuragankod
 	return ec._ResultGetOrders(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalNResultGetStaffs2githubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultGetStaffs(ctx context.Context, sel ast.SelectionSet, v model1.ResultGetStaffs) graphql.Marshaler {
+func (ec *executionContext) marshalNResultGetStaffs2githubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultGetStaffs(ctx context.Context, sel ast.SelectionSet, v model.ResultGetStaffs) graphql.Marshaler {
 	return ec._ResultGetStaffs(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNResultGetStaffs2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultGetStaffs(ctx context.Context, sel ast.SelectionSet, v *model1.ResultGetStaffs) graphql.Marshaler {
+func (ec *executionContext) marshalNResultGetStaffs2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultGetStaffs(ctx context.Context, sel ast.SelectionSet, v *model.ResultGetStaffs) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "must not be null")
@@ -15644,11 +16180,11 @@ func (ec *executionContext) marshalNResultGetStaffs2ᚖgithubᚗcomᚋjuragankod
 	return ec._ResultGetStaffs(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalNResultGetStocks2githubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultGetStocks(ctx context.Context, sel ast.SelectionSet, v model1.ResultGetStocks) graphql.Marshaler {
+func (ec *executionContext) marshalNResultGetStocks2githubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultGetStocks(ctx context.Context, sel ast.SelectionSet, v model.ResultGetStocks) graphql.Marshaler {
 	return ec._ResultGetStocks(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNResultGetStocks2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultGetStocks(ctx context.Context, sel ast.SelectionSet, v *model1.ResultGetStocks) graphql.Marshaler {
+func (ec *executionContext) marshalNResultGetStocks2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultGetStocks(ctx context.Context, sel ast.SelectionSet, v *model.ResultGetStocks) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "must not be null")
@@ -15658,25 +16194,11 @@ func (ec *executionContext) marshalNResultGetStocks2ᚖgithubᚗcomᚋjuragankod
 	return ec._ResultGetStocks(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalNResultInsertBarang2githubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋgraphᚋmodelᚐResultInsertBarang(ctx context.Context, sel ast.SelectionSet, v model.ResultInsertBarang) graphql.Marshaler {
-	return ec._ResultInsertBarang(ctx, sel, &v)
-}
-
-func (ec *executionContext) marshalNResultInsertBarang2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋgraphᚋmodelᚐResultInsertBarang(ctx context.Context, sel ast.SelectionSet, v *model.ResultInsertBarang) graphql.Marshaler {
-	if v == nil {
-		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	return ec._ResultInsertBarang(ctx, sel, v)
-}
-
-func (ec *executionContext) marshalNResultInsertBrands2githubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultInsertBrands(ctx context.Context, sel ast.SelectionSet, v model1.ResultInsertBrands) graphql.Marshaler {
+func (ec *executionContext) marshalNResultInsertBrands2githubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultInsertBrands(ctx context.Context, sel ast.SelectionSet, v model.ResultInsertBrands) graphql.Marshaler {
 	return ec._ResultInsertBrands(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNResultInsertBrands2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultInsertBrands(ctx context.Context, sel ast.SelectionSet, v *model1.ResultInsertBrands) graphql.Marshaler {
+func (ec *executionContext) marshalNResultInsertBrands2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultInsertBrands(ctx context.Context, sel ast.SelectionSet, v *model.ResultInsertBrands) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "must not be null")
@@ -15686,11 +16208,11 @@ func (ec *executionContext) marshalNResultInsertBrands2ᚖgithubᚗcomᚋjuragan
 	return ec._ResultInsertBrands(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalNResultInsertCategories2githubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultInsertCategories(ctx context.Context, sel ast.SelectionSet, v model1.ResultInsertCategories) graphql.Marshaler {
+func (ec *executionContext) marshalNResultInsertCategories2githubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultInsertCategories(ctx context.Context, sel ast.SelectionSet, v model.ResultInsertCategories) graphql.Marshaler {
 	return ec._ResultInsertCategories(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNResultInsertCategories2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultInsertCategories(ctx context.Context, sel ast.SelectionSet, v *model1.ResultInsertCategories) graphql.Marshaler {
+func (ec *executionContext) marshalNResultInsertCategories2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultInsertCategories(ctx context.Context, sel ast.SelectionSet, v *model.ResultInsertCategories) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "must not be null")
@@ -15700,11 +16222,25 @@ func (ec *executionContext) marshalNResultInsertCategories2ᚖgithubᚗcomᚋjur
 	return ec._ResultInsertCategories(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalNResultInsertOrders2githubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultInsertOrders(ctx context.Context, sel ast.SelectionSet, v model1.ResultInsertOrders) graphql.Marshaler {
+func (ec *executionContext) marshalNResultInsertOrderItem2githubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultInsertOrderItem(ctx context.Context, sel ast.SelectionSet, v model.ResultInsertOrderItem) graphql.Marshaler {
+	return ec._ResultInsertOrderItem(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNResultInsertOrderItem2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultInsertOrderItem(ctx context.Context, sel ast.SelectionSet, v *model.ResultInsertOrderItem) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	return ec._ResultInsertOrderItem(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalNResultInsertOrders2githubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultInsertOrders(ctx context.Context, sel ast.SelectionSet, v model.ResultInsertOrders) graphql.Marshaler {
 	return ec._ResultInsertOrders(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNResultInsertOrders2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultInsertOrders(ctx context.Context, sel ast.SelectionSet, v *model1.ResultInsertOrders) graphql.Marshaler {
+func (ec *executionContext) marshalNResultInsertOrders2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultInsertOrders(ctx context.Context, sel ast.SelectionSet, v *model.ResultInsertOrders) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "must not be null")
@@ -15714,11 +16250,11 @@ func (ec *executionContext) marshalNResultInsertOrders2ᚖgithubᚗcomᚋjuragan
 	return ec._ResultInsertOrders(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalNResultInsertProducts2githubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultInsertProducts(ctx context.Context, sel ast.SelectionSet, v model1.ResultInsertProducts) graphql.Marshaler {
+func (ec *executionContext) marshalNResultInsertProducts2githubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultInsertProducts(ctx context.Context, sel ast.SelectionSet, v model.ResultInsertProducts) graphql.Marshaler {
 	return ec._ResultInsertProducts(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNResultInsertProducts2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultInsertProducts(ctx context.Context, sel ast.SelectionSet, v *model1.ResultInsertProducts) graphql.Marshaler {
+func (ec *executionContext) marshalNResultInsertProducts2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultInsertProducts(ctx context.Context, sel ast.SelectionSet, v *model.ResultInsertProducts) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "must not be null")
@@ -15728,11 +16264,11 @@ func (ec *executionContext) marshalNResultInsertProducts2ᚖgithubᚗcomᚋjurag
 	return ec._ResultInsertProducts(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalNResultInsertStaffs2githubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultInsertStaffs(ctx context.Context, sel ast.SelectionSet, v model1.ResultInsertStaffs) graphql.Marshaler {
+func (ec *executionContext) marshalNResultInsertStaffs2githubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultInsertStaffs(ctx context.Context, sel ast.SelectionSet, v model.ResultInsertStaffs) graphql.Marshaler {
 	return ec._ResultInsertStaffs(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNResultInsertStaffs2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultInsertStaffs(ctx context.Context, sel ast.SelectionSet, v *model1.ResultInsertStaffs) graphql.Marshaler {
+func (ec *executionContext) marshalNResultInsertStaffs2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultInsertStaffs(ctx context.Context, sel ast.SelectionSet, v *model.ResultInsertStaffs) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "must not be null")
@@ -15742,11 +16278,11 @@ func (ec *executionContext) marshalNResultInsertStaffs2ᚖgithubᚗcomᚋjuragan
 	return ec._ResultInsertStaffs(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalNResultInsertStocks2githubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultInsertStocks(ctx context.Context, sel ast.SelectionSet, v model1.ResultInsertStocks) graphql.Marshaler {
+func (ec *executionContext) marshalNResultInsertStocks2githubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultInsertStocks(ctx context.Context, sel ast.SelectionSet, v model.ResultInsertStocks) graphql.Marshaler {
 	return ec._ResultInsertStocks(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNResultInsertStocks2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultInsertStocks(ctx context.Context, sel ast.SelectionSet, v *model1.ResultInsertStocks) graphql.Marshaler {
+func (ec *executionContext) marshalNResultInsertStocks2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultInsertStocks(ctx context.Context, sel ast.SelectionSet, v *model.ResultInsertStocks) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "must not be null")
@@ -15756,11 +16292,11 @@ func (ec *executionContext) marshalNResultInsertStocks2ᚖgithubᚗcomᚋjuragan
 	return ec._ResultInsertStocks(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalNResultInsertStores2githubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultInsertStores(ctx context.Context, sel ast.SelectionSet, v model1.ResultInsertStores) graphql.Marshaler {
+func (ec *executionContext) marshalNResultInsertStores2githubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultInsertStores(ctx context.Context, sel ast.SelectionSet, v model.ResultInsertStores) graphql.Marshaler {
 	return ec._ResultInsertStores(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNResultInsertStores2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultInsertStores(ctx context.Context, sel ast.SelectionSet, v *model1.ResultInsertStores) graphql.Marshaler {
+func (ec *executionContext) marshalNResultInsertStores2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultInsertStores(ctx context.Context, sel ast.SelectionSet, v *model.ResultInsertStores) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "must not be null")
@@ -15770,11 +16306,11 @@ func (ec *executionContext) marshalNResultInsertStores2ᚖgithubᚗcomᚋjuragan
 	return ec._ResultInsertStores(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalNResultSingleBrands2githubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultSingleBrands(ctx context.Context, sel ast.SelectionSet, v model1.ResultSingleBrands) graphql.Marshaler {
+func (ec *executionContext) marshalNResultSingleBrands2githubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultSingleBrands(ctx context.Context, sel ast.SelectionSet, v model.ResultSingleBrands) graphql.Marshaler {
 	return ec._ResultSingleBrands(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNResultSingleBrands2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultSingleBrands(ctx context.Context, sel ast.SelectionSet, v *model1.ResultSingleBrands) graphql.Marshaler {
+func (ec *executionContext) marshalNResultSingleBrands2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultSingleBrands(ctx context.Context, sel ast.SelectionSet, v *model.ResultSingleBrands) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "must not be null")
@@ -15784,11 +16320,11 @@ func (ec *executionContext) marshalNResultSingleBrands2ᚖgithubᚗcomᚋjuragan
 	return ec._ResultSingleBrands(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalNResultSingleProducts2githubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultSingleProducts(ctx context.Context, sel ast.SelectionSet, v model1.ResultSingleProducts) graphql.Marshaler {
+func (ec *executionContext) marshalNResultSingleProducts2githubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultSingleProducts(ctx context.Context, sel ast.SelectionSet, v model.ResultSingleProducts) graphql.Marshaler {
 	return ec._ResultSingleProducts(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNResultSingleProducts2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultSingleProducts(ctx context.Context, sel ast.SelectionSet, v *model1.ResultSingleProducts) graphql.Marshaler {
+func (ec *executionContext) marshalNResultSingleProducts2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultSingleProducts(ctx context.Context, sel ast.SelectionSet, v *model.ResultSingleProducts) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "must not be null")
@@ -15798,11 +16334,11 @@ func (ec *executionContext) marshalNResultSingleProducts2ᚖgithubᚗcomᚋjurag
 	return ec._ResultSingleProducts(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalNResultSingleStores2githubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultSingleStores(ctx context.Context, sel ast.SelectionSet, v model1.ResultSingleStores) graphql.Marshaler {
+func (ec *executionContext) marshalNResultSingleStores2githubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultSingleStores(ctx context.Context, sel ast.SelectionSet, v model.ResultSingleStores) graphql.Marshaler {
 	return ec._ResultSingleStores(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNResultSingleStores2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultSingleStores(ctx context.Context, sel ast.SelectionSet, v *model1.ResultSingleStores) graphql.Marshaler {
+func (ec *executionContext) marshalNResultSingleStores2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultSingleStores(ctx context.Context, sel ast.SelectionSet, v *model.ResultSingleStores) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "must not be null")
@@ -15812,11 +16348,11 @@ func (ec *executionContext) marshalNResultSingleStores2ᚖgithubᚗcomᚋjuragan
 	return ec._ResultSingleStores(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalNResultUpdateBrands2githubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultUpdateBrands(ctx context.Context, sel ast.SelectionSet, v model1.ResultUpdateBrands) graphql.Marshaler {
+func (ec *executionContext) marshalNResultUpdateBrands2githubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultUpdateBrands(ctx context.Context, sel ast.SelectionSet, v model.ResultUpdateBrands) graphql.Marshaler {
 	return ec._ResultUpdateBrands(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNResultUpdateBrands2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultUpdateBrands(ctx context.Context, sel ast.SelectionSet, v *model1.ResultUpdateBrands) graphql.Marshaler {
+func (ec *executionContext) marshalNResultUpdateBrands2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultUpdateBrands(ctx context.Context, sel ast.SelectionSet, v *model.ResultUpdateBrands) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "must not be null")
@@ -15826,11 +16362,11 @@ func (ec *executionContext) marshalNResultUpdateBrands2ᚖgithubᚗcomᚋjuragan
 	return ec._ResultUpdateBrands(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalNResultUpdateCategories2githubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultUpdateCategories(ctx context.Context, sel ast.SelectionSet, v model1.ResultUpdateCategories) graphql.Marshaler {
+func (ec *executionContext) marshalNResultUpdateCategories2githubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultUpdateCategories(ctx context.Context, sel ast.SelectionSet, v model.ResultUpdateCategories) graphql.Marshaler {
 	return ec._ResultUpdateCategories(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNResultUpdateCategories2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultUpdateCategories(ctx context.Context, sel ast.SelectionSet, v *model1.ResultUpdateCategories) graphql.Marshaler {
+func (ec *executionContext) marshalNResultUpdateCategories2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultUpdateCategories(ctx context.Context, sel ast.SelectionSet, v *model.ResultUpdateCategories) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "must not be null")
@@ -15840,11 +16376,25 @@ func (ec *executionContext) marshalNResultUpdateCategories2ᚖgithubᚗcomᚋjur
 	return ec._ResultUpdateCategories(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalNResultUpdateOrders2githubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultUpdateOrders(ctx context.Context, sel ast.SelectionSet, v model1.ResultUpdateOrders) graphql.Marshaler {
+func (ec *executionContext) marshalNResultUpdateOrderItem2githubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultUpdateOrderItem(ctx context.Context, sel ast.SelectionSet, v model.ResultUpdateOrderItem) graphql.Marshaler {
+	return ec._ResultUpdateOrderItem(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNResultUpdateOrderItem2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultUpdateOrderItem(ctx context.Context, sel ast.SelectionSet, v *model.ResultUpdateOrderItem) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	return ec._ResultUpdateOrderItem(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalNResultUpdateOrders2githubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultUpdateOrders(ctx context.Context, sel ast.SelectionSet, v model.ResultUpdateOrders) graphql.Marshaler {
 	return ec._ResultUpdateOrders(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNResultUpdateOrders2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultUpdateOrders(ctx context.Context, sel ast.SelectionSet, v *model1.ResultUpdateOrders) graphql.Marshaler {
+func (ec *executionContext) marshalNResultUpdateOrders2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultUpdateOrders(ctx context.Context, sel ast.SelectionSet, v *model.ResultUpdateOrders) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "must not be null")
@@ -15854,11 +16404,11 @@ func (ec *executionContext) marshalNResultUpdateOrders2ᚖgithubᚗcomᚋjuragan
 	return ec._ResultUpdateOrders(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalNResultUpdateProducts2githubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultUpdateProducts(ctx context.Context, sel ast.SelectionSet, v model1.ResultUpdateProducts) graphql.Marshaler {
+func (ec *executionContext) marshalNResultUpdateProducts2githubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultUpdateProducts(ctx context.Context, sel ast.SelectionSet, v model.ResultUpdateProducts) graphql.Marshaler {
 	return ec._ResultUpdateProducts(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNResultUpdateProducts2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultUpdateProducts(ctx context.Context, sel ast.SelectionSet, v *model1.ResultUpdateProducts) graphql.Marshaler {
+func (ec *executionContext) marshalNResultUpdateProducts2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultUpdateProducts(ctx context.Context, sel ast.SelectionSet, v *model.ResultUpdateProducts) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "must not be null")
@@ -15868,11 +16418,11 @@ func (ec *executionContext) marshalNResultUpdateProducts2ᚖgithubᚗcomᚋjurag
 	return ec._ResultUpdateProducts(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalNResultUpdateStaffs2githubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultUpdateStaffs(ctx context.Context, sel ast.SelectionSet, v model1.ResultUpdateStaffs) graphql.Marshaler {
+func (ec *executionContext) marshalNResultUpdateStaffs2githubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultUpdateStaffs(ctx context.Context, sel ast.SelectionSet, v model.ResultUpdateStaffs) graphql.Marshaler {
 	return ec._ResultUpdateStaffs(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNResultUpdateStaffs2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultUpdateStaffs(ctx context.Context, sel ast.SelectionSet, v *model1.ResultUpdateStaffs) graphql.Marshaler {
+func (ec *executionContext) marshalNResultUpdateStaffs2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultUpdateStaffs(ctx context.Context, sel ast.SelectionSet, v *model.ResultUpdateStaffs) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "must not be null")
@@ -15882,11 +16432,11 @@ func (ec *executionContext) marshalNResultUpdateStaffs2ᚖgithubᚗcomᚋjuragan
 	return ec._ResultUpdateStaffs(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalNResultUpdateStocks2githubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultUpdateStocks(ctx context.Context, sel ast.SelectionSet, v model1.ResultUpdateStocks) graphql.Marshaler {
+func (ec *executionContext) marshalNResultUpdateStocks2githubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultUpdateStocks(ctx context.Context, sel ast.SelectionSet, v model.ResultUpdateStocks) graphql.Marshaler {
 	return ec._ResultUpdateStocks(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNResultUpdateStocks2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultUpdateStocks(ctx context.Context, sel ast.SelectionSet, v *model1.ResultUpdateStocks) graphql.Marshaler {
+func (ec *executionContext) marshalNResultUpdateStocks2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultUpdateStocks(ctx context.Context, sel ast.SelectionSet, v *model.ResultUpdateStocks) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "must not be null")
@@ -15896,11 +16446,11 @@ func (ec *executionContext) marshalNResultUpdateStocks2ᚖgithubᚗcomᚋjuragan
 	return ec._ResultUpdateStocks(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalNResultUpdateStores2githubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultUpdateStores(ctx context.Context, sel ast.SelectionSet, v model1.ResultUpdateStores) graphql.Marshaler {
+func (ec *executionContext) marshalNResultUpdateStores2githubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultUpdateStores(ctx context.Context, sel ast.SelectionSet, v model.ResultUpdateStores) graphql.Marshaler {
 	return ec._ResultUpdateStores(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNResultUpdateStores2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultUpdateStores(ctx context.Context, sel ast.SelectionSet, v *model1.ResultUpdateStores) graphql.Marshaler {
+func (ec *executionContext) marshalNResultUpdateStores2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultUpdateStores(ctx context.Context, sel ast.SelectionSet, v *model.ResultUpdateStores) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "must not be null")
@@ -16004,11 +16554,11 @@ func (ec *executionContext) marshalNStocks2ᚖgithubᚗcomᚋjuragankodingᚋgol
 	return ec._Stocks(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalNStores2githubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐStores(ctx context.Context, sel ast.SelectionSet, v model1.Stores) graphql.Marshaler {
+func (ec *executionContext) marshalNStores2githubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐStores(ctx context.Context, sel ast.SelectionSet, v model.Stores) graphql.Marshaler {
 	return ec._Stores(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNStores2ᚕᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐStores(ctx context.Context, sel ast.SelectionSet, v []*model1.Stores) graphql.Marshaler {
+func (ec *executionContext) marshalNStores2ᚕᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐStores(ctx context.Context, sel ast.SelectionSet, v []*model.Stores) graphql.Marshaler {
 	ret := make(graphql.Array, len(v))
 	var wg sync.WaitGroup
 	isLen1 := len(v) == 1
@@ -16045,7 +16595,7 @@ func (ec *executionContext) marshalNStores2ᚕᚖgithubᚗcomᚋjuragankodingᚋ
 	return ret
 }
 
-func (ec *executionContext) marshalNStores2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐStores(ctx context.Context, sel ast.SelectionSet, v *model1.Stores) graphql.Marshaler {
+func (ec *executionContext) marshalNStores2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐStores(ctx context.Context, sel ast.SelectionSet, v *model.Stores) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "must not be null")
@@ -16299,34 +16849,6 @@ func (ec *executionContext) marshalN__TypeKind2string(ctx context.Context, sel a
 	return res
 }
 
-func (ec *executionContext) marshalNresultGetAllJenisBarang2githubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultGetAllJenisBarang(ctx context.Context, sel ast.SelectionSet, v model1.ResultGetAllJenisBarang) graphql.Marshaler {
-	return ec._resultGetAllJenisBarang(ctx, sel, &v)
-}
-
-func (ec *executionContext) marshalNresultGetAllJenisBarang2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultGetAllJenisBarang(ctx context.Context, sel ast.SelectionSet, v *model1.ResultGetAllJenisBarang) graphql.Marshaler {
-	if v == nil {
-		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	return ec._resultGetAllJenisBarang(ctx, sel, v)
-}
-
-func (ec *executionContext) marshalNresultJenisBarang2githubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultJenisBarang(ctx context.Context, sel ast.SelectionSet, v model1.ResultJenisBarang) graphql.Marshaler {
-	return ec._resultJenisBarang(ctx, sel, &v)
-}
-
-func (ec *executionContext) marshalNresultJenisBarang2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultJenisBarang(ctx context.Context, sel ast.SelectionSet, v *model1.ResultJenisBarang) graphql.Marshaler {
-	if v == nil {
-		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	return ec._resultJenisBarang(ctx, sel, v)
-}
-
 func (ec *executionContext) unmarshalOBoolean2bool(ctx context.Context, v interface{}) (bool, error) {
 	res, err := graphql.UnmarshalBoolean(v)
 	return res, graphql.ErrorOnPath(ctx, err)
@@ -16380,21 +16902,21 @@ func (ec *executionContext) marshalOInt2ᚖint(ctx context.Context, sel ast.Sele
 	return graphql.MarshalInt(*v)
 }
 
-func (ec *executionContext) marshalOJenisBarang2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelsᚐJenisBarang(ctx context.Context, sel ast.SelectionSet, v *models.JenisBarang) graphql.Marshaler {
-	if v == nil {
-		return graphql.Null
-	}
-	return ec._JenisBarang(ctx, sel, v)
-}
-
-func (ec *executionContext) marshalOKaryawan2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋgraphᚋmodelᚐKaryawan(ctx context.Context, sel ast.SelectionSet, v *model.Karyawan) graphql.Marshaler {
+func (ec *executionContext) marshalOKaryawan2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋgraphᚋmodelᚐKaryawan(ctx context.Context, sel ast.SelectionSet, v *model1.Karyawan) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
 	return ec._Karyawan(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalOOrders2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐOrders(ctx context.Context, sel ast.SelectionSet, v *model1.Orders) graphql.Marshaler {
+func (ec *executionContext) marshalOOrderItem2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐOrderItem(ctx context.Context, sel ast.SelectionSet, v *model.OrderItem) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._OrderItem(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalOOrders2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐOrders(ctx context.Context, sel ast.SelectionSet, v *model.Orders) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
@@ -16422,7 +16944,7 @@ func (ec *executionContext) marshalOStocks2ᚖgithubᚗcomᚋjuragankodingᚋgol
 	return ec._Stocks(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalOStores2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐStores(ctx context.Context, sel ast.SelectionSet, v *model1.Stores) graphql.Marshaler {
+func (ec *executionContext) marshalOStores2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐStores(ctx context.Context, sel ast.SelectionSet, v *model.Stores) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}

@@ -4,11 +4,19 @@ package model
 
 import (
 	"github.com/juragankoding/golang_graphql_training/domain"
-	"github.com/juragankoding/golang_graphql_training/models"
 )
 
 type ResultInsert interface {
 	IsResultInsert()
+}
+
+type OrderItem struct {
+	ItemID    int `json:"ItemID"`
+	OrderID   int `json:"OrderID"`
+	ProductID int `json:"ProductID"`
+	Quantity  int `json:"Quantity"`
+	ListPrice int `json:"ListPrice"`
+	Discount  int `json:"Discount"`
 }
 
 type Orders struct {
@@ -63,6 +71,14 @@ type ResultDeleteCategories struct {
 
 func (ResultDeleteCategories) IsResultInsert() {}
 
+type ResultDeleteOrderItem struct {
+	Status string     `json:"status"`
+	Code   int        `json:"code"`
+	Data   *OrderItem `json:"data"`
+}
+
+func (ResultDeleteOrderItem) IsResultInsert() {}
+
 type ResultDeleteOrders struct {
 	Status string  `json:"status"`
 	Code   int     `json:"code"`
@@ -111,6 +127,14 @@ type ResultFetchCategories struct {
 
 func (ResultFetchCategories) IsResultInsert() {}
 
+type ResultFetchOrderItem struct {
+	Status string       `json:"status"`
+	Code   int          `json:"code"`
+	Data   []*OrderItem `json:"data"`
+}
+
+func (ResultFetchOrderItem) IsResultInsert() {}
+
 type ResultFetchOrders struct {
 	Status string    `json:"status"`
 	Code   int       `json:"code"`
@@ -142,6 +166,14 @@ type ResultGetCategories struct {
 }
 
 func (ResultGetCategories) IsResultInsert() {}
+
+type ResultGetOrderItem struct {
+	Status string     `json:"status"`
+	Code   int        `json:"code"`
+	Data   *OrderItem `json:"data"`
+}
+
+func (ResultGetOrderItem) IsResultInsert() {}
 
 type ResultGetOrders struct {
 	Status string  `json:"status"`
@@ -182,6 +214,14 @@ type ResultInsertCategories struct {
 }
 
 func (ResultInsertCategories) IsResultInsert() {}
+
+type ResultInsertOrderItem struct {
+	Status string     `json:"status"`
+	Code   int        `json:"code"`
+	Data   *OrderItem `json:"data"`
+}
+
+func (ResultInsertOrderItem) IsResultInsert() {}
 
 type ResultInsertOrders struct {
 	Status string  `json:"status"`
@@ -263,6 +303,14 @@ type ResultUpdateCategories struct {
 
 func (ResultUpdateCategories) IsResultInsert() {}
 
+type ResultUpdateOrderItem struct {
+	Status string     `json:"status"`
+	Code   int        `json:"code"`
+	Data   *OrderItem `json:"data"`
+}
+
+func (ResultUpdateOrderItem) IsResultInsert() {}
+
 type ResultUpdateOrders struct {
 	Status string  `json:"status"`
 	Code   int     `json:"code"`
@@ -312,19 +360,3 @@ type Stores struct {
 	State     string `json:"State"`
 	ZipCode   string `json:"ZipCode"`
 }
-
-type ResultGetAllJenisBarang struct {
-	Status string                `json:"status"`
-	Code   int                   `json:"code"`
-	Data   []*models.JenisBarang `json:"data"`
-}
-
-func (ResultGetAllJenisBarang) IsResultInsert() {}
-
-type ResultJenisBarang struct {
-	Status string              `json:"status"`
-	Code   int                 `json:"code"`
-	Data   *models.JenisBarang `json:"data"`
-}
-
-func (ResultJenisBarang) IsResultInsert() {}
