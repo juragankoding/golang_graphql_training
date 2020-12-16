@@ -43,7 +43,7 @@ func main() {
 	repositoryStocks := repository.NewGenerateStocksRepository(db)
 
 	//prepare usecase
-	categoriesUseCase := usecase.NewCategoriesUserCase(repositoryCategories)
+	categoriesUseCase := usecase.NewGenerateCategoriesUserCase(repositoryCategories)
 	customersUseCase := usecase.NewGenerateCustomerRespository(repositoryCustomers)
 	brandsUseCase := usecase.NewGenerateBrandsUseCase(repositoryBrands)
 	orderItemUseCase := usecase.NewGenerateOderItemUseCase(repositoryOrderItem)

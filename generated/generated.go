@@ -2213,33 +2213,6 @@ var sources = []*ast.Source{
   code: Int!
 }
 `, BuiltIn: false},
-	{Name: "schema/barang.graphqls", Input: `# type Barang {
-#   id: Int!
-#   nama: String!
-#   description: String!
-#   jumlah: Int!
-#   jenisBarang: Int!
-# }
-
-# type ResultInsertBarang implements resultInsert {
-#   status: String!
-#   code: Int!
-#   data: Barang!
-# }
-
-# type Query {
-#   getBarang: String
-# }
-
-# type Mutation {
-#   insertBarang(
-#     id: Int!
-#     nama: String!
-#     description: String!
-#     jenisBarang: Int!
-#   ): ResultInsertBarang!
-# }
-`, BuiltIn: false},
 	{Name: "schema/brands.graphqls", Input: `type Brands {
   ID: Int!
   Name: String!
@@ -2331,31 +2304,6 @@ extend type Mutation {
   UpdateCategories(id: Int!, nama: String!): ResultUpdateCategories!
   DeleteCategories(id: Int!): ResultDeleteCategories!
 }
-`, BuiltIn: false},
-	{Name: "schema/jenis_barang.graphqls", Input: `# type JenisBarang {
-#   id: Int!
-#   jenis_barang: String!
-# }
-
-# type resultJenisBarang implements resultInsert {
-#   status: String!
-#   code: Int!
-#   data: JenisBarang!
-# }
-
-# type resultGetAllJenisBarang implements resultInsert {
-#   status: String!
-#   code: Int!
-#   data: [JenisBarang]!
-# }
-
-# extend type Query {
-#   getAllJenisBarang: resultGetAllJenisBarang!
-# }
-
-# extend type Mutation {
-#   insertJenisBarang(jenis_barang: String!): resultJenisBarang!
-# }
 `, BuiltIn: false},
 	{Name: "schema/order_item.graphqls", Input: `type OrderItem {
   ItemID: Int!

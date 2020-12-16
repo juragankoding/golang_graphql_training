@@ -16,29 +16,29 @@ func NewCategoriesUserCase(a domain.CategoriesRepository) domain.CategoriesUseCa
 	}
 }
 
-func (a *categoriesUseCase) Get(id int) (*domain.Categories, string, error) {
-	return nil, "", nil
+func (a *categoriesUseCase) Get(id int) (*domain.Categories, error) {
+	return nil, nil
 }
 
-func (a *categoriesUseCase) Fetch() ([]*domain.Categories, string, error) {
-	return nil, "", nil
+func (a *categoriesUseCase) Fetch() ([]*domain.Categories, error) {
+	return nil, nil
 }
 
-func (a *categoriesUseCase) Insert(categories domain.Categories) (int64, string, error) {
+func (a *categoriesUseCase) Insert(categories domain.Categories) (int64, error) {
 
 	if categories.Name == "" {
-		return -1, "name cannot null", errors.New("name cannot be null")
+		return -1, errors.New("name cannot be null")
 	}
 
-	return -1, "", nil
+	return -1, nil
 }
-func (a *categoriesUseCase) Update(categories domain.Categories) (string, error) {
+func (a *categoriesUseCase) Update(categories domain.Categories) (int64, error) {
 	if err := categories.Validate(); err != nil {
 
 	}
 
-	return "", nil
+	return -1, nil
 }
-func (a *categoriesUseCase) Delete(id int) (string, error) {
-	return "", nil
+func (a *categoriesUseCase) Delete(id int) (int64, error) {
+	return -1, nil
 }

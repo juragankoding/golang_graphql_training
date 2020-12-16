@@ -23,7 +23,7 @@ func (r *mutationResolver) InsertCategories(ctx context.Context, nama string) (*
 		Name: nama,
 	}
 
-	lastId, _, err := r.CategoriesUseCase.Insert(categories)
+	lastId, err := r.CategoriesUseCase.Insert(categories)
 
 	if err != nil {
 		log.Fatal(err)
@@ -84,7 +84,7 @@ func (r *queryResolver) AllCategories(ctx context.Context) (*model.ResultFetchCa
 	var categories []*domain.Categories
 	var err error
 
-	categories, _, err = r.CategoriesUseCase.Fetch()
+	categories, err = r.CategoriesUseCase.Fetch()
 
 	if err != nil {
 		log.Fatal(err)
