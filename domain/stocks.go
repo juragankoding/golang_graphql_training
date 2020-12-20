@@ -8,16 +8,16 @@ type Stocks struct {
 
 type StocksRepository interface {
 	All() ([]*Stocks, error)
-	Single(id int) (*Stocks, error)
+	Single(storeID int, productID int) (*Stocks, error)
 	Insert(stoks Stocks) (int64, error)
 	Update(stocks Stocks) (int64, error)
-	Delete(id int) (int64, error)
+	Delete(storeID int, productID int) (int64, error)
 }
 
 type StocksUseCase interface {
 	All() ([]*Stocks, error)
-	Single(id int) (*Stocks, error)
+	Single(storeID int, productID int) (*Stocks, error)
 	Insert(stoks Stocks) (int64, error)
 	Update(stocks Stocks) (int64, error)
-	Delete(id int) (int64, error)
+	Delete(storeID int, productID int) (int64, error)
 }
