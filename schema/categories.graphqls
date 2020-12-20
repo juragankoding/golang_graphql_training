@@ -27,8 +27,16 @@ type ResultFetchCategories implements resultInsert {
   data: [Categories]!
 }
 
+type ResultGetCategories implements resultInsert {
+  status: String!
+  code: Int!
+  data: Categories!
+}
+
+
 extend type Query{
-  Fetch: ResultFetchCategories!
+  AllCategories: ResultFetchCategories!
+  SingleCategories(id: Int): ResultGetCategories!
 }
 
 extend type Mutation {

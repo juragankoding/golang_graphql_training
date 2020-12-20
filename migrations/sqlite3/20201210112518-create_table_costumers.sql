@@ -10,7 +10,7 @@ create table if not exists customers(
     street varchar(20),
     city varchar (15),
     state varchar(15),
-    zip_code varchar(15)
+    zip_code integer
 );
 
 -- +migrate Down

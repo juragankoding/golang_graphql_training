@@ -1,0 +1,51 @@
+type Stocks {
+  StoreID: Int!
+  ProductID: Int!
+  ProducData: Products!
+  Quantity: Int!
+}
+
+type ResultInsertStocks implements resultInsert {
+  status: String!
+  code: Int!
+  data: Stocks!
+}
+
+type ResultUpdateStocks implements resultInsert {
+  status: String!
+  code: Int!
+  data: Stocks!
+}
+
+type ResultDeleteStocks implements resultInsert {
+  status: String!
+  code: Int!
+  data: Stocks!
+}
+
+type ResultFetchStocks implements resultInsert {
+  status: String!
+  code: Int!
+  data: [Stocks]!
+}
+
+type ResultGetStocks implements resultInsert {
+  status: String!
+  code: Int!
+  data: Stocks!
+}
+
+extend type Query {
+  AllStocks: ResultFetchStocks!
+  SingelStocks(id: Int): ResultGetStocks!
+}
+
+extend type Mutation {
+  InsertStocks(ProductID: Int!, Quantity: Int!): ResultInsertStocks!
+  UpdateStocks(
+    StockID: Int!
+    ProductID: Int!
+    Quantity: Int!
+  ): ResultUpdateStocks!
+  DeleteStocks(id: Int!): ResultDeleteStocks!
+}

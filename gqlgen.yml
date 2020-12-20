@@ -45,10 +45,20 @@ autobind:
 models:
   Categories:
     model: github.com/juragankoding/golang_graphql_training/domain.Categories
-  Barang:
-    model: github.com/juragankoding/golang_graphql_training/models.Barang
-  JenisBarang:
-    model: github.com/juragankoding/golang_graphql_training/models.JenisBarang
+  # Barang:
+  #   model: github.com/juragankoding/golang_graphql_training/models.Barang
+  # JenisBarang:
+  #   model: github.com/juragankoding/golang_graphql_training/models.JenisBarang
+  Products:
+    model: github.com/juragankoding/golang_graphql_training/domain.Products
+  Brands:
+    model: github.com/juragankoding/golang_graphql_training/domain.Brands
+  Customers:
+    model: github.com/juragankoding/golang_graphql_training/domain.Customers
+  Staffs:
+    model: github.com/juragankoding/golang_graphql_training/domain.Staffs
+  Stocks:
+    model: github.com/juragankoding/golang_graphql_training/domain.Stocks
   ID:
     model:
       - github.com/99designs/gqlgen/graphql.ID

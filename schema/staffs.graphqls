@@ -1,0 +1,69 @@
+type Staffs {
+  StaffID: Int!
+  FirstName: String!
+  LastName: String!
+  Phone: String!
+  Email: String!
+  Active: Int!
+  StoreID: Int!
+  ManagerId: Int!
+  StoreData: Stores!
+}
+
+type ResultInsertStaffs implements resultInsert {
+  status: String!
+  code: Int!
+  data: Staffs!
+}
+
+type ResultUpdateStaffs implements resultInsert {
+  status: String!
+  code: Int!
+  data: Staffs!
+}
+
+type ResultDeleteStaffs implements resultInsert {
+  status: String!
+  code: Int!
+  data: Staffs!
+}
+
+type ResultFetchStaffs implements resultInsert {
+  status: String!
+  code: Int!
+  data: [Staffs]!
+}
+
+type ResultGetStaffs implements resultInsert {
+  status: String!
+  code: Int!
+  data: Staffs!
+}
+
+extend type Query {
+  AllStaffs: ResultFetchStaffs!
+  SingelStaffs(id: Int): ResultGetStaffs!
+}
+
+extend type Mutation {
+  InsertStaffs(
+    FirstName: String!
+    LastName: String!
+    Phone: String!
+    Email: String!
+    Active: Int!
+    StoreID: Int!
+    ManagerId: Int!
+  ): ResultInsertStaffs!
+  UpdateStaffs(
+    StaffID: Int!
+    FirstName: String!
+    LastName: String!
+    Phone: String!
+    Email: String!
+    Active: Int!
+    StoreID: Int!
+    ManagerId: Int!
+  ): ResultUpdateStaffs!
+  DeleteStaffs(id: Int!): ResultDeleteStaffs!
+}
