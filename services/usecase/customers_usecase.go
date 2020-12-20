@@ -8,7 +8,7 @@ type customersUseCase struct {
 	customers domain.CustomersRepository
 }
 
-func NewGenerateCustomerRespository(customers domain.CustomersRepository) domain.CustomersUseCase {
+func NewGenerateCustomerUseCase(customers domain.CustomersRepository) domain.CustomersUseCase {
 	return &customersUseCase{
 		customers: customers,
 	}

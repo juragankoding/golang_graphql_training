@@ -15,21 +15,21 @@ func NewGenerateStaffsUseCase(staffRepo domain.StaffsRepository) domain.StaffsUs
 }
 
 func (s *staffsUseCase) All() ([]*domain.Staffs, error) {
-	return nil, nil
+	return s.StaffsRepo.All()
 }
 
 func (s *staffsUseCase) Single(id int) (*domain.Staffs, error) {
-	return nil, nil
+	return s.StaffsRepo.Single(id)
 }
 
 func (s *staffsUseCase) Insert(staffs domain.Staffs) (int64, error) {
-	return -1, nil
+	return s.StaffsRepo.Insert(staffs)
 }
 
 func (s *staffsUseCase) Update(staffs domain.Staffs) (int64, error) {
-	return -1, nil
+	return s.StaffsRepo.Update(staffs)
 }
 
 func (s *staffsUseCase) Delete(id int) (int64, error) {
-	return -1, nil
+	return s.StaffsRepo.Delete(id)
 }

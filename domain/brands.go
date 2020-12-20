@@ -6,17 +6,17 @@ type Brands struct {
 }
 
 type BrandsUseCase interface {
-	Single() (Brands, error)
-	All() ([]Brands, error)
-	Insert() (int64, error)
-	Update() (int64, error)
-	Delete() (int64, error)
+	Single(id int) (*Brands, error)
+	All() ([]*Brands, error)
+	Insert(brands Brands) (int64, error)
+	Update(brands Brands) (int64, error)
+	Delete(id int) (int64, error)
 }
 
 type BrandsRepository interface {
-	Single() (Brands, error)
-	All() ([]Brands, error)
-	Insert() (int64, error)
-	Update() (int64, error)
-	Delete() (int64, error)
+	Single(id int) (*Brands, error)
+	All() ([]*Brands, error)
+	Insert(brands Brands) (int64, error)
+	Update(brands Brands) (int64, error)
+	Delete(id int) (int64, error)
 }

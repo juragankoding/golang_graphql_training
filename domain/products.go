@@ -12,17 +12,17 @@ type Products struct {
 }
 
 type ProductsRepository interface {
-	Single() (Products, error)
-	All() ([]Products, error)
-	Insert() (int64, error)
-	Update() (int64, error)
-	Delete() (int64, error)
+	Single(id int) (*Products, error)
+	All() ([]*Products, error)
+	Insert(products Products) (int64, error)
+	Update(products Products) (int64, error)
+	Delete(id int) (int64, error)
 }
 
 type ProductsUseCase interface {
-	Single() (Products, error)
-	All() ([]Products, error)
-	Insert() (int64, error)
-	Update() (int64, error)
-	Delete() (int64, error)
+	Single(id int) (*Products, error)
+	All() ([]*Products, error)
+	Insert(products Products) (int64, error)
+	Update(products Products) (int64, error)
+	Delete(id int) (int64, error)
 }

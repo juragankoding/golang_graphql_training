@@ -15,21 +15,21 @@ func NewGenerateOrdersUseCase(orderRepo domain.OrdersRepository) domain.OrdersUs
 }
 
 func (o *ordersUseCase) All() ([]*domain.Orders, error) {
-	return nil, nil
+	return o.ordersRepo.All()
 }
 
 func (o *ordersUseCase) Single(id int) (*domain.Orders, error) {
-	return nil, nil
+	return o.ordersRepo.Single(id)
 }
 
 func (o *ordersUseCase) Insert(orders domain.Orders) (int64, error) {
-	return -1, nil
+	return o.ordersRepo.Insert(orders)
 }
 
 func (o *ordersUseCase) Update(orders domain.Orders) (int64, error) {
-	return -1, nil
+	return o.ordersRepo.Update(orders)
 }
 
 func (o *ordersUseCase) Delete(id int) (int64, error) {
-	return -1, nil
+	return o.ordersRepo.Delete(id)
 }

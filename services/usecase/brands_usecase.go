@@ -14,25 +14,22 @@ func NewGenerateBrandsUseCase(brandsRepository domain.BrandsRepository) domain.B
 	}
 }
 
-func (b *brandsUseCase) Single() (domain.Brands, error) {
-	return domain.Brands{
-		ID:   0,
-		Name: "",
-	}, nil
+func (b *brandsUseCase) Single(id int) (*domain.Brands, error) {
+	return b.brandsRepository.Single(id)
 }
 
-func (b *brandsUseCase) All() ([]domain.Brands, error) {
-	return nil, nil
+func (b *brandsUseCase) All() ([]*domain.Brands, error) {
+	return b.brandsRepository.All()
 }
 
-func (b *brandsUseCase) Insert() (int64, error) {
-	return -1, nil
+func (b *brandsUseCase) Insert(brands domain.Brands) (int64, error) {
+	return b.brandsRepository.Insert(brands)
 }
 
-func (b *brandsUseCase) Update() (int64, error) {
-	return -1, nil
+func (b *brandsUseCase) Update(brands domain.Brands) (int64, error) {
+	return b.brandsRepository.Update(brands)
 }
 
-func (b *brandsUseCase) Delete() (int64, error) {
-	return -1, nil
+func (b *brandsUseCase) Delete(id int) (int64, error) {
+	return b.brandsRepository.Delete(id)
 }

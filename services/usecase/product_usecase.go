@@ -14,22 +14,22 @@ func NewGenerateProductUseCase(productRepository domain.ProductsRepository) doma
 	}
 }
 
-func (a *productUsecase) Single() (domain.Products, error) {
-	return domain.Products{}, nil
+func (a *productUsecase) Single(id int) (*domain.Products, error) {
+	return a.productRepository.Single(id)
 }
 
-func (a *productUsecase) All() ([]domain.Products, error) {
-	return nil, nil
+func (a *productUsecase) All() ([]*domain.Products, error) {
+	return a.productRepository.All()
 }
 
-func (a *productUsecase) Insert() (int64, error) {
-	return -1, nil
+func (a *productUsecase) Insert(products domain.Products) (int64, error) {
+	return a.productRepository.Insert(products)
 }
 
-func (a *productUsecase) Update() (int64, error) {
-	return -1, nil
+func (a *productUsecase) Update(products domain.Products) (int64, error) {
+	return a.productRepository.Update(products)
 }
 
-func (a *productUsecase) Delete() (int64, error) {
-	return -1, nil
+func (a *productUsecase) Delete(id int) (int64, error) {
+	return a.productRepository.Delete(id)
 }

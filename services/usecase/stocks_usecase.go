@@ -13,21 +13,21 @@ func NewGenerateStockUseCase(stockRepository domain.StocksRepository) domain.Sto
 }
 
 func (s *stockUseCase) All() ([]*domain.Stocks, error) {
-	return nil, nil
+	return s.StockRepository.All()
 }
 
 func (s *stockUseCase) Single(id int) (*domain.Stocks, error) {
-	return nil, nil
+	return s.StockRepository.Single(id)
 }
 
 func (s *stockUseCase) Insert(stock domain.Stocks) (int64, error) {
-	return -1, nil
+	return s.StockRepository.Insert(stock)
 }
 
 func (s *stockUseCase) Update(stock domain.Stocks) (int64, error) {
-	return -1, nil
+	return s.StockRepository.Update(stock)
 }
 
 func (s *stockUseCase) Delete(id int) (int64, error) {
-	return -1, nil
+	return s.StockRepository.Delete(id)
 }

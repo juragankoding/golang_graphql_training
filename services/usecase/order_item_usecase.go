@@ -13,21 +13,21 @@ func NewGenerateOderItemUseCase(orderItemRepository domain.OrderItemRepository) 
 }
 
 func (o *orderItemUseCase) All() ([]*domain.OrderItem, error) {
-	return nil, nil
+	return o.orderItemRepository.All()
 }
 
 func (o *orderItemUseCase) Single(id int) (*domain.OrderItem, error) {
-	return nil, nil
+	return o.orderItemRepository.Single(id)
 }
 
 func (o *orderItemUseCase) Insert(orderItem domain.OrderItem) (int64, error) {
-	return -1, nil
+	return o.orderItemRepository.Insert(orderItem)
 }
 
 func (o *orderItemUseCase) Update(orderItem domain.OrderItem) (int64, error) {
-	return -1, nil
+	return o.orderItemRepository.Update(orderItem)
 }
 
 func (o *orderItemUseCase) Delete(id int) (int64, error) {
-	return -1, nil
+	return o.orderItemRepository.Delete(id)
 }
