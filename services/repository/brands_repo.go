@@ -19,7 +19,7 @@ func NewGenerateBrandsRepository(Conn *sql.DB) domain.BrandsRepository {
 }
 
 func (b *brandsRepository) Single(id int) (*domain.Brands, error) {
-	queryRows := b.Conn.QueryRow("SELECT * FROM brands WHERE ?", id)
+	queryRows := b.Conn.QueryRow("SELECT * FROM brands WHERE brand_id=?", id)
 
 	var brands domain.Brands
 
@@ -57,13 +57,13 @@ func (b *brandsRepository) All() ([]*domain.Brands, error) {
 }
 
 func (b *brandsRepository) Insert(brands domain.Brands) (int64, error) {
-	statement, err := b.Conn.Prepare("INSERT INTO brands  (ID, Name) values (?, ?)")
+	statement, err := b.Conn.Prepare("INSERT INTO brands  (brand_name) values (?)")
 
 	if err != nil {
 		return -1, err
 	}
 
-	result, err := statement.Exec(brands.ID, brands.Name)
+	result, err := statement.Exec(brands.Name)
 
 	if err != nil {
 		return -1, err
@@ -74,7 +74,7 @@ func (b *brandsRepository) Insert(brands domain.Brands) (int64, error) {
 
 func (b *brandsRepository) Update(brands domain.Brands) (int64, error) {
 
-	statement, err := b.Conn.Prepare("UPDATE brands SET Name=? where ID=?")
+	statement, err := b.Conn.Prepare("UPDATE brands SET brand_name=? where brand_id=?")
 
 	if err != nil {
 		return -1, err
@@ -90,7 +90,7 @@ func (b *brandsRepository) Update(brands domain.Brands) (int64, error) {
 }
 
 func (b *brandsRepository) Delete(id int) (int64, error) {
-	statement, err := b.Conn.Prepare("DELETE FROM brands WHERE ID=?")
+	statement, err := b.Conn.Prepare("DELETE FROM brands WHERE brand_id=?")
 
 	if err != nil {
 		return -1, err

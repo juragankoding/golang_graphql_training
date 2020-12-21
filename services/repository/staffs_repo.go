@@ -29,7 +29,7 @@ func (s *staffsRepository) All() ([]*domain.Staffs, error) {
 	for query.Next() {
 		var staff *domain.Staffs
 
-		switch err := query.Scan(staff.FirstName, staff.LastName, staff.Email, staff.Phone, staff.Active, staff.StoreID, staff.ManagerID); err {
+		switch err := query.Scan(staff.StaffID, staff.FirstName, staff.LastName, staff.Email, staff.Phone, staff.Active, staff.StoreID, staff.ManagerID); err {
 		case sql.ErrNoRows:
 
 			return listStaffs, err
@@ -43,11 +43,11 @@ func (s *staffsRepository) All() ([]*domain.Staffs, error) {
 }
 
 func (s *staffsRepository) Single(id int) (*domain.Staffs, error) {
-	query := s.Conn.QueryRow("SELECT * FROM staffs")
+	query := s.Conn.QueryRow("SELECT * FROM staffs where staffs_id=?", id)
 
 	var staff *domain.Staffs
 
-	switch err := query.Scan(staff.FirstName, staff.LastName, staff.Email, staff.Phone, staff.Active, staff.StoreID, staff.ManagerID); err {
+	switch err := query.Scan(staff.StaffID, staff.FirstName, staff.LastName, staff.Email, staff.Phone, staff.Active, staff.StoreID, staff.ManagerID); err {
 	case sql.ErrNoRows:
 
 		return nil, err
