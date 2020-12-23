@@ -56,6 +56,12 @@ type ResultAllStores struct {
 
 func (ResultAllStores) IsResultInsert() {}
 
+type ResultCreateUser struct {
+	Data string       `json:"data"`
+	Code int          `json:"code"`
+	User *domain.User `json:"user"`
+}
+
 type ResultDeleteBrands struct {
 	Status string `json:"status"`
 	Code   int    `json:"code"`
@@ -295,6 +301,13 @@ type ResultInsertStores struct {
 
 func (ResultInsertStores) IsResultInsert() {}
 
+type ResultLogin struct {
+	Data  string `json:"data"`
+	Code  int    `json:"code"`
+	Token string `json:"token"`
+	Type  string `json:"type"`
+}
+
 type ResultSingleBrands struct {
 	Status string         `json:"status"`
 	Code   int            `json:"code"`
@@ -390,6 +403,12 @@ type ResultUpdateStores struct {
 }
 
 func (ResultUpdateStores) IsResultInsert() {}
+
+type ResultUsers struct {
+	Data string         `json:"data"`
+	Code int            `json:"code"`
+	User []*domain.User `json:"user"`
+}
 
 type Stores struct {
 	StoreID   int    `json:"StoreID"`

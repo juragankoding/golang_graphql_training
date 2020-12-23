@@ -41,27 +41,21 @@ func main() {
 	repositoryProducts := repository.NewGenerateProductsRepository(db)
 	repositoryStaffs := repository.NewGenerateStaffsRepository(db)
 	repositoryStocks := repository.NewGenerateStocksRepository(db)
+	repositoryUser := repository.GenerateNewUserRepository(db)
 
-	//prepare usecase
-	categoriesUseCase := usecase.NewGenerateCategoriesUserCase(repositoryCategories)
-	customersUseCase := usecase.NewGenerateCustomerUseCase(repositoryCustomers)
-	brandsUseCase := usecase.NewGenerateBrandsUseCase(repositoryBrands)
-	orderItemUseCase := usecase.NewGenerateOderItemUseCase(repositoryOrderItem)
-	ordersUseCase := usecase.NewGenerateOrdersUseCase(repositoryOrders)
-	productUseCase := usecase.NewGenerateProductUseCase(repositoryProducts)
-	staffsUseCase := usecase.NewGenerateStaffsUseCase(repositoryStaffs)
-	stocksUseCase := usecase.NewGenerateStockUseCase(repositoryStocks)
+	resolver := graph.Resolver{
+		CategoriesUseCase: usecase.NewGenerateCategoriesUserCase(repositoryCategories),
+		CustomersUseCase:  usecase.NewGenerateCustomerUseCase(repositoryCustomers),
+		BrandsUseCase:     usecase.NewGenerateBrandsUseCase(repositoryBrands),
+		OrderItemUseCase:  usecase.NewGenerateOderItemUseCase(repositoryOrderItem),
+		OrdersUseCase:     usecase.NewGenerateOrdersUseCase(repositoryOrders),
+		ProductUseCase:    usecase.NewGenerateProductUseCase(repositoryProducts),
+		StaffsUseCase:     usecase.NewGenerateStaffsUseCase(repositoryStaffs),
+		StocksUseCase:     usecase.NewGenerateStockUseCase(repositoryStocks),
+		UserUseCase:       usecase.NewGenerateUserUseCase(&repositoryUser),
+	}
 
-	srv := handler.NewDefaultServer(generated.NewExecutableSchema(generated.Config{Resolvers: &graph.Resolver{
-		CategoriesUseCase: categoriesUseCase,
-		CustomersUseCase:  customersUseCase,
-		BrandsUseCase:     brandsUseCase,
-		OrderItemUseCase:  orderItemUseCase,
-		OrdersUseCase:     ordersUseCase,
-		ProductUseCase:    productUseCase,
-		StaffsUseCase:     staffsUseCase,
-		StocksUseCase:     stocksUseCase,
-	}}))
+	srv := handler.NewDefaultServer(generated.NewExecutableSchema(generated.Config{Resolvers: &resolver}))
 
 	http.Handle("/playground", playground.Handler("GraphQL playground", "/"))
 	http.Handle("/", srv)

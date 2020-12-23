@@ -80,6 +80,7 @@ type ComplexityRoot struct {
 	}
 
 	Mutation struct {
+		CreateUser       func(childComplexity int, username string, password string) int
 		DeleteBrands     func(childComplexity int, id int) int
 		DeleteCategories func(childComplexity int, id int) int
 		DeleteCustomers  func(childComplexity int, id int) int
@@ -98,6 +99,7 @@ type ComplexityRoot struct {
 		InsertStaffs     func(childComplexity int, firstName string, lastName string, phone string, email string, active int, storeID int, managerID int) int
 		InsertStocks     func(childComplexity int, productID int, quantity int) int
 		InsertStores     func(childComplexity int, storeName string, phone string, email string, city string, state string, zipCode string) int
+		Login            func(childComplexity int, username string, password string) int
 		UpdateBrands     func(childComplexity int, id int, nama string) int
 		UpdateCategories func(childComplexity int, id int, nama string) int
 		UpdateCustomers  func(childComplexity int, id int, nama string) int
@@ -154,6 +156,7 @@ type ComplexityRoot struct {
 		Customer         func(childComplexity int, id *int) int
 		Customers        func(childComplexity int) int
 		GetInfoKaryawan  func(childComplexity int, id int) int
+		ListUsers        func(childComplexity int) int
 		SingelOrderItem  func(childComplexity int, id *int) int
 		SingelOrders     func(childComplexity int, id *int) int
 		SingelStaffs     func(childComplexity int, id *int) int
@@ -180,6 +183,12 @@ type ComplexityRoot struct {
 		Code   func(childComplexity int) int
 		Data   func(childComplexity int) int
 		Status func(childComplexity int) int
+	}
+
+	ResultCreateUser struct {
+		Code func(childComplexity int) int
+		Data func(childComplexity int) int
+		User func(childComplexity int) int
 	}
 
 	ResultDeleteBrands struct {
@@ -361,6 +370,13 @@ type ComplexityRoot struct {
 		Status func(childComplexity int) int
 	}
 
+	ResultLogin struct {
+		Code  func(childComplexity int) int
+		Data  func(childComplexity int) int
+		Token func(childComplexity int) int
+		Type  func(childComplexity int) int
+	}
+
 	ResultSingleBrands struct {
 		Code   func(childComplexity int) int
 		Data   func(childComplexity int) int
@@ -433,6 +449,12 @@ type ComplexityRoot struct {
 		Status func(childComplexity int) int
 	}
 
+	ResultUsers struct {
+		Code func(childComplexity int) int
+		Data func(childComplexity int) int
+		User func(childComplexity int) int
+	}
+
 	Staffs struct {
 		Active    func(childComplexity int) int
 		Email     func(childComplexity int) int
@@ -460,6 +482,11 @@ type ComplexityRoot struct {
 		StoreID   func(childComplexity int) int
 		StoreName func(childComplexity int) int
 		ZipCode   func(childComplexity int) int
+	}
+
+	User struct {
+		Password func(childComplexity int) int
+		Username func(childComplexity int) int
 	}
 }
 
@@ -491,6 +518,8 @@ type MutationResolver interface {
 	InsertStores(ctx context.Context, storeName string, phone string, email string, city string, state string, zipCode string) (*model.ResultInsertStores, error)
 	UpdateStores(ctx context.Context, storeID int, storeName string, phone string, email string, city string, state string, zipCode string) (*model.ResultUpdateStores, error)
 	DeleteStores(ctx context.Context, id int) (*model.ResultDeleteStores, error)
+	Login(ctx context.Context, username string, password string) (*model.ResultLogin, error)
+	CreateUser(ctx context.Context, username string, password string) (*model.ResultCreateUser, error)
 }
 type ProductsResolver interface {
 	ProductName(ctx context.Context, obj *domain.Products) (int, error)
@@ -515,6 +544,7 @@ type QueryResolver interface {
 	SingelStocks(ctx context.Context, id *int) (*model.ResultGetStocks, error)
 	AllStores(ctx context.Context) (*model.ResultAllStores, error)
 	SingleStores(ctx context.Context, id *int) (*model.ResultSingleStores, error)
+	ListUsers(ctx context.Context) (*model.ResultUsers, error)
 }
 type StaffsResolver interface {
 	Active(ctx context.Context, obj *domain.Staffs) (int, error)
@@ -665,6 +695,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Karyawan.NoHp(childComplexity), true
+
+	case "Mutation.CreateUser":
+		if e.complexity.Mutation.CreateUser == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_CreateUser_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.CreateUser(childComplexity, args["username"].(string), args["password"].(string)), true
 
 	case "Mutation.DeleteBrands":
 		if e.complexity.Mutation.DeleteBrands == nil {
@@ -881,6 +923,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Mutation.InsertStores(childComplexity, args["StoreName"].(string), args["Phone"].(string), args["Email"].(string), args["City"].(string), args["State"].(string), args["ZipCode"].(string)), true
+
+	case "Mutation.Login":
+		if e.complexity.Mutation.Login == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_Login_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.Login(childComplexity, args["username"].(string), args["password"].(string)), true
 
 	case "Mutation.UpdateBrands":
 		if e.complexity.Mutation.UpdateBrands == nil {
@@ -1245,6 +1299,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Query.GetInfoKaryawan(childComplexity, args["id"].(int)), true
 
+	case "Query.ListUsers":
+		if e.complexity.Query.ListUsers == nil {
+			break
+		}
+
+		return e.complexity.Query.ListUsers(childComplexity), true
+
 	case "Query.SingelOrderItem":
 		if e.complexity.Query.SingelOrderItem == nil {
 			break
@@ -1403,6 +1464,27 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.ResultAllStores.Status(childComplexity), true
+
+	case "ResultCreateUser.code":
+		if e.complexity.ResultCreateUser.Code == nil {
+			break
+		}
+
+		return e.complexity.ResultCreateUser.Code(childComplexity), true
+
+	case "ResultCreateUser.data":
+		if e.complexity.ResultCreateUser.Data == nil {
+			break
+		}
+
+		return e.complexity.ResultCreateUser.Data(childComplexity), true
+
+	case "ResultCreateUser.user":
+		if e.complexity.ResultCreateUser.User == nil {
+			break
+		}
+
+		return e.complexity.ResultCreateUser.User(childComplexity), true
 
 	case "ResultDeleteBrands.code":
 		if e.complexity.ResultDeleteBrands.Code == nil {
@@ -2027,6 +2109,34 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.ResultInsertStores.Status(childComplexity), true
 
+	case "ResultLogin.code":
+		if e.complexity.ResultLogin.Code == nil {
+			break
+		}
+
+		return e.complexity.ResultLogin.Code(childComplexity), true
+
+	case "ResultLogin.data":
+		if e.complexity.ResultLogin.Data == nil {
+			break
+		}
+
+		return e.complexity.ResultLogin.Data(childComplexity), true
+
+	case "ResultLogin.token":
+		if e.complexity.ResultLogin.Token == nil {
+			break
+		}
+
+		return e.complexity.ResultLogin.Token(childComplexity), true
+
+	case "ResultLogin.type":
+		if e.complexity.ResultLogin.Type == nil {
+			break
+		}
+
+		return e.complexity.ResultLogin.Type(childComplexity), true
+
 	case "ResultSingleBrands.code":
 		if e.complexity.ResultSingleBrands.Code == nil {
 			break
@@ -2279,6 +2389,27 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.ResultUpdateStores.Status(childComplexity), true
 
+	case "ResultUsers.code":
+		if e.complexity.ResultUsers.Code == nil {
+			break
+		}
+
+		return e.complexity.ResultUsers.Code(childComplexity), true
+
+	case "ResultUsers.data":
+		if e.complexity.ResultUsers.Data == nil {
+			break
+		}
+
+		return e.complexity.ResultUsers.Data(childComplexity), true
+
+	case "ResultUsers.user":
+		if e.complexity.ResultUsers.User == nil {
+			break
+		}
+
+		return e.complexity.ResultUsers.User(childComplexity), true
+
 	case "Staffs.Active":
 		if e.complexity.Staffs.Active == nil {
 			break
@@ -2418,6 +2549,20 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Stores.ZipCode(childComplexity), true
+
+	case "User.password":
+		if e.complexity.User.Password == nil {
+			break
+		}
+
+		return e.complexity.User.Password(childComplexity), true
+
+	case "User.username":
+		if e.complexity.User.Username == nil {
+			break
+		}
+
+		return e.complexity.User.Username(childComplexity), true
 
 	}
 	return 0, false
@@ -3036,12 +3181,69 @@ extend type Mutation {
   DeleteStores(id: Int!): ResultDeleteStores!
 }
 `, BuiltIn: false},
+	{Name: "schema/user.graphql", Input: `type User {
+  username: String!
+  password: String!
+}
+
+type ResultLogin {
+  data: String!
+  code: Int!
+  token: String!
+  type: String!
+}
+
+type ResultCreateUser {
+  data: String!
+  code: Int!
+  user: User!
+}
+
+type ResultUsers {
+  data: String!
+  code: Int!
+  user: [User]!
+}
+
+extend type Query {
+  ListUsers: ResultUsers!
+}
+
+extend type Mutation {
+  Login(username: String!, password: String!): ResultLogin!
+  CreateUser(username: String!, password: String!): ResultCreateUser!
+}
+`, BuiltIn: false},
 }
 var parsedSchema = gqlparser.MustLoadSchema(sources...)
 
 // endregion ************************** generated!.gotpl **************************
 
 // region    ***************************** args.gotpl *****************************
+
+func (ec *executionContext) field_Mutation_CreateUser_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 string
+	if tmp, ok := rawArgs["username"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("username"))
+		arg0, err = ec.unmarshalNString2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["username"] = arg0
+	var arg1 string
+	if tmp, ok := rawArgs["password"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("password"))
+		arg1, err = ec.unmarshalNString2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["password"] = arg1
+	return args, nil
+}
 
 func (ec *executionContext) field_Mutation_DeleteBrands_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
@@ -3544,6 +3746,30 @@ func (ec *executionContext) field_Mutation_InsertStores_args(ctx context.Context
 		}
 	}
 	args["ZipCode"] = arg5
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_Login_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 string
+	if tmp, ok := rawArgs["username"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("username"))
+		arg0, err = ec.unmarshalNString2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["username"] = arg0
+	var arg1 string
+	if tmp, ok := rawArgs["password"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("password"))
+		arg1, err = ec.unmarshalNString2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["password"] = arg1
 	return args, nil
 }
 
@@ -5964,6 +6190,90 @@ func (ec *executionContext) _Mutation_DeleteStores(ctx context.Context, field gr
 	return ec.marshalNResultDeleteStores2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultDeleteStores(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _Mutation_Login(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_Login_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().Login(rctx, args["username"].(string), args["password"].(string))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*model.ResultLogin)
+	fc.Result = res
+	return ec.marshalNResultLogin2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultLogin(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Mutation_CreateUser(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_CreateUser_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().CreateUser(rctx, args["username"].(string), args["password"].(string))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*model.ResultCreateUser)
+	fc.Result = res
+	return ec.marshalNResultCreateUser2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultCreateUser(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _OrderItem_ItemID(ctx context.Context, field graphql.CollectedField, obj *model.OrderItem) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -7536,6 +7846,41 @@ func (ec *executionContext) _Query_SingleStores(ctx context.Context, field graph
 	return ec.marshalNResultSingleStores2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultSingleStores(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _Query_ListUsers(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().ListUsers(rctx)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*model.ResultUsers)
+	fc.Result = res
+	return ec.marshalNResultUsers2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultUsers(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _Query___type(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -7920,6 +8265,111 @@ func (ec *executionContext) _ResultAllStores_data(ctx context.Context, field gra
 	res := resTmp.([]*model.Stores)
 	fc.Result = res
 	return ec.marshalNStores2ᚕᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐStores(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _ResultCreateUser_data(ctx context.Context, field graphql.CollectedField, obj *model.ResultCreateUser) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "ResultCreateUser",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Data, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _ResultCreateUser_code(ctx context.Context, field graphql.CollectedField, obj *model.ResultCreateUser) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "ResultCreateUser",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Code, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNInt2int(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _ResultCreateUser_user(ctx context.Context, field graphql.CollectedField, obj *model.ResultCreateUser) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "ResultCreateUser",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.User, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*domain.User)
+	fc.Result = res
+	return ec.marshalNUser2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋdomainᚐUser(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _ResultDeleteBrands_status(ctx context.Context, field graphql.CollectedField, obj *model.ResultDeleteBrands) (ret graphql.Marshaler) {
@@ -11037,6 +11487,146 @@ func (ec *executionContext) _ResultInsertStores_data(ctx context.Context, field 
 	return ec.marshalNStores2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐStores(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _ResultLogin_data(ctx context.Context, field graphql.CollectedField, obj *model.ResultLogin) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "ResultLogin",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Data, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _ResultLogin_code(ctx context.Context, field graphql.CollectedField, obj *model.ResultLogin) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "ResultLogin",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Code, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNInt2int(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _ResultLogin_token(ctx context.Context, field graphql.CollectedField, obj *model.ResultLogin) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "ResultLogin",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Token, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _ResultLogin_type(ctx context.Context, field graphql.CollectedField, obj *model.ResultLogin) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "ResultLogin",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Type, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _ResultSingleBrands_status(ctx context.Context, field graphql.CollectedField, obj *model.ResultSingleBrands) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -12297,6 +12887,111 @@ func (ec *executionContext) _ResultUpdateStores_data(ctx context.Context, field 
 	return ec.marshalNStores2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐStores(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _ResultUsers_data(ctx context.Context, field graphql.CollectedField, obj *model.ResultUsers) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "ResultUsers",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Data, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _ResultUsers_code(ctx context.Context, field graphql.CollectedField, obj *model.ResultUsers) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "ResultUsers",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Code, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNInt2int(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _ResultUsers_user(ctx context.Context, field graphql.CollectedField, obj *model.ResultUsers) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "ResultUsers",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.User, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.([]*domain.User)
+	fc.Result = res
+	return ec.marshalNUser2ᚕᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋdomainᚐUser(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _Staffs_StaffID(ctx context.Context, field graphql.CollectedField, obj *domain.Staffs) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -12981,6 +13676,76 @@ func (ec *executionContext) _Stores_ZipCode(ctx context.Context, field graphql.C
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
 		return obj.ZipCode, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _User_username(ctx context.Context, field graphql.CollectedField, obj *domain.User) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "User",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Username, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _User_password(ctx context.Context, field graphql.CollectedField, obj *domain.User) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "User",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Password, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -14744,6 +15509,16 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
+		case "Login":
+			out.Values[i] = ec._Mutation_Login(ctx, field)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "CreateUser":
+			out.Values[i] = ec._Mutation_CreateUser(ctx, field)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -15228,6 +16003,20 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 				}
 				return res
 			})
+		case "ListUsers":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_ListUsers(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			})
 		case "__type":
 			out.Values[i] = ec._Query___type(ctx, field)
 		case "__schema":
@@ -15340,6 +16129,43 @@ func (ec *executionContext) _ResultAllStores(ctx context.Context, sel ast.Select
 			}
 		case "data":
 			out.Values[i] = ec._ResultAllStores_data(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var resultCreateUserImplementors = []string{"ResultCreateUser"}
+
+func (ec *executionContext) _ResultCreateUser(ctx context.Context, sel ast.SelectionSet, obj *model.ResultCreateUser) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, resultCreateUserImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("ResultCreateUser")
+		case "data":
+			out.Values[i] = ec._ResultCreateUser_data(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "code":
+			out.Values[i] = ec._ResultCreateUser_code(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "user":
+			out.Values[i] = ec._ResultCreateUser_user(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
@@ -16459,6 +17285,48 @@ func (ec *executionContext) _ResultInsertStores(ctx context.Context, sel ast.Sel
 	return out
 }
 
+var resultLoginImplementors = []string{"ResultLogin"}
+
+func (ec *executionContext) _ResultLogin(ctx context.Context, sel ast.SelectionSet, obj *model.ResultLogin) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, resultLoginImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("ResultLogin")
+		case "data":
+			out.Values[i] = ec._ResultLogin_data(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "code":
+			out.Values[i] = ec._ResultLogin_code(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "token":
+			out.Values[i] = ec._ResultLogin_token(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "type":
+			out.Values[i] = ec._ResultLogin_type(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
 var resultSingleBrandsImplementors = []string{"ResultSingleBrands", "resultInsert"}
 
 func (ec *executionContext) _ResultSingleBrands(ctx context.Context, sel ast.SelectionSet, obj *model.ResultSingleBrands) graphql.Marshaler {
@@ -16903,6 +17771,43 @@ func (ec *executionContext) _ResultUpdateStores(ctx context.Context, sel ast.Sel
 	return out
 }
 
+var resultUsersImplementors = []string{"ResultUsers"}
+
+func (ec *executionContext) _ResultUsers(ctx context.Context, sel ast.SelectionSet, obj *model.ResultUsers) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, resultUsersImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("ResultUsers")
+		case "data":
+			out.Values[i] = ec._ResultUsers_data(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "code":
+			out.Values[i] = ec._ResultUsers_code(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "user":
+			out.Values[i] = ec._ResultUsers_user(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
 var staffsImplementors = []string{"Staffs"}
 
 func (ec *executionContext) _Staffs(ctx context.Context, sel ast.SelectionSet, obj *domain.Staffs) graphql.Marshaler {
@@ -17082,6 +17987,38 @@ func (ec *executionContext) _Stores(ctx context.Context, sel ast.SelectionSet, o
 			}
 		case "ZipCode":
 			out.Values[i] = ec._Stores_ZipCode(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var userImplementors = []string{"User"}
+
+func (ec *executionContext) _User(ctx context.Context, sel ast.SelectionSet, obj *domain.User) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, userImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("User")
+		case "username":
+			out.Values[i] = ec._User_username(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "password":
+			out.Values[i] = ec._User_password(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
@@ -17707,6 +18644,20 @@ func (ec *executionContext) marshalNResultAllStores2ᚖgithubᚗcomᚋjuragankod
 	return ec._ResultAllStores(ctx, sel, v)
 }
 
+func (ec *executionContext) marshalNResultCreateUser2githubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultCreateUser(ctx context.Context, sel ast.SelectionSet, v model.ResultCreateUser) graphql.Marshaler {
+	return ec._ResultCreateUser(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNResultCreateUser2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultCreateUser(ctx context.Context, sel ast.SelectionSet, v *model.ResultCreateUser) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	return ec._ResultCreateUser(ctx, sel, v)
+}
+
 func (ec *executionContext) marshalNResultDeleteBrands2githubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultDeleteBrands(ctx context.Context, sel ast.SelectionSet, v model.ResultDeleteBrands) graphql.Marshaler {
 	return ec._ResultDeleteBrands(ctx, sel, &v)
 }
@@ -18127,6 +19078,20 @@ func (ec *executionContext) marshalNResultInsertStores2ᚖgithubᚗcomᚋjuragan
 	return ec._ResultInsertStores(ctx, sel, v)
 }
 
+func (ec *executionContext) marshalNResultLogin2githubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultLogin(ctx context.Context, sel ast.SelectionSet, v model.ResultLogin) graphql.Marshaler {
+	return ec._ResultLogin(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNResultLogin2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultLogin(ctx context.Context, sel ast.SelectionSet, v *model.ResultLogin) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	return ec._ResultLogin(ctx, sel, v)
+}
+
 func (ec *executionContext) marshalNResultSingleBrands2githubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultSingleBrands(ctx context.Context, sel ast.SelectionSet, v model.ResultSingleBrands) graphql.Marshaler {
 	return ec._ResultSingleBrands(ctx, sel, &v)
 }
@@ -18295,6 +19260,20 @@ func (ec *executionContext) marshalNResultUpdateStores2ᚖgithubᚗcomᚋjuragan
 	return ec._ResultUpdateStores(ctx, sel, v)
 }
 
+func (ec *executionContext) marshalNResultUsers2githubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultUsers(ctx context.Context, sel ast.SelectionSet, v model.ResultUsers) graphql.Marshaler {
+	return ec._ResultUsers(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNResultUsers2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultUsers(ctx context.Context, sel ast.SelectionSet, v *model.ResultUsers) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	return ec._ResultUsers(ctx, sel, v)
+}
+
 func (ec *executionContext) marshalNStaffs2ᚕᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋdomainᚐStaffs(ctx context.Context, sel ast.SelectionSet, v []*domain.Staffs) graphql.Marshaler {
 	ret := make(graphql.Array, len(v))
 	var wg sync.WaitGroup
@@ -18453,6 +19432,53 @@ func (ec *executionContext) marshalNString2string(ctx context.Context, sel ast.S
 		}
 	}
 	return res
+}
+
+func (ec *executionContext) marshalNUser2ᚕᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋdomainᚐUser(ctx context.Context, sel ast.SelectionSet, v []*domain.User) graphql.Marshaler {
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalOUser2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋdomainᚐUser(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+	return ret
+}
+
+func (ec *executionContext) marshalNUser2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋdomainᚐUser(ctx context.Context, sel ast.SelectionSet, v *domain.User) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	return ec._User(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalN__Directive2githubᚗcomᚋ99designsᚋgqlgenᚋgraphqlᚋintrospectionᚐDirective(ctx context.Context, sel ast.SelectionSet, v introspection.Directive) graphql.Marshaler {
@@ -18815,6 +19841,13 @@ func (ec *executionContext) marshalOString2ᚖstring(ctx context.Context, sel as
 		return graphql.Null
 	}
 	return graphql.MarshalString(*v)
+}
+
+func (ec *executionContext) marshalOUser2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋdomainᚐUser(ctx context.Context, sel ast.SelectionSet, v *domain.User) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._User(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalO__EnumValue2ᚕgithubᚗcomᚋ99designsᚋgqlgenᚋgraphqlᚋintrospectionᚐEnumValueᚄ(ctx context.Context, sel ast.SelectionSet, v []introspection.EnumValue) graphql.Marshaler {
