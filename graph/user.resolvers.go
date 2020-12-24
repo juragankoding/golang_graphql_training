@@ -7,12 +7,23 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/juragankoding/golang_graphql_training/domain"
 	"github.com/juragankoding/golang_graphql_training/model"
 )
 
 func (r *mutationResolver) Login(ctx context.Context, username string, password string) (*model.ResultLogin, error) {
-	panic(fmt.Errorf("not implemented"))
+	_, token, err := r.UserUseCase.Login(&username, &password)
 
+	if err != nil {
+		return nil, err
+	}
+
+	return &model.ResultLogin{
+		Token: token,
+		Data:  "success login",
+		Code:  200,
+		Type:  "",
+	}, nil
 }
 
 func (r *mutationResolver) CreateUser(ctx context.Context, username string, password string) (*model.ResultCreateUser, error) {
@@ -29,7 +40,6 @@ func (r *mutationResolver) CreateUser(ctx context.Context, username string, pass
 	}
 
 	return &obj, nil
-
 }
 
 func (r *queryResolver) ListUsers(ctx context.Context) (*model.ResultUsers, error) {
@@ -44,4 +54,8 @@ func (r *queryResolver) ListUsers(ctx context.Context) (*model.ResultUsers, erro
 		User: users,
 		Code: 200,
 	}, nil
+}
+
+func (r *queryResolver) Users(ctx context.Context) (*domain.User, error) {
+	panic(fmt.Errorf("not implemented"))
 }

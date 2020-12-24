@@ -2,6 +2,7 @@ package repository
 
 import (
 	"database/sql"
+	"fmt"
 	"log"
 
 	"github.com/juragankoding/golang_graphql_training/domain"
@@ -17,12 +18,21 @@ func GenerateNewUserRepository(conn *sql.DB) domain.UserRepository {
 	}
 }
 
-func (u *userRepo) Login(username *string, password *string) (*domain.User, error) {
-	return nil, nil
-}
+func (u *userRepo) SingleUser(username *string) (*domain.User, error) {
+	queryrow := u.Conn.QueryRow("SELECT * FROM users WHERE username = ?", username)
 
-func (u *userRepo) Logout() error {
-	return nil
+	var user domain.User
+
+	switch err := queryrow.Scan(&user.ID, &user.Username, &user.Password, &user.Display_name); err {
+	case sql.ErrNoRows:
+		return nil, sql.ErrNoRows
+	case nil:
+		return &user, nil
+	default:
+		fmt.Println("error on %s ", err.Error())
+
+		return nil, err
+	}
 }
 
 func (u *userRepo) CreateUser(username *string, password *string, displayName *string) (*domain.User, string, error) {
@@ -64,11 +74,13 @@ func (u *userRepo) ListUsers() ([]*domain.User, error) {
 	for query.Next() {
 		var user domain.User
 
-		switch err := query.Scan(user.ID, user.Username, user.Password, user.Display_name); err {
+		switch err := query.Scan(&user.ID, &user.Username, &user.Password, &user.Display_name); err {
 		case sql.ErrNoRows:
 			return users, sql.ErrNoRows
 		case nil:
 			users = append(users, &user)
+		default:
+			fmt.Println("error on %s ", err.Error())
 		}
 	}
 

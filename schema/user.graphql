@@ -24,6 +24,7 @@ type ResultUsers {
 
 extend type Query {
   ListUsers: ResultUsers!
+  Users: User!
 }
 
 extend type Mutation {

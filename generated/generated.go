@@ -165,6 +165,7 @@ type ComplexityRoot struct {
 		SingleCategories func(childComplexity int, id *int) int
 		SingleProducts   func(childComplexity int, id *int) int
 		SingleStores     func(childComplexity int, id *int) int
+		Users            func(childComplexity int) int
 	}
 
 	ResultAllBrands struct {
@@ -545,6 +546,7 @@ type QueryResolver interface {
 	AllStores(ctx context.Context) (*model.ResultAllStores, error)
 	SingleStores(ctx context.Context, id *int) (*model.ResultSingleStores, error)
 	ListUsers(ctx context.Context) (*model.ResultUsers, error)
+	Users(ctx context.Context) (*domain.User, error)
 }
 type StaffsResolver interface {
 	Active(ctx context.Context, obj *domain.Staffs) (int, error)
@@ -1401,6 +1403,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Query.SingleStores(childComplexity, args["id"].(*int)), true
+
+	case "Query.Users":
+		if e.complexity.Query.Users == nil {
+			break
+		}
+
+		return e.complexity.Query.Users(childComplexity), true
 
 	case "ResultAllBrands.code":
 		if e.complexity.ResultAllBrands.Code == nil {
@@ -3207,6 +3216,7 @@ type ResultUsers {
 
 extend type Query {
   ListUsers: ResultUsers!
+  Users: User!
 }
 
 extend type Mutation {
@@ -7879,6 +7889,41 @@ func (ec *executionContext) _Query_ListUsers(ctx context.Context, field graphql.
 	res := resTmp.(*model.ResultUsers)
 	fc.Result = res
 	return ec.marshalNResultUsers2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋmodelᚐResultUsers(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Query_Users(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().Users(rctx)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*domain.User)
+	fc.Result = res
+	return ec.marshalNUser2ᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋdomainᚐUser(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query___type(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -16017,6 +16062,20 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 				}
 				return res
 			})
+		case "Users":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_Users(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			})
 		case "__type":
 			out.Values[i] = ec._Query___type(ctx, field)
 		case "__schema":
@@ -19432,6 +19491,10 @@ func (ec *executionContext) marshalNString2string(ctx context.Context, sel ast.S
 		}
 	}
 	return res
+}
+
+func (ec *executionContext) marshalNUser2githubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋdomainᚐUser(ctx context.Context, sel ast.SelectionSet, v domain.User) graphql.Marshaler {
+	return ec._User(ctx, sel, &v)
 }
 
 func (ec *executionContext) marshalNUser2ᚕᚖgithubᚗcomᚋjuragankodingᚋgolang_graphql_trainingᚋdomainᚐUser(ctx context.Context, sel ast.SelectionSet, v []*domain.User) graphql.Marshaler {

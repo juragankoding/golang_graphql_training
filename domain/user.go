@@ -1,5 +1,7 @@
 package domain
 
+import "github.com/dgrijalva/jwt-go"
+
 type User struct {
 	ID           int    `json:"id"`
 	Username     string `json:"username"`
@@ -8,15 +10,20 @@ type User struct {
 }
 
 type UserRepository interface {
-	Login(username *string, password *string) (*User, error)
-	Logout() error
+	SingleUser(username *string) (*User, error)
 	CreateUser(username *string, password *string, displayName *string) (*User, string, error)
 	ListUsers() ([]*User, error)
 }
 
 type UserUseCase interface {
-	Login(username *string, password *string) (*User, error)
+	Login(username *string, password *string) (*User, string, error)
 	Logout() error
 	CreateUser(username *string, password *string, displayName *string) (*User, string, error)
 	ListUsers() ([]*User, error)
+	Users(token string) (*User, error)
+}
+
+type ClaimsUser struct {
+	jwt.StandardClaims
+	UserID int `json:"Username"`
 }
