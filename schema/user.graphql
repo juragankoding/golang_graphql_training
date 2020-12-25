@@ -1,0 +1,33 @@
+type User {
+  username: String!
+  password: String!
+}
+
+type ResultLogin {
+  data: String!
+  code: Int!
+  token: String!
+  type: String!
+}
+
+type ResultCreateUser {
+  data: String!
+  code: Int!
+  user: User!
+}
+
+type ResultUsers {
+  data: String!
+  code: Int!
+  user: [User]!
+}
+
+extend type Query {
+  ListUsers: ResultUsers!
+  Users: User!
+}
+
+extend type Mutation {
+  Login(username: String!, password: String!): ResultLogin!
+  CreateUser(username: String!, password: String!): ResultCreateUser!
+}

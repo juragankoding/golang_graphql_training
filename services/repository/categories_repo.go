@@ -19,7 +19,7 @@ func NewGenerateCategoriesRepository(Conn *sql.DB) domain.CategoriesRepository {
 }
 
 func (r *categoriesRepository) Get(id int) (res *domain.Categories, err error) {
-	row := r.Conn.QueryRow("SELECT * FROM categories WHERE ID = ?", id)
+	row := r.Conn.QueryRow("SELECT * FROM categories WHERE category_id = ?", id)
 
 	var categories domain.Categories
 
@@ -56,14 +56,14 @@ func (r *categoriesRepository) Fetch() (res []*domain.Categories, err error) {
 	return listData, nil
 }
 
-func (r *categoriesRepository) Insert(categories domain.Categories) (int64, error) {
-	statement, err := r.Conn.Prepare("INSERT INTO categories (ID, Name) value (?,?)")
+func (r *categoriesRepository) Insert(categories *domain.Categories) (int64, error) {
+	statement, err := r.Conn.Prepare("INSERT INTO categories (category_name) VALUES (?)")
 
 	if err != nil {
 		return -1, err
 	}
 
-	result, err := statement.Exec(categories.ID, categories.Name)
+	result, err := statement.Exec(categories.Name)
 
 	if err != nil {
 		return -1, err
@@ -78,8 +78,8 @@ func (r *categoriesRepository) Insert(categories domain.Categories) (int64, erro
 	return lastID, nil
 
 }
-func (r *categoriesRepository) Update(categories domain.Categories) (int64, error) {
-	statement, err := r.Conn.Prepare("UPDATE categores set Name=? where ID=?")
+func (r *categoriesRepository) Update(categories *domain.Categories) (int64, error) {
+	statement, err := r.Conn.Prepare("UPDATE categories set category_name=? where category_id=?")
 
 	if err != nil {
 		return -1, err
@@ -100,7 +100,7 @@ func (r *categoriesRepository) Update(categories domain.Categories) (int64, erro
 	return lastID, nil
 }
 func (r *categoriesRepository) Delete(id int) (int64, error) {
-	statement, err := r.Conn.Prepare("DELETE FROM categories WHERE ID=?")
+	statement, err := r.Conn.Prepare("DELETE FROM categories WHERE category_id=?")
 
 	if err != nil {
 		return -1, err

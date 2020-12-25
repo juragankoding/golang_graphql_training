@@ -1,7 +1,7 @@
 package domain
 
 type Customers struct {
-	CosutmerID int    `json:"customer_id"`
+	CustomerID int    `json:"customer_id"`
 	FirstName  string `json:"first_name"`
 	LastName   string `json:"last_name"`
 	Phone      string `json:"phone"`

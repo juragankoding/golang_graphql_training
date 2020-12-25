@@ -1,6 +1,6 @@
 # Where are all the schema files located? globs are supported eg  src/**/*.graphqls
 schema:
-  - schema/*.graphqls
+  - schema/*.graphql
 
 # Where should the generated server code go?
 exec:
@@ -59,6 +59,8 @@ models:
     model: github.com/juragankoding/golang_graphql_training/domain.Staffs
   Stocks:
     model: github.com/juragankoding/golang_graphql_training/domain.Stocks
+  User:
+    model: github.com/juragankoding/golang_graphql_training/domain.User
   ID:
     model:
       - github.com/99designs/gqlgen/graphql.ID

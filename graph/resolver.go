@@ -11,4 +11,5 @@ type Resolver struct {
 	ProductUseCase    domain.ProductsUseCase
 	StaffsUseCase     domain.StaffsUseCase
 	StocksUseCase     domain.StocksUseCase
+	UserUseCase       domain.UserUseCase
 }

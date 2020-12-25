@@ -24,14 +24,14 @@ func (a *categoriesUseCase) Fetch() ([]*domain.Categories, error) {
 	return a.categoriesRepo.Fetch()
 }
 
-func (a *categoriesUseCase) Insert(categories domain.Categories) (int64, error) {
+func (a *categoriesUseCase) Insert(categories *domain.Categories) (int64, error) {
 	if categories.Name == "" {
 		return -1, errors.New("name cannot be null")
 	}
 
 	return a.categoriesRepo.Insert(categories)
 }
-func (a *categoriesUseCase) Update(categories domain.Categories) (int64, error) {
+func (a *categoriesUseCase) Update(categories *domain.Categories) (int64, error) {
 	if categories.Name == "" {
 		return -1, errors.New("name cannot be null")
 	}

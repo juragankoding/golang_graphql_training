@@ -16,8 +16,8 @@ func (s *stockUseCase) All() ([]*domain.Stocks, error) {
 	return s.StockRepository.All()
 }
 
-func (s *stockUseCase) Single(id int) (*domain.Stocks, error) {
-	return s.StockRepository.Single(id)
+func (s *stockUseCase) Single(stockID int, productID int) (*domain.Stocks, error) {
+	return s.StockRepository.Single(stockID, productID)
 }
 
 func (s *stockUseCase) Insert(stock domain.Stocks) (int64, error) {
@@ -28,6 +28,6 @@ func (s *stockUseCase) Update(stock domain.Stocks) (int64, error) {
 	return s.StockRepository.Update(stock)
 }
 
-func (s *stockUseCase) Delete(id int) (int64, error) {
-	return s.StockRepository.Delete(id)
+func (s *stockUseCase) Delete(storeID int, productID int) (int64, error) {
+	return s.StockRepository.Delete(storeID, productID)
 }

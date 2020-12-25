@@ -23,12 +23,10 @@ func (r *mutationResolver) InsertCategories(ctx context.Context, nama string) (*
 		Name: nama,
 	}
 
-	lastId, err := r.CategoriesUseCase.Insert(categories)
+	lastId, err := r.CategoriesUseCase.Insert(&categories)
 
 	if err != nil {
-		log.Fatal(err)
-
-		return &resultInsertCategories, err
+		return nil, err
 	}
 
 	categories.ID = int(lastId)
@@ -52,7 +50,7 @@ func (r *mutationResolver) UpdateCategories(ctx context.Context, id int, nama st
 		Name: nama,
 	}
 
-	_, err := r.CategoriesUseCase.Update(categories)
+	_, err := r.CategoriesUseCase.Update(&categories)
 
 	if err != nil {
 		return nil, err
