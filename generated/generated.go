@@ -92,7 +92,7 @@ type ComplexityRoot struct {
 		DeleteStores     func(childComplexity int, id int) int
 		InsertBrands     func(childComplexity int, nama string) int
 		InsertCategories func(childComplexity int, nama string) int
-		InsertCustomers  func(childComplexity int, nama string) int
+		InsertCustomers  func(childComplexity int, firstName string, lastName string, phone string, email string, street string, city string, state string, zipCode int) int
 		InsertOrderItem  func(childComplexity int, orderID int, productID int, quantity int, listPrice int, discount int) int
 		InsertOrders     func(childComplexity int, custormerID int, orderStatus int, orderDate string, requiredDate string, shippedDate string, storeID int, staffID int) int
 		InsertProducts   func(childComplexity int, name string, brandID int, categoryID int, modelyear int, listPrice int) int
@@ -102,7 +102,7 @@ type ComplexityRoot struct {
 		Login            func(childComplexity int, username string, password string) int
 		UpdateBrands     func(childComplexity int, id int, nama string) int
 		UpdateCategories func(childComplexity int, id int, nama string) int
-		UpdateCustomers  func(childComplexity int, id int, nama string) int
+		UpdateCustomers  func(childComplexity int, customerID int, firstName string, lastName string, phone string, email string, street string, city string, state string, zipCode int) int
 		UpdateOrderItem  func(childComplexity int, itemID int, orderID int, productID int, quantity int, listPrice int, discount int) int
 		UpdateOrders     func(childComplexity int, orderID int, custormerID int, orderStatus int, orderDate string, requiredDate string, shippedDate string, storeID int, staffID int) int
 		UpdateProducts   func(childComplexity int, id int, name string, brandID int, categoryID int, modelyear int, listPrice int) int
@@ -498,8 +498,8 @@ type MutationResolver interface {
 	InsertCategories(ctx context.Context, nama string) (*model.ResultInsertCategories, error)
 	UpdateCategories(ctx context.Context, id int, nama string) (*model.ResultUpdateCategories, error)
 	DeleteCategories(ctx context.Context, id int) (*model.ResultDeleteCategories, error)
-	InsertCustomers(ctx context.Context, nama string) (*model.ResultInsertCustomers, error)
-	UpdateCustomers(ctx context.Context, id int, nama string) (*model.ResultUpdateCustomers, error)
+	InsertCustomers(ctx context.Context, firstName string, lastName string, phone string, email string, street string, city string, state string, zipCode int) (*model.ResultInsertCustomers, error)
+	UpdateCustomers(ctx context.Context, customerID int, firstName string, lastName string, phone string, email string, street string, city string, state string, zipCode int) (*model.ResultUpdateCustomers, error)
 	DeleteCustomers(ctx context.Context, id int) (*model.ResultDeleteCustomers, error)
 	InsertOrderItem(ctx context.Context, orderID int, productID int, quantity int, listPrice int, discount int) (*model.ResultInsertOrderItem, error)
 	UpdateOrderItem(ctx context.Context, itemID int, orderID int, productID int, quantity int, listPrice int, discount int) (*model.ResultUpdateOrderItem, error)
@@ -852,7 +852,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Mutation.InsertCustomers(childComplexity, args["nama"].(string)), true
+		return e.complexity.Mutation.InsertCustomers(childComplexity, args["FirstName"].(string), args["LastName"].(string), args["Phone"].(string), args["Email"].(string), args["Street"].(string), args["City"].(string), args["State"].(string), args["ZipCode"].(int)), true
 
 	case "Mutation.InsertOrderItem":
 		if e.complexity.Mutation.InsertOrderItem == nil {
@@ -972,7 +972,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Mutation.UpdateCustomers(childComplexity, args["id"].(int), args["nama"].(string)), true
+		return e.complexity.Mutation.UpdateCustomers(childComplexity, args["CustomerID"].(int), args["FirstName"].(string), args["LastName"].(string), args["Phone"].(string), args["Email"].(string), args["Street"].(string), args["City"].(string), args["State"].(string), args["ZipCode"].(int)), true
 
 	case "Mutation.UpdateOrderItem":
 		if e.complexity.Mutation.UpdateOrderItem == nil {
@@ -2782,8 +2782,27 @@ extend type Query {
 }
 
 extend type Mutation {
-  InsertCustomers(nama: String!): ResultInsertCustomers!
-  UpdateCustomers(id: Int!, nama: String!): ResultUpdateCustomers!
+  InsertCustomers(
+    FirstName: String!
+    LastName: String!
+    Phone: String!
+    Email: String!
+    Street: String!
+    City: String!
+    State: String!
+    ZipCode: Int!
+  ): ResultInsertCustomers!
+  UpdateCustomers(
+    CustomerID: Int!
+    FirstName: String!
+    LastName: String!
+    Phone: String!
+    Email: String!
+    Street: String!
+    City: String!
+    State: String!
+    ZipCode: Int!
+  ): ResultUpdateCustomers!
   DeleteCustomers(id: Int!): ResultDeleteCustomers!
 }
 `, BuiltIn: false},
@@ -3424,14 +3443,77 @@ func (ec *executionContext) field_Mutation_InsertCustomers_args(ctx context.Cont
 	var err error
 	args := map[string]interface{}{}
 	var arg0 string
-	if tmp, ok := rawArgs["nama"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("nama"))
+	if tmp, ok := rawArgs["FirstName"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("FirstName"))
 		arg0, err = ec.unmarshalNString2string(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["nama"] = arg0
+	args["FirstName"] = arg0
+	var arg1 string
+	if tmp, ok := rawArgs["LastName"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("LastName"))
+		arg1, err = ec.unmarshalNString2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["LastName"] = arg1
+	var arg2 string
+	if tmp, ok := rawArgs["Phone"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("Phone"))
+		arg2, err = ec.unmarshalNString2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["Phone"] = arg2
+	var arg3 string
+	if tmp, ok := rawArgs["Email"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("Email"))
+		arg3, err = ec.unmarshalNString2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["Email"] = arg3
+	var arg4 string
+	if tmp, ok := rawArgs["Street"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("Street"))
+		arg4, err = ec.unmarshalNString2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["Street"] = arg4
+	var arg5 string
+	if tmp, ok := rawArgs["City"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("City"))
+		arg5, err = ec.unmarshalNString2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["City"] = arg5
+	var arg6 string
+	if tmp, ok := rawArgs["State"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("State"))
+		arg6, err = ec.unmarshalNString2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["State"] = arg6
+	var arg7 int
+	if tmp, ok := rawArgs["ZipCode"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("ZipCode"))
+		arg7, err = ec.unmarshalNInt2int(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["ZipCode"] = arg7
 	return args, nil
 }
 
@@ -3835,23 +3917,86 @@ func (ec *executionContext) field_Mutation_UpdateCustomers_args(ctx context.Cont
 	var err error
 	args := map[string]interface{}{}
 	var arg0 int
-	if tmp, ok := rawArgs["id"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+	if tmp, ok := rawArgs["CustomerID"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("CustomerID"))
 		arg0, err = ec.unmarshalNInt2int(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["id"] = arg0
+	args["CustomerID"] = arg0
 	var arg1 string
-	if tmp, ok := rawArgs["nama"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("nama"))
+	if tmp, ok := rawArgs["FirstName"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("FirstName"))
 		arg1, err = ec.unmarshalNString2string(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["nama"] = arg1
+	args["FirstName"] = arg1
+	var arg2 string
+	if tmp, ok := rawArgs["LastName"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("LastName"))
+		arg2, err = ec.unmarshalNString2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["LastName"] = arg2
+	var arg3 string
+	if tmp, ok := rawArgs["Phone"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("Phone"))
+		arg3, err = ec.unmarshalNString2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["Phone"] = arg3
+	var arg4 string
+	if tmp, ok := rawArgs["Email"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("Email"))
+		arg4, err = ec.unmarshalNString2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["Email"] = arg4
+	var arg5 string
+	if tmp, ok := rawArgs["Street"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("Street"))
+		arg5, err = ec.unmarshalNString2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["Street"] = arg5
+	var arg6 string
+	if tmp, ok := rawArgs["City"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("City"))
+		arg6, err = ec.unmarshalNString2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["City"] = arg6
+	var arg7 string
+	if tmp, ok := rawArgs["State"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("State"))
+		arg7, err = ec.unmarshalNString2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["State"] = arg7
+	var arg8 int
+	if tmp, ok := rawArgs["ZipCode"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("ZipCode"))
+		arg8, err = ec.unmarshalNInt2int(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["ZipCode"] = arg8
 	return args, nil
 }
 
@@ -5343,7 +5488,7 @@ func (ec *executionContext) _Mutation_InsertCustomers(ctx context.Context, field
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().InsertCustomers(rctx, args["nama"].(string))
+		return ec.resolvers.Mutation().InsertCustomers(rctx, args["FirstName"].(string), args["LastName"].(string), args["Phone"].(string), args["Email"].(string), args["Street"].(string), args["City"].(string), args["State"].(string), args["ZipCode"].(int))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -5385,7 +5530,7 @@ func (ec *executionContext) _Mutation_UpdateCustomers(ctx context.Context, field
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().UpdateCustomers(rctx, args["id"].(int), args["nama"].(string))
+		return ec.resolvers.Mutation().UpdateCustomers(rctx, args["CustomerID"].(int), args["FirstName"].(string), args["LastName"].(string), args["Phone"].(string), args["Email"].(string), args["Street"].(string), args["City"].(string), args["State"].(string), args["ZipCode"].(int))
 	})
 	if err != nil {
 		ec.Error(ctx, err)

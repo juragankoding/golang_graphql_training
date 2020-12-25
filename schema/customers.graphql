@@ -46,7 +46,26 @@ extend type Query {
 }
 
 extend type Mutation {
-  InsertCustomers(nama: String!): ResultInsertCustomers!
-  UpdateCustomers(id: Int!, nama: String!): ResultUpdateCustomers!
+  InsertCustomers(
+    FirstName: String!
+    LastName: String!
+    Phone: String!
+    Email: String!
+    Street: String!
+    City: String!
+    State: String!
+    ZipCode: Int!
+  ): ResultInsertCustomers!
+  UpdateCustomers(
+    CustomerID: Int!
+    FirstName: String!
+    LastName: String!
+    Phone: String!
+    Email: String!
+    Street: String!
+    City: String!
+    State: String!
+    ZipCode: Int!
+  ): ResultUpdateCustomers!
   DeleteCustomers(id: Int!): ResultDeleteCustomers!
 }

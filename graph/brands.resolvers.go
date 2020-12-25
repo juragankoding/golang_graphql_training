@@ -37,7 +37,6 @@ func (r *mutationResolver) InsertBrands(ctx context.Context, nama string) (*mode
 		Code:   200,
 		Data:   &brands,
 	}, nil
-
 }
 
 func (r *mutationResolver) UpdateBrands(ctx context.Context, id int, nama string) (*model.ResultUpdateBrands, error) {
@@ -110,7 +109,6 @@ func (r *queryResolver) SingleBrands(ctx context.Context, id int) (*model.Result
 		Code:   200,
 		Data:   userSingle,
 	}, nil
-
 }
 
 func (r *queryResolver) AllBrands(ctx context.Context) (*model.ResultAllBrands, error) {
@@ -131,7 +129,6 @@ func (r *queryResolver) AllBrands(ctx context.Context) (*model.ResultAllBrands, 
 		Code:   200,
 		Data:   brands,
 	}, nil
-
 }
 
 // Mutation returns generated.MutationResolver implementation.
