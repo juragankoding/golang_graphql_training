@@ -10,6 +10,7 @@ type User struct {
 }
 
 type UserRepository interface {
+	SingleUserFromID(id int64) (*User, error)
 	SingleUser(username *string) (*User, error)
 	CreateUser(username *string, password *string, displayName *string) (*User, string, error)
 	ListUsers() ([]*User, error)
@@ -21,6 +22,7 @@ type UserUseCase interface {
 	CreateUser(username *string, password *string, displayName *string) (*User, string, error)
 	ListUsers() ([]*User, error)
 	Users(token string) (*User, error)
+	SingleUserFromID(id int64) (*User, error)
 }
 
 type ClaimsUser struct {

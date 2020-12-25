@@ -86,3 +86,20 @@ func (u *userRepo) ListUsers() ([]*domain.User, error) {
 
 	return users, nil
 }
+
+func (u *userRepo) SingleUserFromID(id int64) (*domain.User, error) {
+	queryrow := u.Conn.QueryRow("SELECT * FROM users WHERE id = ?", id)
+
+	var user domain.User
+
+	switch err := queryrow.Scan(&user.ID, &user.Username, &user.Password, &user.Display_name); err {
+	case sql.ErrNoRows:
+		return nil, sql.ErrNoRows
+	case nil:
+		return &user, nil
+	default:
+		fmt.Println("error on %s ", err.Error())
+
+		return nil, err
+	}
+}

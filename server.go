@@ -7,9 +7,11 @@ import (
 
 	"github.com/99designs/gqlgen/graphql/handler"
 	"github.com/99designs/gqlgen/graphql/playground"
+	"github.com/go-chi/chi"
 	"github.com/juragankoding/golang_graphql_training/db"
 	"github.com/juragankoding/golang_graphql_training/generated"
 	"github.com/juragankoding/golang_graphql_training/graph"
+	"github.com/juragankoding/golang_graphql_training/middleware"
 	"github.com/juragankoding/golang_graphql_training/services/repository"
 	"github.com/juragankoding/golang_graphql_training/services/usecase"
 )
@@ -55,11 +57,15 @@ func main() {
 		UserUseCase:       usecase.NewGenerateUserUseCase(&repositoryUser),
 	}
 
+	router := chi.NewRouter()
+
+	router.Use(middleware.JwtMiddleware())
+
 	srv := handler.NewDefaultServer(generated.NewExecutableSchema(generated.Config{Resolvers: &resolver}))
 
-	http.Handle("/playground", playground.Handler("GraphQL playground", "/"))
-	http.Handle("/", srv)
+	router.Handle("/playground", playground.Handler("GraphQL playground", "/"))
+	router.Handle("/", srv)
 
 	log.Printf("connect to http://localhost:%s/playground for GraphQL playground", port)
-	log.Fatal(http.ListenAndServe(":"+port, nil))
+	log.Fatal(http.ListenAndServe(":"+port, router))
 }

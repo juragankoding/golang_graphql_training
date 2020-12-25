@@ -5,9 +5,9 @@ package graph
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/juragankoding/golang_graphql_training/domain"
+	"github.com/juragankoding/golang_graphql_training/middleware"
 	"github.com/juragankoding/golang_graphql_training/model"
 )
 
@@ -57,5 +57,13 @@ func (r *queryResolver) ListUsers(ctx context.Context) (*model.ResultUsers, erro
 }
 
 func (r *queryResolver) Users(ctx context.Context) (*domain.User, error) {
-	panic(fmt.Errorf("not implemented"))
+	userAuth := middleware.GetUserFromContext(ctx)
+
+	user, err := r.UserUseCase.SingleUserFromID(userAuth.UserID)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return user, nil
 }

@@ -9,6 +9,12 @@ import (
 
 var issuer = []byte("github/thealmarques")
 
+func DecodeJwt(token string) (*jwt.Token, error) {
+	return jwt.ParseWithClaims(token, &domain.ClaimsUser{}, func(t *jwt.Token) (interface{}, error) {
+		return issuer, nil
+	})
+}
+
 func GenerateJWT(userID int64, expiredAt int64) string {
 	claims := domain.ClaimsUser{
 		UserID: int(userID),

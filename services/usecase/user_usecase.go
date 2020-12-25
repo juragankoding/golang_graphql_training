@@ -54,3 +54,7 @@ func (u *userUsecase) ListUsers() ([]*domain.User, error) {
 func (u *userUsecase) Users(token string) (*domain.User, error) {
 	return nil, nil
 }
+
+func (u *userUsecase) SingleUserFromID(id int64) (*domain.User, error) {
+	return u.UserRepo.SingleUserFromID(id)
+}
