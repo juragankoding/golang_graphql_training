@@ -80,7 +80,7 @@ func (u *userRepo) ListUsers() ([]*domain.User, error) {
 		case nil:
 			users = append(users, &user)
 		default:
-			fmt.Println("error on %s ", err.Error())
+			fmt.Printf("error on %s ", err.Error())
 		}
 	}
 
@@ -98,7 +98,7 @@ func (u *userRepo) SingleUserFromID(id int64) (*domain.User, error) {
 	case nil:
 		return &user, nil
 	default:
-		fmt.Println("error on %s ", err.Error())
+		fmt.Printf("error on %s", err.Error())
 
 		return nil, err
 	}

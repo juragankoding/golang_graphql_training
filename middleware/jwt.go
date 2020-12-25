@@ -30,13 +30,15 @@ func JwtMiddleware() func(http.Handler) http.Handler {
 			user := UserIDFromHTTPRequest(token)
 			ip, _, _ := net.SplitHostPort(r.RemoteAddr)
 
-			userAuth := UserAUTH{
-				UserID:    user,
-				IpAddress: ip,
-			}
+			if user >= 0 {
+				userAuth := UserAUTH{
+					UserID:    user,
+					IpAddress: ip,
+				}
 
-			ctx := context.WithValue(r.Context(), userCtxKey, &userAuth)
-			r = r.WithContext(ctx)
+				ctx := context.WithValue(r.Context(), userCtxKey, &userAuth)
+				r = r.WithContext(ctx)
+			}
 
 			next.ServeHTTP(rw, r)
 		})
