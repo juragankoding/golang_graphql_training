@@ -29,8 +29,7 @@ func (u *userRepo) SingleUser(username *string) (*domain.User, error) {
 	case nil:
 		return &user, nil
 	default:
-		fmt.Println("error on %s ", err.Error())
-
+		fmt.Printf("error on %s ", err.Error())
 		return nil, err
 	}
 }
