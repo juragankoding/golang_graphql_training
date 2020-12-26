@@ -11,7 +11,7 @@ type storeRepo struct {
 	Conn *sql.DB
 }
 
-func NewGenereateStoreRepository(conn *sql.DB) domain.StoresRepository {
+func NewGenerateStoresRepository(conn *sql.DB) domain.StoresRepository {
 	store := storeRepo{
 		Conn: conn,
 	}

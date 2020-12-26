@@ -44,7 +44,7 @@ func main() {
 	repositoryStaffs := repository.NewGenerateStaffsRepository(db)
 	repositoryStocks := repository.NewGenerateStocksRepository(db)
 	repositoryUser := repository.GenerateNewUserRepository(db)
-	repositoryStores := repository.GenerateNewUserRepository(db)
+	repositoryStores := repository.NewGenerateStoresRepository(db)
 
 	resolver := graph.Resolver{
 		CategoriesUseCase: usecase.NewGenerateCategoriesUserCase(repositoryCategories),
@@ -56,7 +56,7 @@ func main() {
 		StaffsUseCase:     usecase.NewGenerateStaffsUseCase(repositoryStaffs),
 		StocksUseCase:     usecase.NewGenerateStockUseCase(repositoryStocks),
 		UserUseCase:       usecase.NewGenerateUserUseCase(&repositoryUser),
-		StoreUseCase:      usecase.NewGenereateStoreUseCase(repositoryStores),
+		StoreUseCase:      usecase.NewGenereateStoreUseCase(&repositoryStores),
 	}
 
 	router := chi.NewRouter()
