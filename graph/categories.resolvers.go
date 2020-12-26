@@ -23,13 +23,13 @@ func (r *mutationResolver) InsertCategories(ctx context.Context, nama string) (*
 		Name: nama,
 	}
 
-	lastId, err := r.CategoriesUseCase.Insert(&categories)
+	lastInsertedID, err := r.CategoriesUseCase.Insert(&categories)
 
 	if err != nil {
 		return nil, err
 	}
 
-	categories.ID = int(lastId)
+	categories.ID = int(lastInsertedID)
 
 	resultInsertCategories.Status = "Sucess insert categories"
 	resultInsertCategories.Code = 200

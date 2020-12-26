@@ -4,7 +4,7 @@ type Staffs {
   LastName: String!
   Phone: String!
   Email: String!
-  Active: Int!
+  Active: String!
   StoreID: Int!
   ManagerId: Int!
   StoreData: Stores!
@@ -25,7 +25,7 @@ type ResultUpdateStaffs implements resultInsert {
 type ResultDeleteStaffs implements resultInsert {
   status: String!
   code: Int!
-  data: Staffs!
+  data: Staffs!1
 }
 
 type ResultFetchStaffs implements resultInsert {
@@ -51,7 +51,7 @@ extend type Mutation {
     LastName: String!
     Phone: String!
     Email: String!
-    Active: Int!
+    Active: String!
     StoreID: Int!
     ManagerId: Int!
   ): ResultInsertStaffs!
@@ -61,7 +61,7 @@ extend type Mutation {
     LastName: String!
     Phone: String!
     Email: String!
-    Active: Int!
+    Active: String!
     StoreID: Int!
     ManagerId: Int!
   ): ResultUpdateStaffs!

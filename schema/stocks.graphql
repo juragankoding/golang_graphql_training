@@ -37,15 +37,19 @@ type ResultGetStocks implements resultInsert {
 
 extend type Query {
   AllStocks: ResultFetchStocks!
-  SingelStocks(id: Int): ResultGetStocks!
+  SingelStocks(StoreID: Int!, ProductID: Int!): ResultGetStocks!
 }
 
 extend type Mutation {
-  InsertStocks(ProductID: Int!, Quantity: Int!): ResultInsertStocks!
+  InsertStocks(
+    StoreID: Int!
+    ProductID: Int!
+    Quantity: Int!
+  ): ResultInsertStocks!
   UpdateStocks(
-    StockID: Int!
+    StoreID: Int!
     ProductID: Int!
     Quantity: Int!
   ): ResultUpdateStocks!
-  DeleteStocks(id: Int!): ResultDeleteStocks!
+  DeleteStocks(StoreID: Int!, ProductID: Int!): ResultDeleteStocks!
 }

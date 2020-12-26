@@ -5,7 +5,6 @@ package graph
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/juragankoding/golang_graphql_training/domain"
 	errorJurganKoding "github.com/juragankoding/golang_graphql_training/error"
@@ -31,13 +30,13 @@ func (r *mutationResolver) InsertCustomers(ctx context.Context, firstName string
 		ZipCode:   zipCode,
 	}
 
-	lastInsertId, err := r.CustomersUseCase.Insert(customers)
+	lastInsertID, err := r.CustomersUseCase.Insert(customers)
 
 	if err != nil {
 		return nil, err
 	}
 
-	customers.CustomerID = int(lastInsertId)
+	customers.CustomerID = int(lastInsertID)
 
 	return &model.ResultInsertCustomers{
 		Status: "Success",
@@ -47,17 +46,100 @@ func (r *mutationResolver) InsertCustomers(ctx context.Context, firstName string
 }
 
 func (r *mutationResolver) UpdateCustomers(ctx context.Context, customerID int, firstName string, lastName string, phone string, email string, street string, city string, state string, zipCode int) (*model.ResultUpdateCustomers, error) {
-	panic(fmt.Errorf("not implemented"))
+	user := middleware.GetUserFromContext(ctx)
+
+	if user != nil {
+		return nil, errorJurganKoding.ErrorsNotAuthenticate
+	}
+
+	customers := domain.Customers{
+		FirstName:  firstName,
+		LastName:   lastName,
+		Phone:      phone,
+		Email:      email,
+		Street:     street,
+		City:       city,
+		State:      state,
+		ZipCode:    zipCode,
+		CustomerID: customerID,
+	}
+
+	countRowEffect, err := r.CustomersUseCase.Update(customers)
+
+	if err != nil {
+		return nil, err
+	}
+
+	if countRowEffect > 0 {
+		return nil, errorJurganKoding.ErrorsUpdateNotEffect
+	}
+
+	return &model.ResultUpdateCustomers{
+		Status: "Success",
+		Code:   200,
+		Data:   &customers,
+	}, nil
 }
 
 func (r *mutationResolver) DeleteCustomers(ctx context.Context, id int) (*model.ResultDeleteCustomers, error) {
-	panic(fmt.Errorf("not implemented"))
+	user := middleware.GetUserFromContext(ctx)
+
+	if user != nil {
+		return nil, errorJurganKoding.ErrorsNotAuthenticate
+	}
+
+	countRowEffect, err := r.CustomersUseCase.Delete(id)
+
+	if err != nil {
+		return nil, err
+	}
+
+	if countRowEffect > 0 {
+		return nil, errorJurganKoding.ErrorsUpdateNotEffect
+	}
+
+	return &model.ResultDeleteCustomers{
+		Status: "Success",
+		Code:   200,
+	}, nil
 }
 
 func (r *queryResolver) Customers(ctx context.Context) (*model.ResultFetchCustomers, error) {
-	panic(fmt.Errorf("not implemented"))
+	user := middleware.GetUserFromContext(ctx)
+
+	if user != nil {
+		return nil, errorJurganKoding.ErrorsNotAuthenticate
+	}
+
+	customers, err := r.CustomersUseCase.All()
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &model.ResultFetchCustomers{
+		Status: "success",
+		Code:   200,
+		Data:   customers,
+	}, nil
 }
 
 func (r *queryResolver) Customer(ctx context.Context, id *int) (*model.ResultGetCustomers, error) {
-	panic(fmt.Errorf("not implemented"))
+	user := middleware.GetUserFromContext(ctx)
+
+	if user != nil {
+		return nil, errorJurganKoding.ErrorsNotAuthenticate
+	}
+
+	customers, err := r.CustomersUseCase.Get(*id)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &model.ResultGetCustomers{
+		Status: "success",
+		Code:   200,
+		Data:   customers,
+	}, nil
 }

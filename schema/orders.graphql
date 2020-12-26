@@ -1,6 +1,6 @@
 type Orders {
   OrderID: Int!
-  CustormerID: Int!
+  CustomerID: Int!
   OrderStatus: Int!
   OrderDate: String!
   RequiredDate: String!

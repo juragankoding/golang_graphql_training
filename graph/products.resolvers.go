@@ -5,38 +5,135 @@ package graph
 
 import (
 	"context"
-	"fmt"
+	"strconv"
 
 	"github.com/juragankoding/golang_graphql_training/domain"
-	"github.com/juragankoding/golang_graphql_training/generated"
+	errorJurganKoding "github.com/juragankoding/golang_graphql_training/error"
+	"github.com/juragankoding/golang_graphql_training/middleware"
 	"github.com/juragankoding/golang_graphql_training/model"
 )
 
 func (r *mutationResolver) InsertProducts(ctx context.Context, name string, brandID int, categoryID int, modelyear int, listPrice int) (*model.ResultInsertProducts, error) {
-	panic(fmt.Errorf("not implemented"))
+	user := middleware.GetUserFromContext(ctx)
+
+	if user == nil {
+		return nil, errorJurganKoding.ErrorsNotAuthenticate
+	}
+
+	products := domain.Products{
+		ProductName: name,
+		BrandID:     brandID,
+		CategoryID:  categoryID,
+		ModelYear:   strconv.Itoa(modelyear),
+		ListPrice:   listPrice,
+	}
+	lastInsertID, err := r.ProductUseCase.Insert(products)
+
+	if err != nil {
+		return nil, err
+	}
+
+	products.ProductID = int(lastInsertID)
+
+	return &model.ResultInsertProducts{
+		Status: "success",
+		Code:   200,
+		Data:   &products,
+	}, nil
 }
 
 func (r *mutationResolver) UpdateProducts(ctx context.Context, id int, name string, brandID int, categoryID int, modelyear int, listPrice int) (*model.ResultUpdateProducts, error) {
-	panic(fmt.Errorf("not implemented"))
+	user := middleware.GetUserFromContext(ctx)
+
+	if user == nil {
+		return nil, errorJurganKoding.ErrorsNotAuthenticate
+	}
+
+	products := domain.Products{
+		ProductName: name,
+		BrandID:     brandID,
+		CategoryID:  categoryID,
+		ModelYear:   strconv.Itoa(modelyear),
+		ListPrice:   listPrice,
+		ProductID:   id,
+	}
+
+	rowEffectID, err := r.ProductUseCase.Insert(products)
+
+	if err != nil {
+		return nil, err
+	}
+
+	if rowEffectID == 0 {
+		return nil, errorJurganKoding.ErrorsUpdateNotEffect
+	}
+
+	return &model.ResultUpdateProducts{
+		Status: "success",
+		Code:   200,
+		Data:   &products,
+	}, nil
 }
 
 func (r *mutationResolver) DeleteProducts(ctx context.Context, id int) (*model.ResultDeleteProducts, error) {
-	panic(fmt.Errorf("not implemented"))
-}
+	user := middleware.GetUserFromContext(ctx)
 
-func (r *productsResolver) ProductName(ctx context.Context, obj *domain.Products) (int, error) {
-	panic(fmt.Errorf("not implemented"))
+	if user == nil {
+		return nil, errorJurganKoding.ErrorsNotAuthenticate
+	}
+
+	rowEffectID, err := r.ProductUseCase.Delete(id)
+
+	if err != nil {
+		return nil, err
+	}
+
+	if rowEffectID == 0 {
+		return nil, errorJurganKoding.ErrorsUpdateNotEffect
+	}
+
+	return &model.ResultDeleteProducts{
+		Status: "success",
+		Code:   200,
+	}, nil
 }
 
 func (r *queryResolver) AllProducts(ctx context.Context) (*model.ResultAllProducts, error) {
-	panic(fmt.Errorf("not implemented"))
+	user := middleware.GetUserFromContext(ctx)
+
+	if user == nil {
+		return nil, errorJurganKoding.ErrorsNotAuthenticate
+	}
+
+	products, err := r.ProductUseCase.All()
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &model.ResultAllProducts{
+		Status: "success",
+		Code:   200,
+		Data:   products,
+	}, nil
 }
 
 func (r *queryResolver) SingleProducts(ctx context.Context, id *int) (*model.ResultSingleProducts, error) {
-	panic(fmt.Errorf("not implemented"))
+	user := middleware.GetUserFromContext(ctx)
+
+	if user == nil {
+		return nil, errorJurganKoding.ErrorsNotAuthenticate
+	}
+
+	products, err := r.ProductUseCase.Single(*id)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &model.ResultSingleProducts{
+		Status: "success",
+		Code:   200,
+		Data:   products,
+	}, nil
 }
-
-// Products returns generated.ProductsResolver implementation.
-func (r *Resolver) Products() generated.ProductsResolver { return &productsResolver{r} }
-
-type productsResolver struct{ *Resolver }

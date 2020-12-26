@@ -1,6 +1,6 @@
 type Products {
   ProductID: Int!
-  ProductName: Int!
+  ProductName: String!
   BrandID: Int!
   CategoryID: Int!
   ModelYear: String!
