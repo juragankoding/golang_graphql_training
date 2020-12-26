@@ -29,7 +29,7 @@ type ResultFetchStocks implements resultInsert {
   data: [Stocks]!
 }
 
-type ResultGetStocks implements resultInsert {
+type ResultGetStocks implements resultIns\ert {
   status: String!
   code: Int!
   data: Stocks!

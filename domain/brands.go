@@ -20,3 +20,8 @@ type BrandsRepository interface {
 	Update(brands Brands) (int64, error)
 	Delete(id int) (int64, error)
 }
+
+func (brands *Brands) Compare(newBrands Brands) bool {
+	return newBrands.ID == brands.ID &&
+		brands.Name == newBrands.Name
+}

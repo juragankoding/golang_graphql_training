@@ -80,7 +80,7 @@ func (b *brandsRepository) Update(brands domain.Brands) (int64, error) {
 		return -1, err
 	}
 
-	result, err := statement.Exec()
+	result, err := statement.Exec(brands.Name, brands.ID)
 
 	if err != nil {
 		return -1, err
