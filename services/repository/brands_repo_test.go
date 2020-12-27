@@ -34,8 +34,6 @@ func TestInsertBrands(t *testing.T) {
 		brands.ID = int(lastID)
 		listBrands = append(listBrands, &brands)
 
-		t.Logf("last id brands insert is %d", lastID)
-
 		brandsOnDatabase, err := brandsRepository.Single(int(lastID))
 
 		if err != nil {
@@ -72,7 +70,9 @@ func TestUpdateBrands(t *testing.T) {
 			t.Errorf("error on testing brands : %s", err.Error())
 		}
 
-		t.Logf("last id brands effect is %d", countEffect)
+		if countEffect <= 0 {
+			t.Errorf("nothing row update")
+		}
 
 		brandsOnDatabase, err := brandsRepository.Single(int(id))
 
@@ -86,7 +86,7 @@ func TestUpdateBrands(t *testing.T) {
 	}
 }
 
-func TestAll(t *testing.T) {
+func TestAllBrands(t *testing.T) {
 	database, err := db.GetDatabase()
 
 	if err != nil {
@@ -107,7 +107,7 @@ func TestAll(t *testing.T) {
 	}
 }
 
-func TestSingle(t *testing.T) {
+func TestSingleBrands(t *testing.T) {
 	database, err := db.GetDatabase()
 
 	if err != nil {
@@ -130,7 +130,7 @@ func TestSingle(t *testing.T) {
 	}
 }
 
-func TestDelete(t *testing.T) {
+func TestDeleteBrands(t *testing.T) {
 	database, err := db.GetDatabase()
 
 	if err != nil {
@@ -147,7 +147,9 @@ func TestDelete(t *testing.T) {
 			t.Errorf("error on testing brands : %s", err.Error())
 		}
 
-		t.Logf("last id brands effect is %d", countEffect)
+		if countEffect <= 0 {
+			t.Errorf("nothing row update")
+		}
 
 		brandsOnDatabase, err := brandsRepository.Single(int(id))
 

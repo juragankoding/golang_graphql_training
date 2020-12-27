@@ -2,8 +2,8 @@
 -- +migrate Up
 
 create table if not exists customers(
-    costumer_id integer primary key autoincrement,
-    firt_name varchar(20) not null,
+    customer_id integer primary key autoincrement,
+    first_name varchar(20) not null,
     last_name varchar(20),
     phone varchar(20) not null,
     email varchar(20) not null,

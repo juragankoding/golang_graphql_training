@@ -2,7 +2,6 @@ package repository
 
 import (
 	"database/sql"
-	"errors"
 
 	"github.com/juragankoding/golang_graphql_training/domain"
 )
@@ -11,7 +10,7 @@ type customerRepository struct {
 	Conn *sql.DB
 }
 
-func NewGenerateCustomerRespository(Conn *sql.DB) domain.CustomersRepository {
+func NewGenerateCustomersRepository(Conn *sql.DB) domain.CustomersRepository {
 	return &customerRepository{
 		Conn: Conn,
 	}
@@ -27,14 +26,22 @@ func (a *customerRepository) All() ([]*domain.Customers, error) {
 	}
 
 	for query.Next() {
-		var customer *domain.Customers
+		var customer domain.Customers
 
-		switch err := query.Scan(&customer.CustomerID, &customer.FirstName, &customer.LastName, &customer.Phone, &customer.Email, &customer.Street, &customer.City, &customer.State, &customer.ZipCode); err {
+		switch err := query.Scan(&customer.CustomerID,
+			&customer.FirstName,
+			&customer.LastName,
+			&customer.Phone,
+			&customer.Email,
+			&customer.Street,
+			&customer.City,
+			&customer.State,
+			&customer.ZipCode); err {
 		case sql.ErrNoRows:
 			return nil, err
 
 		case nil:
-			customers = append(customers, customer)
+			customers = append(customers, &customer)
 		}
 	}
 
@@ -43,21 +50,26 @@ func (a *customerRepository) All() ([]*domain.Customers, error) {
 
 func (a *customerRepository) Get(id int) (*domain.Customers, error) {
 
-	queryRow, err := a.Conn.Query("SELECT * FROM customers WHERE customer_id = ?", id)
+	queryRow := a.Conn.QueryRow("SELECT * FROM customers WHERE customer_id = ?", id)
 
-	if err != nil {
-		return nil, err
-	}
-	var customer *domain.Customers
+	var customer domain.Customers
 
-	switch err := queryRow.Scan(&customer.CustomerID, customer.FirstName, customer.LastName, customer.Phone, customer.Email, customer.Street, customer.City, customer.State, customer.ZipCode); err {
+	switch err := queryRow.Scan(&customer.CustomerID,
+		&customer.FirstName,
+		&customer.LastName,
+		&customer.Phone,
+		&customer.Email,
+		&customer.Street,
+		&customer.City,
+		&customer.State,
+		&customer.ZipCode); err {
 	case sql.ErrNoRows:
 		return nil, sql.ErrNoRows
 	case nil:
-		return customer, nil
+		return &customer, nil
+	default:
+		return nil, err
 	}
-
-	return nil, errors.New("Nothing action here")
 }
 
 func (a *customerRepository) Insert(customer domain.Customers) (int64, error) {
@@ -76,7 +88,7 @@ func (a *customerRepository) Insert(customer domain.Customers) (int64, error) {
 }
 
 func (a *customerRepository) Update(customers domain.Customers) (int64, error) {
-	statement, err := a.Conn.Prepare("UPDATE customers SET first_name=?,last_name=?,phone=?,email=?,street=?,city=?,state=?,zip_code=? where costumer_id=?")
+	statement, err := a.Conn.Prepare("UPDATE customers SET first_name=?,last_name=?,phone=?,email=?,street=?,city=?,state=?,zip_code=? where customer_id=?")
 
 	if err != nil {
 		return -1, err
@@ -91,7 +103,7 @@ func (a *customerRepository) Update(customers domain.Customers) (int64, error) {
 }
 
 func (a *customerRepository) Delete(id int) (int64, error) {
-	statement, err := a.Conn.Prepare("DELETE FROM customers WHERE costumer_id=?")
+	statement, err := a.Conn.Prepare("DELETE FROM customers WHERE customer_id=?")
 
 	if err != nil {
 		return -1, err

@@ -36,9 +36,9 @@ func main() {
 
 	//prepare repository
 	repositoryCategories := repository.NewGenerateCategoriesRepository(db)
-	repositoryCustomers := repository.NewGenerateCustomerRespository(db)
+	repositoryCustomers := repository.NewGenerateCustomersRepository(db)
 	repositoryBrands := repository.NewGenerateBrandsRepository(db)
-	repositoryOrderItem := repository.NewGenerateOrderItemRespository(db)
+	repositoryOrderItem := repository.NewGenerateOrderItemRepository(db)
 	repositoryOrders := repository.NewGenerateOrdersRepository(db)
 	repositoryProducts := repository.NewGenerateProductsRepository(db)
 	repositoryStaffs := repository.NewGenerateStaffsRepository(db)

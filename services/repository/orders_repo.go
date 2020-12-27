@@ -29,7 +29,14 @@ func (o *ordersRepository) All() ([]*domain.Orders, error) {
 	for query.Next() {
 		var order *domain.Orders
 
-		switch err := query.Scan(order.OrderID, order.CustomerID, order.OrderStatus, order.OrderDate, order.RequiredDate, order.ShippedDate, order.StoreID, order.StaffID); err {
+		switch err := query.Scan(order.OrderID,
+			order.CustomerID,
+			order.OrderStatus,
+			order.OrderDate,
+			order.RequiredDate,
+			order.ShippedDate,
+			order.StoreID,
+			order.StaffID); err {
 		case sql.ErrNoRows:
 			return nil, sql.ErrNoRows
 		case nil:
@@ -45,7 +52,14 @@ func (o *ordersRepository) Single(id int) (*domain.Orders, error) {
 
 	var order *domain.Orders
 
-	switch err := queryRow.Scan(order.OrderID, order.CustomerID, order.OrderStatus, order.OrderDate, order.RequiredDate, order.ShippedDate, order.StoreID, order.StaffID); err {
+	switch err := queryRow.Scan(order.OrderID,
+		order.CustomerID,
+		order.OrderStatus,
+		order.OrderDate,
+		order.RequiredDate,
+		order.ShippedDate,
+		order.StoreID,
+		order.StaffID); err {
 	case sql.ErrNoRows:
 		return nil, sql.ErrNoRows
 	case nil:
@@ -76,7 +90,14 @@ func (o *ordersRepository) Update(orders domain.Orders) (int64, error) {
 		return -1, err
 	}
 
-	if result, err := statement.Exec(orders.CustomerID, orders.OrderStatus, orders.OrderDate, orders.RequiredDate, orders.ShippedDate, orders.StoreID, orders.StaffID, orders.OrderID); err != nil {
+	if result, err := statement.Exec(orders.CustomerID,
+		orders.OrderStatus,
+		orders.OrderDate,
+		orders.RequiredDate,
+		orders.ShippedDate,
+		orders.StoreID,
+		orders.StaffID,
+		orders.OrderID); err != nil {
 		return -1, err
 	} else {
 		return result.RowsAffected()

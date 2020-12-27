@@ -11,7 +11,7 @@ type orderItemRepository struct {
 	Conn *sql.DB
 }
 
-func NewGenerateOrderItemRespository(Conn *sql.DB) domain.OrderItemRepository {
+func NewGenerateOrderItemRepository(Conn *sql.DB) domain.OrderItemRepository {
 	return &orderItemRepository{
 		Conn: Conn,
 	}

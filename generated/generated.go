@@ -38,6 +38,7 @@ type Config struct {
 }
 
 type ResolverRoot interface {
+	Customers() CustomersResolver
 	Mutation() MutationResolver
 	Orders() OrdersResolver
 	Query() QueryResolver
@@ -490,6 +491,9 @@ type ComplexityRoot struct {
 	}
 }
 
+type CustomersResolver interface {
+	State(ctx context.Context, obj *domain.Customers) (string, error)
+}
 type MutationResolver interface {
 	InsertBrands(ctx context.Context, nama string) (*model.ResultInsertBrands, error)
 	UpdateBrands(ctx context.Context, id int, nama string) (*model.ResultUpdateBrands, error)
@@ -5003,14 +5007,14 @@ func (ec *executionContext) _Customers_State(ctx context.Context, field graphql.
 		Object:     "Customers",
 		Field:      field,
 		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
+		IsMethod:   true,
+		IsResolver: true,
 	}
 
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.State, nil
+		return ec.resolvers.Customers().State(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -15475,47 +15479,56 @@ func (ec *executionContext) _Customers(ctx context.Context, sel ast.SelectionSet
 		case "CustomerID":
 			out.Values[i] = ec._Customers_CustomerID(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
 		case "FirstName":
 			out.Values[i] = ec._Customers_FirstName(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
 		case "LastName":
 			out.Values[i] = ec._Customers_LastName(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
 		case "Phone":
 			out.Values[i] = ec._Customers_Phone(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
 		case "Email":
 			out.Values[i] = ec._Customers_Email(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
 		case "Street":
 			out.Values[i] = ec._Customers_Street(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
 		case "City":
 			out.Values[i] = ec._Customers_City(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
 		case "State":
-			out.Values[i] = ec._Customers_State(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Customers_State(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			})
 		case "ZipCode":
 			out.Values[i] = ec._Customers_ZipCode(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))

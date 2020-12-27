@@ -25,7 +25,7 @@ type ResultUpdateStaffs implements resultInsert {
 type ResultDeleteStaffs implements resultInsert {
   status: String!
   code: Int!
-  data: Staffs!1
+  data: Staffs!
 }
 
 type ResultFetchStaffs implements resultInsert {

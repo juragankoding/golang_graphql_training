@@ -24,3 +24,7 @@ type CategoriesRepository interface {
 func (c *Categories) Validate() error {
 	return nil
 }
+
+func (c *Categories) Compare(newCategories Categories) bool {
+	return c.ID == newCategories.ID && c.Name == newCategories.Name
+}

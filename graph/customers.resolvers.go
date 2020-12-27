@@ -5,12 +5,19 @@ package graph
 
 import (
 	"context"
+	"database/sql"
+	"fmt"
 
 	"github.com/juragankoding/golang_graphql_training/domain"
 	errorJurganKoding "github.com/juragankoding/golang_graphql_training/error"
+	"github.com/juragankoding/golang_graphql_training/generated"
 	"github.com/juragankoding/golang_graphql_training/middleware"
 	"github.com/juragankoding/golang_graphql_training/model"
 )
+
+func (r *customersResolver) State(ctx context.Context, obj *domain.Customers) (string, error) {
+	panic(fmt.Errorf("not implemented"))
+}
 
 func (r *mutationResolver) InsertCustomers(ctx context.Context, firstName string, lastName string, phone string, email string, street string, city string, state string, zipCode int) (*model.ResultInsertCustomers, error) {
 	user := middleware.GetUserFromContext(ctx)
@@ -26,7 +33,7 @@ func (r *mutationResolver) InsertCustomers(ctx context.Context, firstName string
 		Email:     email,
 		Street:    street,
 		City:      city,
-		State:     state,
+		State:     sql.NullString{String: state},
 		ZipCode:   zipCode,
 	}
 
@@ -59,7 +66,7 @@ func (r *mutationResolver) UpdateCustomers(ctx context.Context, customerID int, 
 		Email:      email,
 		Street:     street,
 		City:       city,
-		State:      state,
+		State:      sql.NullString{String: state},
 		ZipCode:    zipCode,
 		CustomerID: customerID,
 	}
@@ -143,3 +150,8 @@ func (r *queryResolver) Customer(ctx context.Context, id *int) (*model.ResultGet
 		Data:   customers,
 	}, nil
 }
+
+// Customers returns generated.CustomersResolver implementation.
+func (r *Resolver) Customers() generated.CustomersResolver { return &customersResolver{r} }
+
+type customersResolver struct{ *Resolver }
