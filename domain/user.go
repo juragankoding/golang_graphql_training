@@ -12,7 +12,7 @@ type User struct {
 type UserRepository interface {
 	SingleUserFromID(id int64) (*User, error)
 	SingleUser(username *string) (*User, error)
-	CreateUser(username *string, password *string, displayName *string) (*User, string, error)
+	Insert(user *User) (*User, string, error)
 	ListUsers() ([]*User, error)
 }
 
@@ -28,4 +28,11 @@ type UserUseCase interface {
 type ClaimsUser struct {
 	jwt.StandardClaims
 	UserID int `json:"Username"`
+}
+
+func (u *User) Compare(user *User) bool {
+	return u.ID == user.ID &&
+		u.Display_name == user.Display_name &&
+		u.Password == user.Password &&
+		u.Username == user.Username
 }

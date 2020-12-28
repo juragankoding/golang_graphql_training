@@ -12,7 +12,7 @@ type userRepo struct {
 	Conn *sql.DB
 }
 
-func GenerateNewUserRepository(conn *sql.DB) domain.UserRepository {
+func NewGenerateUserRepository(conn *sql.DB) domain.UserRepository {
 	return &userRepo{
 		Conn: conn,
 	}
@@ -34,7 +34,10 @@ func (u *userRepo) SingleUser(username *string) (*domain.User, error) {
 	}
 }
 
-func (u *userRepo) CreateUser(username *string, password *string, displayName *string) (*domain.User, string, error) {
+func (u *userRepo) Insert(user *domain.User) (*domain.User, string, error) {
+	username := user.Username
+	password := user.Password
+	displayName := user.Display_name
 
 	statement, err := u.Conn.Prepare("INSERT INTO users (username, password, display_name) values (?,?,?)")
 
@@ -50,9 +53,9 @@ func (u *userRepo) CreateUser(username *string, password *string, displayName *s
 		} else {
 			return &domain.User{
 				ID:           int(id),
-				Username:     *username,
-				Password:     *password,
-				Display_name: *displayName,
+				Username:     username,
+				Password:     password,
+				Display_name: displayName,
 			}, "", nil
 		}
 	}

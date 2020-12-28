@@ -43,7 +43,7 @@ func main() {
 	repositoryProducts := repository.NewGenerateProductsRepository(db)
 	repositoryStaffs := repository.NewGenerateStaffsRepository(db)
 	repositoryStocks := repository.NewGenerateStocksRepository(db)
-	repositoryUser := repository.GenerateNewUserRepository(db)
+	repositoryUser := repository.NewGenerateUserRepository(db)
 	repositoryStores := repository.NewGenerateStoresRepository(db)
 
 	resolver := graph.Resolver{

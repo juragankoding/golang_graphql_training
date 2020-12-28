@@ -44,7 +44,11 @@ func (u *userUsecase) Logout() error {
 }
 
 func (u *userUsecase) CreateUser(username *string, password *string, diplayName *string) (*domain.User, string, error) {
-	return u.UserRepo.CreateUser(username, password, diplayName)
+	return u.UserRepo.Insert(&domain.User{
+		Username:     *username,
+		Password:     *password,
+		Display_name: *diplayName,
+	})
 }
 
 func (u *userUsecase) ListUsers() ([]*domain.User, error) {
