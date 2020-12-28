@@ -10,17 +10,26 @@ type OrderItem struct {
 }
 
 type OrderItemRepository interface {
-	All() ([]*OrderItem, error)
-	Single(id int) (*OrderItem, error)
+	Fetch() ([]*OrderItem, error)
+	Get(id int) (*OrderItem, error)
 	Insert(orderItem OrderItem) (int64, error)
 	Update(orderItem OrderItem) (int64, error)
 	Delete(id int) (int64, error)
 }
 
 type OrderItemUseCase interface {
-	All() ([]*OrderItem, error)
-	Single(id int) (*OrderItem, error)
+	Fetch() ([]*OrderItem, error)
+	Get(id int) (*OrderItem, error)
 	Insert(orderItem OrderItem) (int64, error)
 	Update(orderItem OrderItem) (int64, error)
 	Delete(id int) (int64, error)
+}
+
+func (o *OrderItem) Compare(orderItem OrderItem) bool {
+	return o.ItemID == orderItem.ItemID &&
+		// o.Discount == orderItem.Discount &&
+		// o.ListPrice == orderItem.ListPrice &&
+		// o.Quantity == orderItem.Quantity &&
+		// o.OrderID == orderItem.OrderID &&
+		o.ProductID == orderItem.ProductID
 }

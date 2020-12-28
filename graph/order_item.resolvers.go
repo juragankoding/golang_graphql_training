@@ -104,7 +104,7 @@ func (r *queryResolver) AllOrderItem(ctx context.Context) (*model.ResultFetchOrd
 		return nil, errorJurganKoding.ErrorsNotAuthenticate
 	}
 
-	customers, err := r.OrderItemUseCase.All()
+	customers, err := r.OrderItemUseCase.Fetch()
 
 	if err != nil {
 		return nil, err
@@ -124,7 +124,7 @@ func (r *queryResolver) SingelOrderItem(ctx context.Context, id *int) (*model.Re
 		return nil, errorJurganKoding.ErrorsNotAuthenticate
 	}
 
-	customer, err := r.OrderItemUseCase.Single(*id)
+	customer, err := r.OrderItemUseCase.Get(*id)
 
 	if err != nil {
 		return nil, err

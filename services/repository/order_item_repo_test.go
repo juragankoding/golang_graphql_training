@@ -1,172 +1,297 @@
 package repository
 
-// import (
-// 	"database/sql"
-// 	"testing"
+import (
+	"database/sql"
+	"strconv"
+	"testing"
 
-// 	"github.com/icrowley/fake"
-// 	"github.com/juragankoding/golang_graphql_training/db"
-// 	"github.com/juragankoding/golang_graphql_training/domain"
-// )
+	"github.com/icrowley/fake"
+	"github.com/juragankoding/golang_graphql_training/db"
+	"github.com/juragankoding/golang_graphql_training/domain"
+)
 
-// var listOrderItem []*domain.OrderItem
+var listOrderItem []*domain.OrderItem
 
-// func TestInsertOrderItem(t *testing.T) {
-// 	database, err := db.GetDatabase()
+var idOrderOrderItem domain.OrderItem
+var idCategoryItem domain.Categories
 
-// 	if err != nil {
-// 		t.Errorf("error on testing orderItem on database : %s", err.Error())
-// 	}
+var idProductOrderItem int64
+var idBrandsOrderItem int64
+var idStaffOrderItem int64
+var idStoreOrderItem int64
+var idCategoryOrderItem int64
+var idCustomersOrderItem int64
+var idOrdersOrderItem int64
 
-// 	orderItemRepository := NewGenerateOrderItemRepository(database)
+func TestInsertOrderItem(t *testing.T) {
+	database, err := db.GetDatabase()
 
-// 	for loopingOrderItem := 0; loopingOrderItem < 10; loopingOrderItem++ {
-// 		orderItem := domain.OrderItem{
-// 			orderitem
-// 		}
+	if err != nil {
+		t.Errorf("error on testing orderItem on database : %s", err.Error())
+	}
 
-// 		lastID, err := orderItemRepository.Insert(orderItem)
+	orderItemRepository := NewGenerateOrderItemRepository(database)
+	ordersRepository := NewGenerateOrdersRepository(database)
+	productsRepository := NewGenerateProductsRepository(database)
+	categoriesRepository := NewGenerateCategoriesRepository(database)
+	brandsRepository := NewGenerateBrandsRepository(database)
+	storesRepository := NewGenerateStoresRepository(database)
+	staffsRepository := NewGenerateStaffsRepository(database)
+	customersRepository := NewGenerateCustomersRepository(database)
 
-// 		if err != nil {
-// 			t.Errorf("error on testing orderItem : %s", err.Error())
-// 		}
+	if idBrandsOrderItem, err = brandsRepository.Insert(domain.Brands{
+		Name: fake.Brand(),
+	}); err != nil {
+		t.Errorf(err.Error())
+	}
 
-// 		orderItem.CustomerID = int(lastID)
-// 		listOrderItem = append(listOrderItem, &orderItem)
+	if idCategoryOrderItem, err = categoriesRepository.Insert(&domain.Categories{
+		Name: fake.Brand(),
+	}); err != nil {
+		t.Errorf(err.Error())
+	}
 
-// 		orderItemOnDatabase, err := orderItemRepository.Get(int(lastID))
+	if idProductOrderItem, err = productsRepository.Insert(domain.Products{
+		BrandID:     int(idBrandsOrderItem),
+		CategoryID:  int(idCategoryOrderItem),
+		ProductName: fake.ProductName(),
+		ModelYear:   strconv.Itoa(fake.Year(1993, 2020)),
+		ListPrice:   1000,
+	}); err != nil {
+		t.Errorf(err.Error())
+	}
 
-// 		if err != nil {
-// 			t.Errorf("error on testing orderItem : %s", err.Error())
-// 		}
+	if idStoreOrderItem, err = storesRepository.Insert(domain.Stores{
+		StoreName: fake.DomainName(),
+		Phone:     fake.Phone(),
+		Email:     fake.EmailAddress(),
+		Street:    fake.Street(),
+		City:      fake.City(),
+		State:     fake.State(),
+		ZipCode:   fake.Zip(),
+	}); err != nil {
+		t.Errorf(err.Error())
+	}
 
-// 		if orderItem.Compare(*orderItemOnDatabase) == false {
-// 			t.Errorf("field on database not same with on field input")
-// 		}
-// 	}
+	if idStaffOrderItem, err = staffsRepository.Insert(domain.Staffs{
+		StoreID:   int(idStoreOrderItem),
+		FirstName: fake.FirstName(),
+		LastName:  fake.LastName(),
+		Email:     fake.LastName(),
+		Phone:     fake.Phone(),
+		Active:    "1",
+	}); err != nil {
+		t.Errorf(err.Error())
+	}
 
-// }
+	if idCustomersOrderItem, err = customersRepository.Insert(domain.Customers{
+		FirstName: fake.FirstName(),
+		LastName:  fake.LastName(),
+		Phone:     fake.Phone(),
+		Email:     fake.EmailAddress(),
+		Street:    fake.Street(),
+		City:      fake.City(),
+		State:     sql.NullString{String: fake.State()},
+		ZipCode:   111,
+	}); err != nil {
+		t.Errorf(err.Error())
+	}
 
-// func TestUpdateOrderItem(t *testing.T) {
-// 	database, err := db.GetDatabase()
+	if idOrdersOrderItem, err = ordersRepository.Insert(domain.Orders{
+		CustomerID:   int(idCustomersOrderItem),
+		OrderStatus:  1,
+		OrderDate:    "20-11-2003",
+		RequiredDate: "20-11-2003",
+		ShippedDate:  "20-11-2003",
+		StoreID:      int(idStaffOrderItem),
+		StaffID:      int(idStaffOrderItem),
+	}); err != nil {
+		t.Errorf(err.Error())
+	}
 
-// 	if err != nil {
-// 		t.Errorf("error on testing orderItem on database : %s", err.Error())
-// 	}
+	for loopingOrderItem := 0; loopingOrderItem < 10; loopingOrderItem++ {
+		orderItem := domain.OrderItem{
+			OrderID:   int(idOrdersOrderItem),
+			ProductID: int(idProductOrderItem),
+			Quantity:  10,
+			ListPrice: 10000,
+			Discount:  10,
+		}
 
-// 	orderItemRepository := NewGenerateOrderItemRepository(database)
+		lastID, err := orderItemRepository.Insert(orderItem)
 
-// 	for orderItem := range listOrderItem {
-// 		id := *&listOrderItem[orderItem].CustomerID
+		if err != nil {
+			t.Errorf("error on testing orderItem : %s", err.Error())
+		}
 
-// 		orderItem := domain.OrderItem{
-// 			CustomerID: id,
-// 			FirstName:  fake.FirstName(),
-// 			LastName:   fake.LastName(),
-// 			Phone:      fake.Phone(),
-// 			Email:      fake.EmailAddress(),
-// 			Street:     fake.Street(),
-// 			City:       fake.City(),
-// 			State:      sql.NullString{String: fake.State()},
+		orderItem.OrderID = int(lastID)
+		listOrderItem = append(listOrderItem, &orderItem)
 
-// 			ZipCode: 111,
-// 		}
+		orderItemOnDatabase, err := orderItemRepository.Get(int(lastID))
 
-// 		countEffect, err := orderItemRepository.Update(orderItem)
+		if err != nil {
+			t.Errorf("error on testing orderItem : %s", err.Error())
+		}
 
-// 		if err != nil {
-// 			t.Errorf("error on testing orderItem : %s", err.Error())
-// 		}
+		if orderItem.Compare(*orderItemOnDatabase) == false {
+			t.Errorf("field on database not same with on field input")
+		}
+	}
 
-// 		if countEffect <= 0 {
-// 			t.Errorf("nothing row update")
-// 		}
+}
 
-// 		orderItemOnDatabase, err := orderItemRepository.Get(int(id))
+func TestUpdateOrderItem(t *testing.T) {
+	database, err := db.GetDatabase()
 
-// 		if err != nil {
-// 			t.Errorf("error on testing orderItem : %s", err.Error())
-// 		}
+	if err != nil {
+		t.Errorf("error on testing orderItem on database : %s", err.Error())
+	}
 
-// 		if orderItem.Compare(*orderItemOnDatabase) == false {
-// 			t.Errorf("field on database not same with on field input")
-// 		}
-// 	}
-// }
+	orderItemRepository := NewGenerateOrderItemRepository(database)
 
-// func TestAllOrderItem(t *testing.T) {
-// 	database, err := db.GetDatabase()
+	for orderItem := range listOrderItem {
+		id := *&listOrderItem[orderItem].OrderID
 
-// 	if err != nil {
-// 		t.Errorf("error on testing orderItem on database : %s", err.Error())
-// 	}
+		orderItem := domain.OrderItem{
+			OrderID:   int(idOrdersOrderItem),
+			ProductID: int(idProductOrderItem),
+			Quantity:  10,
+			ListPrice: 10000,
+			Discount:  10,
+		}
 
-// 	orderItemRepository := NewGenerateOrderItemRepository(database)
+		countEffect, err := orderItemRepository.Update(orderItem)
 
-// 	orderItemOnDatabase, err := orderItemRepository.All()
+		if err != nil {
+			t.Errorf("error on testing orderItem : %s", err.Error())
+		}
 
-// 	for orderItem := range listOrderItem {
-// 		customer := *&listOrderItem[orderItem]
-// 		for orderItem := range orderItemOnDatabase {
-// 			if customer.Compare(*orderItemOnDatabase[orderItem]) {
-// 				t.Errorf("Found filed not exists %d -> %s", customer.CustomerID, customer.FirstName)
-// 			}
-// 		}
-// 	}
-// }
+		if countEffect <= 0 {
+			t.Errorf("nothing row update")
+		}
 
-// func TestSingleOrderItem(t *testing.T) {
-// 	database, err := db.GetDatabase()
+		orderItemOnDatabase, err := orderItemRepository.Get(int(id))
 
-// 	if err != nil {
-// 		t.Errorf("error on testing orderItem on database : %s", err.Error())
-// 	}
+		if err != nil {
+			t.Errorf("error on testing orderItem : %s", err.Error())
+		}
 
-// 	orderItemRepository := NewGenerateOrderItemRepository(database)
+		if orderItem.Compare(*orderItemOnDatabase) == false {
+			t.Errorf("field on database not same with on field input")
+		}
+	}
+}
 
-// 	for orderItem := range listOrderItem {
-// 		id := *&listOrderItem[orderItem].CustomerID
-// 		orderItemOnDatabase, err := orderItemRepository.Get(int(id))
+func TestAllOrderItem(t *testing.T) {
+	database, err := db.GetDatabase()
 
-// 		if err != nil {
-// 			t.Errorf("error on testing orderItem : %s", err.Error())
-// 		}
+	if err != nil {
+		t.Errorf("error on testing orderItem on database : %s", err.Error())
+	}
 
-// 		if orderItemOnDatabase == nil {
-// 			t.Errorf("error field not exists : %s", err.Error())
-// 		}
-// 	}
-// }
+	orderItemRepository := NewGenerateOrderItemRepository(database)
 
-// func TestDeleteOrderItem(t *testing.T) {
-// 	database, err := db.GetDatabase()
+	orderItemOnDatabase, err := orderItemRepository.Fetch()
 
-// 	if err != nil {
-// 		t.Errorf("error on testing orderItem on database : %s", err.Error())
-// 	}
+	for orderItem := range listOrderItem {
+		customer := *&listOrderItem[orderItem]
+		for orderItem := range orderItemOnDatabase {
+			if customer.Compare(*orderItemOnDatabase[orderItem]) {
+				t.Errorf("Found filed not exists %d -> %d", customer.OrderID, customer.Quantity)
+			}
+		}
+	}
+}
 
-// 	orderItemRepository := NewGenerateOrderItemRepository(database)
+func TestSingleOrderItem(t *testing.T) {
+	database, err := db.GetDatabase()
 
-// 	for orderItem := range listOrderItem {
-// 		id := *&listOrderItem[orderItem].CustomerID
-// 		countEffect, err := orderItemRepository.Delete(id)
+	if err != nil {
+		t.Errorf("error on testing orderItem on database : %s", err.Error())
+	}
 
-// 		if err != nil {
-// 			t.Errorf("error on testing orderItem : %s", err.Error())
-// 		}
+	orderItemRepository := NewGenerateOrderItemRepository(database)
 
-// 		if countEffect <= 0 {
-// 			t.Errorf("nothing row update")
-// 		}
+	for orderItem := range listOrderItem {
+		id := *&listOrderItem[orderItem].OrderID
+		orderItemOnDatabase, err := orderItemRepository.Get(int(id))
 
-// 		orderItemOnDatabase, err := orderItemRepository.Get(int(id))
+		if err != nil {
+			t.Errorf("error on testing orderItem : %s", err.Error())
+		}
 
-// 		if err != sql.ErrNoRows {
-// 			t.Errorf("error on testing orderItem : %s", err.Error())
-// 		}
+		if orderItemOnDatabase == nil {
+			t.Errorf("error field not exists : %s", err.Error())
+		}
+	}
+}
 
-// 		if orderItemOnDatabase != nil {
-// 			t.Errorf("error field still exists : %s", err.Error())
-// 		}
-// 	}
-// }
+func TestDeleteOrderItem(t *testing.T) {
+	database, err := db.GetDatabase()
+
+	if err != nil {
+		t.Errorf("error on testing orderItem on database : %s", err.Error())
+	}
+
+	orderItemRepository := NewGenerateOrderItemRepository(database)
+
+	for orderItem := range listOrderItem {
+		id := *&listOrderItem[orderItem].OrderID
+		countEffect, err := orderItemRepository.Delete(id)
+
+		if err != nil {
+			t.Errorf("error on testing orderItem : %s", err.Error())
+		}
+
+		if countEffect <= 0 {
+			t.Errorf("nothing row update")
+		}
+
+		orderItemOnDatabase, err := orderItemRepository.Get(int(id))
+
+		if err != sql.ErrNoRows {
+			t.Errorf("error on testing orderItem : %s", err.Error())
+		}
+
+		if orderItemOnDatabase != nil {
+			t.Errorf("error field still exists : %s", err.Error())
+		}
+	}
+
+	ordersRepository := NewGenerateOrdersRepository(database)
+	productsRepository := NewGenerateProductsRepository(database)
+	categoriesRepository := NewGenerateCategoriesRepository(database)
+	brandsRepository := NewGenerateBrandsRepository(database)
+	storesRepository := NewGenerateStoresRepository(database)
+	staffsRepository := NewGenerateStaffsRepository(database)
+	customersRepository := NewGenerateCustomersRepository(database)
+
+	if _, err := ordersRepository.Delete(int(idOrdersOrderItem)); err != nil {
+		t.Error(err.Error())
+	}
+
+	if _, err := productsRepository.Delete(int(idProductOrderItem)); err != nil {
+		t.Error(err.Error())
+	}
+
+	if _, err := categoriesRepository.Delete(int(idCategoryOrderItem)); err != nil {
+		t.Error(err.Error())
+	}
+
+	if _, err := brandsRepository.Delete(int(idBrandsOrderItem)); err != nil {
+		t.Error(err.Error())
+	}
+
+	if _, err := storesRepository.Delete(int(idStoreOrderItem)); err != nil {
+		t.Error(err.Error())
+	}
+
+	if _, err := staffsRepository.Delete(int(idStaffOrderItem)); err != nil {
+		t.Error(err.Error())
+	}
+
+	if _, err := customersRepository.Delete(int(idCustomersOrderItem)); err != nil {
+		t.Error(err.Error())
+	}
+
+}

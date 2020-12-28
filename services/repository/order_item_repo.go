@@ -17,7 +17,7 @@ func NewGenerateOrderItemRepository(Conn *sql.DB) domain.OrderItemRepository {
 	}
 }
 
-func (o *orderItemRepository) All() ([]*domain.OrderItem, error) {
+func (o *orderItemRepository) Fetch() ([]*domain.OrderItem, error) {
 	var listOrderItem []*domain.OrderItem
 
 	query, err := o.Conn.Query("SELECT * FROM order_items")
@@ -27,29 +27,29 @@ func (o *orderItemRepository) All() ([]*domain.OrderItem, error) {
 	}
 
 	for query.Next() {
-		var orderItem *domain.OrderItem
+		var orderItem domain.OrderItem
 
-		switch err := query.Scan(orderItem.ItemID, orderItem.OrderID, orderItem.ProductID, orderItem.Quantity, orderItem.ListPrice, orderItem.Discount); err {
+		switch err := query.Scan(&orderItem.ItemID, &orderItem.OrderID, &orderItem.ProductID, &orderItem.Quantity, &orderItem.ListPrice, &orderItem.Discount); err {
 		case sql.ErrNoRows:
 			return nil, sql.ErrNoRows
 		case nil:
-			listOrderItem = append(listOrderItem, orderItem)
+			listOrderItem = append(listOrderItem, &orderItem)
 		}
 	}
 
 	return listOrderItem, nil
 }
 
-func (o *orderItemRepository) Single(id int) (*domain.OrderItem, error) {
+func (o *orderItemRepository) Get(id int) (*domain.OrderItem, error) {
 	queryRow := o.Conn.QueryRow("SELECT * FROM order_items WHERE item_id=?", id)
 
-	var orderItem *domain.OrderItem
+	var orderItem domain.OrderItem
 
-	switch err := queryRow.Scan(orderItem.ItemID, orderItem.OrderID, orderItem.ProductID, orderItem.Quantity, orderItem.ListPrice, orderItem.Discount); err {
+	switch err := queryRow.Scan(&orderItem.ItemID, &orderItem.OrderID, &orderItem.ProductID, &orderItem.Quantity, &orderItem.ListPrice, &orderItem.Discount); err {
 	case sql.ErrNoRows:
 		return nil, sql.ErrNoRows
 	case nil:
-		return orderItem, nil
+		return &orderItem, nil
 	}
 
 	return nil, errors.New("Nothing action in this functions")

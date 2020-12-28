@@ -12,12 +12,12 @@ func NewGenerateOderItemUseCase(orderItemRepository domain.OrderItemRepository) 
 	}
 }
 
-func (o *orderItemUseCase) All() ([]*domain.OrderItem, error) {
-	return o.orderItemRepository.All()
+func (o *orderItemUseCase) Fetch() ([]*domain.OrderItem, error) {
+	return o.orderItemRepository.Fetch()
 }
 
-func (o *orderItemUseCase) Single(id int) (*domain.OrderItem, error) {
-	return o.orderItemRepository.Single(id)
+func (o *orderItemUseCase) Get(id int) (*domain.OrderItem, error) {
+	return o.orderItemRepository.Get(id)
 }
 
 func (o *orderItemUseCase) Insert(orderItem domain.OrderItem) (int64, error) {
