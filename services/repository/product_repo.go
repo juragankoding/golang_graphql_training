@@ -2,7 +2,6 @@ package repository
 
 import (
 	"database/sql"
-	"errors"
 
 	"github.com/juragankoding/golang_graphql_training/domain"
 )
@@ -17,38 +16,41 @@ func NewGenerateProductsRepository(Conn *sql.DB) domain.ProductsRepository {
 	}
 }
 
-func (a *productsRepository) Single(id int) (*domain.Products, error) {
-	queryRow := a.Conn.QueryRow("SELECT * FROM orders WHERE product_id = ?")
+func (a *productsRepository) Get(id int) (*domain.Products, error) {
+	queryRow := a.Conn.QueryRow("SELECT * FROM products WHERE product_id = ?", id)
 
-	var product *domain.Products
+	var product domain.Products
 
-	switch err := queryRow.Scan(product.ProductID, product.ProductName, product.BrandID, product.CategoryID, product.ModelYear, product.ListPrice); err {
+	switch err := queryRow.Scan(&product.ProductID, &product.ProductName, &product.BrandID, &product.CategoryID, &product.ModelYear, &product.ListPrice); err {
 	case sql.ErrNoRows:
 		return nil, err
 	case nil:
-		return product, nil
+		return &product, nil
+	default:
+		return nil, err
 	}
 
-	return nil, errors.New("Nothing action in this function")
 }
 
-func (a *productsRepository) All() ([]*domain.Products, error) {
+func (a *productsRepository) Fetch() ([]*domain.Products, error) {
 	var listProducts []*domain.Products
 
-	query, err := a.Conn.Query("SELECT * FROM orders")
+	query, err := a.Conn.Query("SELECT * FROM products")
 
 	if err != nil {
 		return listProducts, err
 	}
 
 	for query.Next() {
-		var product *domain.Products
+		var product domain.Products
 
-		switch err := query.Scan(product.ProductID, product.ProductName, product.BrandID, product.CategoryID, product.ModelYear, product.ListPrice); err {
+		switch err := query.Scan(&product.ProductID, &product.ProductName, &product.BrandID, &product.CategoryID, &product.ModelYear, &product.ListPrice); err {
 		case sql.ErrNoRows:
 			return nil, err
 		case nil:
-			listProducts = append(listProducts, product)
+			listProducts = append(listProducts, &product)
+		default:
+			return nil, err
 		}
 	}
 
@@ -56,7 +58,7 @@ func (a *productsRepository) All() ([]*domain.Products, error) {
 }
 
 func (a *productsRepository) Insert(products domain.Products) (int64, error) {
-	statement, err := a.Conn.Prepare("INSERT INTO products (product_name, brands_id, category_id, model_year, list_price) values (?,?,?,?,?)")
+	statement, err := a.Conn.Prepare("INSERT INTO products (product_name, brand_id, category_id, model_year, list_price) values (?,?,?,?,?)")
 
 	if err != nil {
 		return -1, err

@@ -12,17 +12,26 @@ type Products struct {
 }
 
 type ProductsRepository interface {
-	Single(id int) (*Products, error)
-	All() ([]*Products, error)
+	Get(id int) (*Products, error)
+	Fetch() ([]*Products, error)
 	Insert(products Products) (int64, error)
 	Update(products Products) (int64, error)
 	Delete(id int) (int64, error)
 }
 
 type ProductsUseCase interface {
-	Single(id int) (*Products, error)
-	All() ([]*Products, error)
+	Get(id int) (*Products, error)
+	Fetch() ([]*Products, error)
 	Insert(products Products) (int64, error)
 	Update(products Products) (int64, error)
 	Delete(id int) (int64, error)
+}
+
+func (p *Products) Compare(product Products) bool {
+	return p.ProductID == product.ProductID &&
+		p.BrandID == product.BrandID &&
+		p.CategoryID == product.CategoryID &&
+		p.ModelYear == product.ModelYear &&
+		p.ProductName == product.ProductName &&
+		p.ListPrice == product.ListPrice
 }

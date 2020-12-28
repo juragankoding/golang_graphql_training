@@ -2,7 +2,6 @@ package repository
 
 import (
 	"database/sql"
-	"errors"
 
 	"github.com/juragankoding/golang_graphql_training/domain"
 )
@@ -27,15 +26,15 @@ func (s *staffsRepository) All() ([]*domain.Staffs, error) {
 	}
 
 	for query.Next() {
-		var staff *domain.Staffs
+		var staff domain.Staffs
 
-		switch err := query.Scan(staff.StaffID, staff.FirstName, staff.LastName, staff.Email, staff.Phone, staff.Active, staff.StoreID, staff.ManagerID); err {
+		switch err := query.Scan(&staff.StaffID, &staff.FirstName, &staff.LastName, &staff.Email, &staff.Phone, &staff.Active, &staff.StoreID, &staff.ManagerID); err {
 		case sql.ErrNoRows:
-
-			return listStaffs, err
+			return nil, err
 		case nil:
-			listStaffs = append(listStaffs, staff)
-
+			listStaffs = append(listStaffs, &staff)
+		default:
+			return nil, err
 		}
 	}
 
@@ -43,24 +42,22 @@ func (s *staffsRepository) All() ([]*domain.Staffs, error) {
 }
 
 func (s *staffsRepository) Single(id int) (*domain.Staffs, error) {
-	query := s.Conn.QueryRow("SELECT * FROM staffs where staffs_id=?", id)
+	query := s.Conn.QueryRow("SELECT * FROM staffs where staff_id=?", id)
 
-	var staff *domain.Staffs
+	var staff domain.Staffs
 
-	switch err := query.Scan(staff.StaffID, staff.FirstName, staff.LastName, staff.Email, staff.Phone, staff.Active, staff.StoreID, staff.ManagerID); err {
+	switch err := query.Scan(&staff.StaffID, &staff.FirstName, &staff.LastName, &staff.Email, &staff.Phone, &staff.Active, &staff.StoreID, &staff.ManagerID); err {
 	case sql.ErrNoRows:
-
 		return nil, err
 	case nil:
-		return staff, nil
-
+		return &staff, nil
+	default:
+		return nil, err
 	}
-
-	return nil, errors.New("Nothing action on this function")
 }
 
 func (s *staffsRepository) Insert(staffs domain.Staffs) (int64, error) {
-	statement, err := s.Conn.Prepare("INSERT INTO staffs (first_name, last_name, email, phone, active, store_id, manager_id) VALUES (?,?,?,?,?,?)")
+	statement, err := s.Conn.Prepare("INSERT INTO staffs (first_name, last_name, email, phone, active, store_id, manager_id) VALUES (?,?,?,?,?,?,?)")
 
 	if err != nil {
 		return -1, err
@@ -74,7 +71,7 @@ func (s *staffsRepository) Insert(staffs domain.Staffs) (int64, error) {
 }
 
 func (s *staffsRepository) Update(staffs domain.Staffs) (int64, error) {
-	statement, err := s.Conn.Prepare("UPDATE staffs SET first_name=?, last_name=?, email=?, phone=?, active=?, store_id=?, manager_id WHERE staff_id=?")
+	statement, err := s.Conn.Prepare("UPDATE staffs SET first_name=?, last_name=?, email=?, phone=?, active=?, store_id=?, manager_id=? WHERE staff_id=?")
 
 	if err != nil {
 		return -1, err
@@ -88,7 +85,7 @@ func (s *staffsRepository) Update(staffs domain.Staffs) (int64, error) {
 }
 
 func (s *staffsRepository) Delete(id int) (int64, error) {
-	statement, err := s.Conn.Prepare("DELETE FROM staffs WHERE staffs_id=?")
+	statement, err := s.Conn.Prepare("DELETE FROM staffs WHERE staff_id=?")
 
 	if err != nil {
 		return -1, err

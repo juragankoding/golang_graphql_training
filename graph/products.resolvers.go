@@ -105,7 +105,7 @@ func (r *queryResolver) AllProducts(ctx context.Context) (*model.ResultAllProduc
 		return nil, errorJurganKoding.ErrorsNotAuthenticate
 	}
 
-	products, err := r.ProductUseCase.All()
+	products, err := r.ProductUseCase.Fetch()
 
 	if err != nil {
 		return nil, err
@@ -125,7 +125,7 @@ func (r *queryResolver) SingleProducts(ctx context.Context, id *int) (*model.Res
 		return nil, errorJurganKoding.ErrorsNotAuthenticate
 	}
 
-	products, err := r.ProductUseCase.Single(*id)
+	products, err := r.ProductUseCase.Get(*id)
 
 	if err != nil {
 		return nil, err

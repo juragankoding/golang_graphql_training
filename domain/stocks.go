@@ -7,17 +7,23 @@ type Stocks struct {
 }
 
 type StocksRepository interface {
-	All() ([]*Stocks, error)
-	Single(storeID int, productID int) (*Stocks, error)
+	Fetch() ([]*Stocks, error)
+	Get(storeID int, productID int) (*Stocks, error)
 	Insert(stoks Stocks) (int64, error)
 	Update(stocks Stocks) (int64, error)
 	Delete(storeID int, productID int) (int64, error)
 }
 
 type StocksUseCase interface {
-	All() ([]*Stocks, error)
-	Single(storeID int, productID int) (*Stocks, error)
+	Fetch() ([]*Stocks, error)
+	Get(storeID int, productID int) (*Stocks, error)
 	Insert(stoks Stocks) (int64, error)
 	Update(stocks Stocks) (int64, error)
 	Delete(storeID int, productID int) (int64, error)
+}
+
+func (s *Stocks) Compare(stock Stocks) bool {
+	return s.StoreID == stock.StoreID &&
+		s.ProductID == stock.ProductID &&
+		s.Quantity == stock.Quantity
 }

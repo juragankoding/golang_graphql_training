@@ -12,12 +12,12 @@ func NewGenerateStockUseCase(stockRepository domain.StocksRepository) domain.Sto
 	}
 }
 
-func (s *stockUseCase) All() ([]*domain.Stocks, error) {
-	return s.StockRepository.All()
+func (s *stockUseCase) Fetch() ([]*domain.Stocks, error) {
+	return s.StockRepository.Fetch()
 }
 
-func (s *stockUseCase) Single(stockID int, productID int) (*domain.Stocks, error) {
-	return s.StockRepository.Single(stockID, productID)
+func (s *stockUseCase) Get(stockID int, productID int) (*domain.Stocks, error) {
+	return s.StockRepository.Get(stockID, productID)
 }
 
 func (s *stockUseCase) Insert(stock domain.Stocks) (int64, error) {

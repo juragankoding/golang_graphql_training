@@ -16,11 +16,11 @@ func NewGenereateStoreUseCase(storeRepo *domain.StoresRepository) domain.StoresU
 	return &store
 }
 
-func (s *storeUseCase) Single(id int) (*domain.Stores, error) {
-	return s.Single(id)
+func (s *storeUseCase) Get(id int) (*domain.Stores, error) {
+	return s.Get(id)
 }
-func (s *storeUseCase) All() ([]*domain.Stores, error) {
-	return s.All()
+func (s *storeUseCase) Fetch() ([]*domain.Stores, error) {
+	return s.Fetch()
 }
 func (s *storeUseCase) Insert(stores domain.Stores) (int64, error) {
 	return s.Insert(stores)

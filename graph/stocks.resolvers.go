@@ -100,7 +100,7 @@ func (r *queryResolver) AllStocks(ctx context.Context) (*model.ResultFetchStocks
 		return nil, errorJurganKoding.ErrorsNotAuthenticate
 	}
 
-	stocks, err := r.StocksUseCase.All()
+	stocks, err := r.StocksUseCase.Fetch()
 
 	if err != nil {
 		return nil, err
@@ -120,7 +120,7 @@ func (r *queryResolver) SingelStocks(ctx context.Context, storeID int, productID
 		return nil, errorJurganKoding.ErrorsNotAuthenticate
 	}
 
-	stocks, err := r.StocksUseCase.Single(storeID, productID)
+	stocks, err := r.StocksUseCase.Get(storeID, productID)
 
 	if err != nil {
 		return nil, err

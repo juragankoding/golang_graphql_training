@@ -17,7 +17,7 @@ func NewGenerateStocksRepository(conn *sql.DB) domain.StocksRepository {
 	}
 }
 
-func (s *stocksRepository) All() ([]*domain.Stocks, error) {
+func (s *stocksRepository) Fetch() ([]*domain.Stocks, error) {
 	var listStock []*domain.Stocks
 
 	query, err := s.Conn.Query("SELECT * FROM stocks")
@@ -40,7 +40,7 @@ func (s *stocksRepository) All() ([]*domain.Stocks, error) {
 	return listStock, nil
 }
 
-func (s *stocksRepository) Single(stockID int, productID int) (*domain.Stocks, error) {
+func (s *stocksRepository) Get(stockID int, productID int) (*domain.Stocks, error) {
 	queryRow := s.Conn.QueryRow("SELECT * FROM stocks WHERE store_id=? AND product_id=?", stockID, productID)
 
 	var stock *domain.Stocks

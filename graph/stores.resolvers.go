@@ -107,7 +107,7 @@ func (r *queryResolver) AllStores(ctx context.Context) (*model.ResultAllStores, 
 		return nil, errorJurganKoding.ErrorsNotAuthenticate
 	}
 
-	stores, err := r.StoreUseCase.All()
+	stores, err := r.StoreUseCase.Fetch()
 
 	if err != nil {
 		return nil, err
@@ -127,7 +127,7 @@ func (r *queryResolver) SingleStores(ctx context.Context, id *int) (*model.Resul
 		return nil, errorJurganKoding.ErrorsNotAuthenticate
 	}
 
-	stores, err := r.StoreUseCase.Single(*id)
+	stores, err := r.StoreUseCase.Get(*id)
 
 	if err != nil {
 		return nil, err

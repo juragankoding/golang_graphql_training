@@ -28,3 +28,14 @@ type StaffsUseCase interface {
 	Update(staffs Staffs) (int64, error)
 	Delete(id int) (int64, error)
 }
+
+func (s *Staffs) Compare(staffs Staffs) bool {
+	return s.StaffID == staffs.StaffID &&
+		s.FirstName == staffs.FirstName &&
+		s.LastName == staffs.LastName &&
+		s.Email == staffs.Email &&
+		s.Phone == staffs.Phone &&
+		s.Active == staffs.Active &&
+		s.StoreID == staffs.StoreID &&
+		s.ManagerID == staffs.ManagerID
+}

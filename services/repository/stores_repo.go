@@ -19,21 +19,21 @@ func NewGenerateStoresRepository(conn *sql.DB) domain.StoresRepository {
 	return &store
 }
 
-func (s *storeRepo) Single(id int) (*domain.Stores, error) {
+func (s *storeRepo) Get(id int) (*domain.Stores, error) {
 	query := s.Conn.QueryRow("SELECT * FROM stores WHERE store_id = ?", id)
-	var store *domain.Stores
+	var store domain.Stores
 
-	switch err := query.Scan(store.StoreID, store.StoreName, store.Phone, store.Email, store.Street, store.City, store.State, store.ZipCode); err {
+	switch err := query.Scan(&store.StoreID, &store.StoreName, &store.Phone, &store.Email, &store.Street, &store.City, &store.State, &store.ZipCode); err {
 	case sql.ErrNoRows:
 		return nil, err
 	case nil:
-		return store, nil
+		return &store, nil
 	}
 
 	return nil, errorJurganKoding.NotActionOnThisFunction
 }
 
-func (s *storeRepo) All() ([]*domain.Stores, error) {
+func (s *storeRepo) Fetch() ([]*domain.Stores, error) {
 	var stores []*domain.Stores
 
 	query, err := s.Conn.Query("SELECT * FROM stores")
@@ -43,13 +43,13 @@ func (s *storeRepo) All() ([]*domain.Stores, error) {
 	}
 
 	for query.Next() {
-		var store *domain.Stores
+		var store domain.Stores
 
-		switch err := query.Scan(store.StoreID, store.StoreName, store.Phone, store.Email, store.Street, store.City, store.State, store.ZipCode); err {
+		switch err := query.Scan(&store.StoreID, &store.StoreName, &store.Phone, &store.Email, &store.Street, &store.City, &store.State, &store.ZipCode); err {
 		case sql.ErrNoRows:
 			return nil, err
 		case nil:
-			stores = append(stores, store)
+			stores = append(stores, &store)
 		}
 	}
 

@@ -14,12 +14,12 @@ func NewGenerateProductUseCase(productRepository domain.ProductsRepository) doma
 	}
 }
 
-func (a *productUsecase) Single(id int) (*domain.Products, error) {
-	return a.productRepository.Single(id)
+func (a *productUsecase) Get(id int) (*domain.Products, error) {
+	return a.productRepository.Get(id)
 }
 
-func (a *productUsecase) All() ([]*domain.Products, error) {
-	return a.productRepository.All()
+func (a *productUsecase) Fetch() ([]*domain.Products, error) {
+	return a.productRepository.Fetch()
 }
 
 func (a *productUsecase) Insert(products domain.Products) (int64, error) {

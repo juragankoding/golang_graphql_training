@@ -12,17 +12,28 @@ type Stores struct {
 }
 
 type StoresRepository interface {
-	Single(id int) (*Stores, error)
-	All() ([]*Stores, error)
+	Get(id int) (*Stores, error)
+	Fetch() ([]*Stores, error)
 	Insert(stores Stores) (int64, error)
 	Update(stores Stores) (int64, error)
 	Delete(id int) (int64, error)
 }
 
 type StoresUseCase interface {
-	Single(id int) (*Stores, error)
-	All() ([]*Stores, error)
+	Get(id int) (*Stores, error)
+	Fetch() ([]*Stores, error)
 	Insert(stores Stores) (int64, error)
 	Update(stores Stores) (int64, error)
 	Delete(id int) (int64, error)
+}
+
+func (s *Stores) Compare(stores Stores) bool {
+	return s.StoreID == stores.StoreID &&
+		s.StoreName == stores.StoreName &&
+		s.Email == stores.Email &&
+		s.City == stores.City &&
+		s.Phone == stores.Phone &&
+		s.State == stores.State &&
+		s.Street == stores.Street &&
+		s.ZipCode == stores.ZipCode
 }
