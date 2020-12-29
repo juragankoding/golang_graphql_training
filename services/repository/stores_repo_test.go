@@ -110,10 +110,16 @@ func TestAllStores(t *testing.T) {
 
 	for stores := range listStores {
 		store := *&listStores[stores]
+		var exists bool
+
+		exists = false
+
 		for stores := range storesOnDatabase {
-			if store.Compare(*storesOnDatabase[stores]) {
-				t.Errorf("Found filed not exists %d -> %s", store.StoreID, store.StoreName)
-			}
+			exists = store.Compare(*storesOnDatabase[stores]) || exists
+		}
+
+		if exists == false {
+			t.Errorf("Found filed not exists %d -> %s", store.StoreID, store.StoreName)
 		}
 	}
 }

@@ -11,6 +11,6 @@ require (
 	github.com/mattn/go v0.0.0-20171011075504-07f7db3ea99f // indirect
 	github.com/mattn/go-sqlite3 v2.0.3+incompatible
 	github.com/novalagung/gubrak/v2 v2.0.1 // indirect
-	github.com/rubenv/sql-migrate v0.0.0-20200616145509-8d140a17f351 // indirect
+	github.com/rubenv/sql-migrate v0.0.0-20200616145509-8d140a17f351
 	github.com/vektah/gqlparser/v2 v2.1.0
 )

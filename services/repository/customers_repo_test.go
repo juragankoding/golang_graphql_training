@@ -114,10 +114,17 @@ func TestAllCustomers(t *testing.T) {
 
 	for customers := range listCustomers {
 		customer := *&listCustomers[customers]
+
+		var exists bool
+
+		exists = false
+
 		for customers := range customersOnDatabase {
-			if customer.Compare(*customersOnDatabase[customers]) {
-				t.Errorf("Found filed not exists %d -> %s", customer.CustomerID, customer.FirstName)
-			}
+			exists = customer.Compare(*customersOnDatabase[customers]) || exists
+		}
+
+		if exists == false {
+			t.Errorf("Found filed not exists %d -> %s", customer.CustomerID, customer.FirstName)
 		}
 	}
 }

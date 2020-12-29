@@ -196,10 +196,18 @@ func TestAllOrderItem(t *testing.T) {
 
 	for orderItem := range listOrderItem {
 		customer := *&listOrderItem[orderItem]
+
+		var exists bool
+
+		exists = false
+
 		for orderItem := range orderItemOnDatabase {
-			if customer.Compare(*orderItemOnDatabase[orderItem]) {
-				t.Errorf("Found filed not exists %d -> %d", customer.OrderID, customer.Quantity)
-			}
+			exists = customer.Compare(*orderItemOnDatabase[orderItem]) || exists
+		}
+
+		if exists == false {
+			t.Errorf("Found filed not exists %d -> %d", customer.OrderID, customer.Quantity)
+
 		}
 	}
 }

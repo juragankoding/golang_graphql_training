@@ -99,10 +99,17 @@ func TestAllBrands(t *testing.T) {
 
 	for brands := range listBrands {
 		brand := *&listBrands[brands]
+
+		var exists bool
+
+		exists = false
+
 		for brands := range brandsOnDatabase {
-			if brand.Compare(*brandsOnDatabase[brands]) {
-				t.Errorf("Found filed not exists %d -> %s", brand.ID, brand.Name)
-			}
+			exists = brand.Compare(*brandsOnDatabase[brands]) || exists
+		}
+
+		if exists == false {
+			t.Errorf("Found filed not exists %d -> %s", brand.ID, brand.Name)
 		}
 	}
 }

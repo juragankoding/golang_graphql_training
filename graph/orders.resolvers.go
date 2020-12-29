@@ -119,7 +119,7 @@ func (r *queryResolver) AllOrders(ctx context.Context) (*model.ResultFetchOrders
 		return nil, errorJurganKoding.ErrorsNotAuthenticate
 	}
 
-	allOrders, err := r.OrdersUseCase.All()
+	allOrders, err := r.OrdersUseCase.Fetch()
 
 	if err != nil {
 		return nil, err
@@ -139,7 +139,7 @@ func (r *queryResolver) SingelOrders(ctx context.Context, id *int) (*model.Resul
 		return nil, errorJurganKoding.ErrorsNotAuthenticate
 	}
 
-	orders, err := r.OrdersUseCase.Single(*id)
+	orders, err := r.OrdersUseCase.Get(*id)
 
 	if err != nil {
 		return nil, err

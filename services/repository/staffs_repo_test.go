@@ -126,10 +126,17 @@ func TestAllStaffs(t *testing.T) {
 
 	for staffs := range listStaffs {
 		staff := *&listStaffs[staffs]
+		var exists bool
+
+		exists = false
+
 		for staffs := range staffsOnDatabase {
-			if staff.Compare(*staffsOnDatabase[staffs]) {
-				t.Errorf("Found filed not exists %d -> %s %s", staff.StaffID, staff.FirstName, staff.LastName)
-			}
+			exists = staff.Compare(*staffsOnDatabase[staffs]) || exists
+
+		}
+
+		if exists == false {
+			t.Errorf("Found filed not exists %d -> %s %s", staff.StaffID, staff.FirstName, staff.LastName)
 		}
 	}
 }

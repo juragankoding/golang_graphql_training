@@ -127,10 +127,17 @@ func TestAllProducts(t *testing.T) {
 
 	for products := range listProducts {
 		product := *&listProducts[products]
+
+		var exists bool
+
+		exists = false
+
 		for products := range productsOnDatabase {
-			if product.Compare(*productsOnDatabase[products]) {
-				t.Errorf("Found filed not exists %d -> %s", product.ProductID, product.ProductName)
-			}
+			exists = product.Compare(*productsOnDatabase[products]) || exists
+		}
+
+		if exists == false {
+			t.Errorf("Found filed not exists %d -> %s", product.ProductID, product.ProductName)
 		}
 	}
 }

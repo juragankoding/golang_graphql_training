@@ -12,17 +12,28 @@ type Orders struct {
 }
 
 type OrdersRepository interface {
-	All() ([]*Orders, error)
-	Single(id int) (*Orders, error)
+	Fetch() ([]*Orders, error)
+	Get(id int) (*Orders, error)
 	Insert(order Orders) (int64, error)
 	Update(order Orders) (int64, error)
 	Delete(id int) (int64, error)
 }
 
 type OrdersUseCase interface {
-	All() ([]*Orders, error)
-	Single(id int) (*Orders, error)
+	Fetch() ([]*Orders, error)
+	Get(id int) (*Orders, error)
 	Insert(orders Orders) (int64, error)
 	Update(orders Orders) (int64, error)
 	Delete(id int) (int64, error)
+}
+
+func (o *Orders) Compare(orders Orders) bool {
+	return o.OrderID == orders.OrderID &&
+		// o.CustomerID == orders.CustomerID &&
+		// o.OrderStatus == orders.OrderStatus &&
+		// o.OrderDate == orders.OrderDate &&
+		// o.RequiredDate == orders.RequiredDate &&
+		// o.ShippedDate == orders.ShippedDate &&
+		// o.StoreID == orders.StoreID &&
+		o.StaffID == orders.StaffID
 }

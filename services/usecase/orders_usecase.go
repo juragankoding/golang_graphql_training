@@ -14,12 +14,12 @@ func NewGenerateOrdersUseCase(orderRepo domain.OrdersRepository) domain.OrdersUs
 	}
 }
 
-func (o *ordersUseCase) All() ([]*domain.Orders, error) {
-	return o.ordersRepo.All()
+func (o *ordersUseCase) Fetch() ([]*domain.Orders, error) {
+	return o.ordersRepo.Fetch()
 }
 
-func (o *ordersUseCase) Single(id int) (*domain.Orders, error) {
-	return o.ordersRepo.Single(id)
+func (o *ordersUseCase) Get(id int) (*domain.Orders, error) {
+	return o.ordersRepo.Get(id)
 }
 
 func (o *ordersUseCase) Insert(orders domain.Orders) (int64, error) {

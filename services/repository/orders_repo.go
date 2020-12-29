@@ -17,7 +17,7 @@ func NewGenerateOrdersRepository(Conn *sql.DB) domain.OrdersRepository {
 	}
 }
 
-func (o *ordersRepository) All() ([]*domain.Orders, error) {
+func (o *ordersRepository) Fetch() ([]*domain.Orders, error) {
 	var listListOrders []*domain.Orders
 
 	query, err := o.Conn.Query("SELECT * FROM orders ")
@@ -27,43 +27,43 @@ func (o *ordersRepository) All() ([]*domain.Orders, error) {
 	}
 
 	for query.Next() {
-		var order *domain.Orders
+		var order domain.Orders
 
-		switch err := query.Scan(order.OrderID,
-			order.CustomerID,
-			order.OrderStatus,
-			order.OrderDate,
-			order.RequiredDate,
-			order.ShippedDate,
-			order.StoreID,
-			order.StaffID); err {
+		switch err := query.Scan(&order.OrderID,
+			&order.CustomerID,
+			&order.OrderStatus,
+			&order.OrderDate,
+			&order.RequiredDate,
+			&order.ShippedDate,
+			&order.StoreID,
+			&order.StaffID); err {
 		case sql.ErrNoRows:
 			return nil, sql.ErrNoRows
 		case nil:
-			listListOrders = append(listListOrders, order)
+			listListOrders = append(listListOrders, &order)
 		}
 	}
 
 	return listListOrders, nil
 }
 
-func (o *ordersRepository) Single(id int) (*domain.Orders, error) {
+func (o *ordersRepository) Get(id int) (*domain.Orders, error) {
 	queryRow := o.Conn.QueryRow("SELECT * FROM orders WHERE order_id = ?", id)
 
-	var order *domain.Orders
+	var order domain.Orders
 
-	switch err := queryRow.Scan(order.OrderID,
-		order.CustomerID,
-		order.OrderStatus,
-		order.OrderDate,
-		order.RequiredDate,
-		order.ShippedDate,
-		order.StoreID,
-		order.StaffID); err {
+	switch err := queryRow.Scan(&order.OrderID,
+		&order.CustomerID,
+		&order.OrderStatus,
+		&order.OrderDate,
+		&order.RequiredDate,
+		&order.ShippedDate,
+		&order.StoreID,
+		&order.StaffID); err {
 	case sql.ErrNoRows:
 		return nil, sql.ErrNoRows
 	case nil:
-		return order, nil
+		return &order, nil
 	}
 
 	return nil, errors.New("Nothing action in this function")
