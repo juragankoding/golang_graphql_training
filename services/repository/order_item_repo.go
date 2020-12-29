@@ -56,7 +56,9 @@ func (o *orderItemRepository) Get(id int) (*domain.OrderItem, error) {
 }
 
 func (o *orderItemRepository) Insert(orderItem domain.OrderItem) (int64, error) {
-	statement, err := o.Conn.Prepare("INSERT INTO order_items (order_id, product_id, quantity, list_price, discount) VALUES (?,?,?,?,?)")
+	var stringQuery string = "INSERT INTO order_items (order_id, product_id, quantity, list_price, discount) VALUES (?,?,?,?,?)"
+
+	statement, err := o.Conn.Prepare(stringQuery)
 
 	if err != nil {
 		return -1, err
@@ -79,6 +81,7 @@ func (o *orderItemRepository) Update(orderItem domain.OrderItem) (int64, error) 
 	if result, err := statement.Exec(orderItem.OrderID, orderItem.ProductID, orderItem.Quantity, orderItem.ListPrice, orderItem.Discount, orderItem.ItemID); err != nil {
 		return -1, err
 	} else {
+
 		return result.RowsAffected()
 	}
 }

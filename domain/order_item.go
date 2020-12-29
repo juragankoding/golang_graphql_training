@@ -27,9 +27,9 @@ type OrderItemUseCase interface {
 
 func (o *OrderItem) Compare(orderItem OrderItem) bool {
 	return o.ItemID == orderItem.ItemID &&
-		// o.Discount == orderItem.Discount &&
-		// o.ListPrice == orderItem.ListPrice &&
-		// o.Quantity == orderItem.Quantity &&
-		// o.OrderID == orderItem.OrderID &&
+		o.Discount == orderItem.Discount &&
+		o.ListPrice == orderItem.ListPrice &&
+		o.Quantity == orderItem.Quantity &&
+		o.OrderID == orderItem.OrderID &&
 		o.ProductID == orderItem.ProductID
 }

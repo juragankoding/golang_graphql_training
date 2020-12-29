@@ -109,7 +109,7 @@ func TestInsertOrderItem(t *testing.T) {
 		t.Errorf(err.Error())
 	}
 
-	for loopingOrderItem := 0; loopingOrderItem < 10; loopingOrderItem++ {
+	for loopingOrderItem := 0; loopingOrderItem < 1; loopingOrderItem++ {
 		orderItem := domain.OrderItem{
 			OrderID:   int(idOrdersOrderItem),
 			ProductID: int(idProductOrderItem),
@@ -124,7 +124,7 @@ func TestInsertOrderItem(t *testing.T) {
 			t.Errorf("error on testing orderItem : %s", err.Error())
 		}
 
-		orderItem.OrderID = int(lastID)
+		orderItem.ItemID = int(lastID)
 		listOrderItem = append(listOrderItem, &orderItem)
 
 		orderItemOnDatabase, err := orderItemRepository.Get(int(lastID))
@@ -150,14 +150,15 @@ func TestUpdateOrderItem(t *testing.T) {
 	orderItemRepository := NewGenerateOrderItemRepository(database)
 
 	for orderItem := range listOrderItem {
-		id := *&listOrderItem[orderItem].OrderID
+		id := *&listOrderItem[orderItem].ItemID
 
 		orderItem := domain.OrderItem{
+			ItemID:    id,
 			OrderID:   int(idOrdersOrderItem),
 			ProductID: int(idProductOrderItem),
-			Quantity:  10,
-			ListPrice: 10000,
-			Discount:  10,
+			Quantity:  100,
+			ListPrice: 1000,
+			Discount:  1,
 		}
 
 		countEffect, err := orderItemRepository.Update(orderItem)
@@ -213,7 +214,7 @@ func TestSingleOrderItem(t *testing.T) {
 	orderItemRepository := NewGenerateOrderItemRepository(database)
 
 	for orderItem := range listOrderItem {
-		id := *&listOrderItem[orderItem].OrderID
+		id := *&listOrderItem[orderItem].ItemID
 		orderItemOnDatabase, err := orderItemRepository.Get(int(id))
 
 		if err != nil {
@@ -236,7 +237,7 @@ func TestDeleteOrderItem(t *testing.T) {
 	orderItemRepository := NewGenerateOrderItemRepository(database)
 
 	for orderItem := range listOrderItem {
-		id := *&listOrderItem[orderItem].OrderID
+		id := *&listOrderItem[orderItem].ItemID
 		countEffect, err := orderItemRepository.Delete(id)
 
 		if err != nil {

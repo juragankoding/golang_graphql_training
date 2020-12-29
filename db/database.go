@@ -9,7 +9,5 @@ import (
 )
 
 func GetDatabase() (*sql.DB, error) {
-	fmt.Print(utils.RootDir(), "report.db")
-
 	return sql.Open("sqlite3", fmt.Sprint(utils.RootDir(), "/report.db"))
 }
