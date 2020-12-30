@@ -59,12 +59,12 @@ func TestUpdateBrands(t *testing.T) {
 	for brands := range listBrands {
 		id := *&listBrands[brands].ID
 
-		brands := domain.Brands{
+		brands1 := domain.Brands{
 			ID:   id,
 			Name: fake.Brand(),
 		}
 
-		countEffect, err := brandsRepository.Update(brands)
+		countEffect, err := brandsRepository.Update(brands1)
 
 		if err != nil {
 			t.Errorf("error on testing brands : %s", err.Error())
@@ -74,13 +74,15 @@ func TestUpdateBrands(t *testing.T) {
 			t.Errorf("nothing row update")
 		}
 
+		listBrands[brands] = &brands1
+
 		brandsOnDatabase, err := brandsRepository.Single(int(id))
 
 		if err != nil {
 			t.Errorf("error on testing brands : %s", err.Error())
 		}
 
-		if brands.Compare(*brandsOnDatabase) == false {
+		if brands1.Compare(*brandsOnDatabase) == false {
 			t.Errorf("field on database not same with on field input")
 		}
 	}
@@ -106,6 +108,9 @@ func TestAllBrands(t *testing.T) {
 
 		for brands := range brandsOnDatabase {
 			exists = brand.Compare(*brandsOnDatabase[brands]) || exists
+			if exists {
+				break
+			}
 		}
 
 		if exists == false {

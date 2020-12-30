@@ -81,7 +81,7 @@ func TestUpdateStaffs(t *testing.T) {
 	for staffs := range listStaffs {
 		id := *&listStaffs[staffs].StaffID
 
-		staffs := domain.Staffs{
+		staffs1 := domain.Staffs{
 			StaffID:   id,
 			StoreID:   int(idStores),
 			FirstName: fake.FirstName(),
@@ -91,7 +91,7 @@ func TestUpdateStaffs(t *testing.T) {
 			Active:    "1",
 		}
 
-		countEffect, err := staffsRepository.Update(staffs)
+		countEffect, err := staffsRepository.Update(staffs1)
 
 		if err != nil {
 			t.Errorf("error on testing staffs : %s", err.Error())
@@ -101,13 +101,15 @@ func TestUpdateStaffs(t *testing.T) {
 			t.Errorf("nothing row update")
 		}
 
+		listStaffs[staffs] = &staffs1
+
 		staffsOnDatabase, err := staffsRepository.Single(int(id))
 
 		if err != nil {
 			t.Errorf("error on testing staffs : %s", err.Error())
 		}
 
-		if staffs.Compare(*staffsOnDatabase) == false {
+		if staffs1.Compare(*staffsOnDatabase) == false {
 			t.Errorf("field on database not same with on field input")
 		}
 	}

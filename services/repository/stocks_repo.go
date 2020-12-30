@@ -2,7 +2,7 @@ package repository
 
 import (
 	"database/sql"
-	"errors"
+	"fmt"
 
 	"github.com/juragankoding/golang_graphql_training/domain"
 )
@@ -27,36 +27,39 @@ func (s *stocksRepository) Fetch() ([]*domain.Stocks, error) {
 	}
 
 	for query.Next() {
-		var stock *domain.Stocks
+		var stock domain.Stocks
 
-		switch err := query.Scan(stock.StoreID, stock.ProductID, stock.Quantity); err {
+		switch err := query.Scan(&stock.StoreID, &stock.ProductID, &stock.Quantity); err {
 		case sql.ErrNoRows:
 			return nil, err
 		case nil:
-			listStock = append(listStock, stock)
+			listStock = append(listStock, &stock)
 		}
 	}
 
 	return listStock, nil
 }
 
-func (s *stocksRepository) Get(stockID int, productID int) (*domain.Stocks, error) {
-	queryRow := s.Conn.QueryRow("SELECT * FROM stocks WHERE store_id=? AND product_id=?", stockID, productID)
+func (s *stocksRepository) Get(storeID int, productID int) (*domain.Stocks, error) {
 
-	var stock *domain.Stocks
+	fmt.Printf("SELECT * FROM stocks WHERE store_id=%d AND product_id=%d", storeID, productID)
 
-	switch err := queryRow.Scan(stock.StoreID, stock.ProductID, stock.Quantity); err {
+	queryRow := s.Conn.QueryRow("SELECT * FROM stocks WHERE store_id=? AND product_id=?", storeID, productID)
+
+	var stock domain.Stocks
+
+	switch err := queryRow.Scan(&stock.StoreID, &stock.ProductID, &stock.Quantity); err {
 	case sql.ErrNoRows:
 		return nil, err
 	case nil:
-		return stock, nil
+		return &stock, nil
+	default:
+		return nil, err
 	}
-
-	return nil, errors.New("Nothing action on this function")
 }
 
-func (s *stocksRepository) Update(stocks domain.Stocks) (int64, error) {
-	statement, err := s.Conn.Prepare("INSERT INTO staffs (store_id, product_id, quantity) VALUES (?,?,?)")
+func (s *stocksRepository) Insert(stocks domain.Stocks) (int64, error) {
+	statement, err := s.Conn.Prepare("INSERT INTO stocks (store_id, product_id, quantity) VALUES (?,?,?)")
 
 	if err != nil {
 		return -1, err
@@ -69,8 +72,8 @@ func (s *stocksRepository) Update(stocks domain.Stocks) (int64, error) {
 	}
 }
 
-func (s *stocksRepository) Insert(stocks domain.Stocks) (int64, error) {
-	statement, err := s.Conn.Prepare("UPDATE staffs SET quantity=? manager_id WHERE store_id = ? AND product_id=?")
+func (s *stocksRepository) Update(stocks domain.Stocks) (int64, error) {
+	statement, err := s.Conn.Prepare("UPDATE stocks SET quantity=? WHERE store_id = ? AND product_id=?")
 
 	if err != nil {
 		return -1, err

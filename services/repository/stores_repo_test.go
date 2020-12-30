@@ -65,7 +65,7 @@ func TestUpdateStores(t *testing.T) {
 	for stores := range listStores {
 		id := *&listStores[stores].StoreID
 
-		stores := domain.Stores{
+		stores1 := domain.Stores{
 			StoreID:   id,
 			StoreName: fake.FullName(),
 			Phone:     fake.Phone(),
@@ -75,7 +75,7 @@ func TestUpdateStores(t *testing.T) {
 			State:     fake.State(),
 			ZipCode:   fake.Zip(),
 		}
-		countEffect, err := storesRepository.Update(stores)
+		countEffect, err := storesRepository.Update(stores1)
 
 		if err != nil {
 			t.Errorf("error on testing stores : %s", err.Error())
@@ -85,13 +85,15 @@ func TestUpdateStores(t *testing.T) {
 			t.Errorf("nothing row update")
 		}
 
+		listStores[stores] = &stores1
+
 		storesOnDatabase, err := storesRepository.Get(int(id))
 
 		if err != nil {
 			t.Errorf("error on testing stores : %s", err.Error())
 		}
 
-		if stores.Compare(*storesOnDatabase) == false {
+		if stores1.Compare(*storesOnDatabase) == false {
 			t.Errorf("field on database not same with on field input")
 		}
 	}

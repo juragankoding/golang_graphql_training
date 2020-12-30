@@ -59,12 +59,12 @@ func TestUpdateCategories(t *testing.T) {
 	for categories := range listCategories {
 		id := *&listCategories[categories].ID
 
-		categories := domain.Categories{
+		categories1 := domain.Categories{
 			ID:   id,
 			Name: fake.Brand(),
 		}
 
-		countEffect, err := categoriesRepository.Update(&categories)
+		countEffect, err := categoriesRepository.Update(&categories1)
 
 		if err != nil {
 			t.Errorf("error on testing categories : %s", err.Error())
@@ -74,13 +74,15 @@ func TestUpdateCategories(t *testing.T) {
 			t.Errorf("nothing row update")
 		}
 
+		listCategories[categories] = &categories1
+
 		categoriesOnDatabase, err := categoriesRepository.Get(int(id))
 
 		if err != nil {
 			t.Errorf("error on testing categories : %s", err.Error())
 		}
 
-		if categories.Compare(*categoriesOnDatabase) == false {
+		if categories1.Compare(*categoriesOnDatabase) == false {
 			t.Errorf("field on database not same with on field input")
 		}
 	}

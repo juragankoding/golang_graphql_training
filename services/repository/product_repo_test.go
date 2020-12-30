@@ -84,7 +84,7 @@ func TestUpdateProducts(t *testing.T) {
 	for products := range listProducts {
 		id := *&listProducts[products].ProductID
 
-		products := domain.Products{
+		products1 := domain.Products{
 			ProductID:   id,
 			ListPrice:   1000,
 			ModelYear:   strconv.Itoa((fake.Year(1990, 2000))),
@@ -92,7 +92,7 @@ func TestUpdateProducts(t *testing.T) {
 			CategoryID:  int(idCategoryProduct),
 			BrandID:     int(idBrandsProduct),
 		}
-		countEffect, err := productsRepository.Update(products)
+		countEffect, err := productsRepository.Update(products1)
 
 		if err != nil {
 			t.Errorf("error on testing products : %s", err.Error())
@@ -102,13 +102,15 @@ func TestUpdateProducts(t *testing.T) {
 			t.Errorf("nothing row update")
 		}
 
+		listProducts[products] = &products1
+
 		productsOnDatabase, err := productsRepository.Get(int(id))
 
 		if err != nil {
 			t.Errorf("error on testing products : %s", err.Error())
 		}
 
-		if products.Compare(*productsOnDatabase) == false {
+		if products1.Compare(*productsOnDatabase) == false {
 			t.Errorf("field on database not same with on field input")
 		}
 	}

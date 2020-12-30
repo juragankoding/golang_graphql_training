@@ -152,7 +152,7 @@ func TestUpdateOrderItem(t *testing.T) {
 	for orderItem := range listOrderItem {
 		id := *&listOrderItem[orderItem].ItemID
 
-		orderItem := domain.OrderItem{
+		orderItem1 := domain.OrderItem{
 			ItemID:    id,
 			OrderID:   int(idOrdersOrderItem),
 			ProductID: int(idProductOrderItem),
@@ -161,7 +161,7 @@ func TestUpdateOrderItem(t *testing.T) {
 			Discount:  1,
 		}
 
-		countEffect, err := orderItemRepository.Update(orderItem)
+		countEffect, err := orderItemRepository.Update(orderItem1)
 
 		if err != nil {
 			t.Errorf("error on testing orderItem : %s", err.Error())
@@ -171,13 +171,14 @@ func TestUpdateOrderItem(t *testing.T) {
 			t.Errorf("nothing row update")
 		}
 
+		listOrderItem[orderItem] = &orderItem1
 		orderItemOnDatabase, err := orderItemRepository.Get(int(id))
 
 		if err != nil {
 			t.Errorf("error on testing orderItem : %s", err.Error())
 		}
 
-		if orderItem.Compare(*orderItemOnDatabase) == false {
+		if orderItem1.Compare(*orderItemOnDatabase) == false {
 			t.Errorf("field on database not same with on field input")
 		}
 	}

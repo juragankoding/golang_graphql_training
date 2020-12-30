@@ -66,7 +66,7 @@ func TestUpdateCustomers(t *testing.T) {
 	for customers := range listCustomers {
 		id := *&listCustomers[customers].CustomerID
 
-		customers := domain.Customers{
+		customers1 := domain.Customers{
 			CustomerID: id,
 			FirstName:  fake.FirstName(),
 			LastName:   fake.LastName(),
@@ -79,7 +79,7 @@ func TestUpdateCustomers(t *testing.T) {
 			ZipCode: 111,
 		}
 
-		countEffect, err := customersRepository.Update(customers)
+		countEffect, err := customersRepository.Update(customers1)
 
 		if err != nil {
 			t.Errorf("error on testing customers : %s", err.Error())
@@ -89,13 +89,15 @@ func TestUpdateCustomers(t *testing.T) {
 			t.Errorf("nothing row update")
 		}
 
+		listCustomers[customers] = &customers1
+
 		customersOnDatabase, err := customersRepository.Get(int(id))
 
 		if err != nil {
 			t.Errorf("error on testing customers : %s", err.Error())
 		}
 
-		if customers.Compare(*customersOnDatabase) == false {
+		if customers1.Compare(*customersOnDatabase) == false {
 			t.Errorf("field on database not same with on field input")
 		}
 	}
