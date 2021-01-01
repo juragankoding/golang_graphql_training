@@ -5,7 +5,6 @@ package graph
 
 import (
 	"context"
-	"fmt"
 	"log"
 
 	"github.com/juragankoding/golang_graphql_training/domain"
@@ -96,5 +95,15 @@ func (r *queryResolver) AllCategories(ctx context.Context) (*model.ResultFetchCa
 }
 
 func (r *queryResolver) SingleCategories(ctx context.Context, id *int) (*model.ResultGetCategories, error) {
-	panic(fmt.Errorf("not implemented"))
+	dataCategories, err := r.CategoriesUseCase.Get(*id)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &model.ResultGetCategories{
+		Status: "Success Gettering Data",
+		Code:   200,
+		Data:   dataCategories,
+	}, nil
 }

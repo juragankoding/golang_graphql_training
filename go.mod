@@ -9,7 +9,7 @@ require (
 	github.com/go-chi/chi v3.3.2+incompatible
 	github.com/go-redis/redis/v8 v8.4.4
 	github.com/icrowley/fake v0.0.0-20180203215853-4178557ae428
-	github.com/mattn/go v0.0.0-20171011075504-07f7db3ea99f // indirect
+	github.com/mattn/go v0.0.0-20171011075504-07f7db3ea99f
 	github.com/mattn/go-sqlite3 v2.0.3+incompatible
 	github.com/novalagung/gubrak/v2 v2.0.1 // indirect
 	github.com/rubenv/sql-migrate v0.0.0-20200616145509-8d140a17f351

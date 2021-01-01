@@ -1,6 +1,10 @@
 package db
 
-import "github.com/go-redis/redis/v8"
+import (
+	"time"
+
+	"github.com/go-redis/redis/v8"
+)
 
 func GetRedisClient() *redis.Client {
 	edb := redis.NewClient(&redis.Options{
@@ -11,3 +15,6 @@ func GetRedisClient() *redis.Client {
 
 	return edb
 }
+
+var DurationFetch = 15 * time.Minute
+var DurationDetail = 5 * time.Minute
