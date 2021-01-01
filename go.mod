@@ -7,6 +7,7 @@ require (
 	github.com/corpix/uarand v0.1.1 // indirect
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/go-chi/chi v3.3.2+incompatible
+	github.com/go-redis/redis/v8 v8.4.4
 	github.com/icrowley/fake v0.0.0-20180203215853-4178557ae428
 	github.com/mattn/go v0.0.0-20171011075504-07f7db3ea99f // indirect
 	github.com/mattn/go-sqlite3 v2.0.3+incompatible
