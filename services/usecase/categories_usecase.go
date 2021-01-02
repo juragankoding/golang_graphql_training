@@ -1,37 +1,40 @@
 package usecase
 
 import (
-	"context"
 	"encoding/json"
 	"errors"
 	"fmt"
 
 	"github.com/go-redis/redis/v8"
-	"github.com/juragankoding/golang_graphql_training/db"
+	"github.com/juragankoding/golang_graphql_training/cache"
 	"github.com/juragankoding/golang_graphql_training/domain"
+	"github.com/mattn/go/src/context"
 )
 
-var KeyRedisDatabase = "categories"
-var ctxBackground = context.Background()
+var KeyRedisDatabaseCategories = "categories"
 
 type categoriesUseCase struct {
 	redisUtil      *redis.Client
 	categoriesRepo domain.CategoriesRepository
+	Context        context.Context
 }
 
-func NewGenerateCategoriesUserCase(a domain.CategoriesRepository) domain.CategoriesUseCase {
+func NewGenerateCategoriesUserCase(a domain.CategoriesRepository,
+	context context.Context,
+	redisUtil *redis.Client) domain.CategoriesUseCase {
 	return &categoriesUseCase{
-		redisUtil:      db.GetRedisClient(),
+		redisUtil:      redisUtil,
 		categoriesRepo: a,
+		Context:        context,
 	}
 }
 
 func (a *categoriesUseCase) Get(id int) (*domain.Categories, error) {
 	var domainCategory *domain.Categories
 
-	key := fmt.Sprintf(KeyRedisDatabase, "_detail_", id)
+	key := fmt.Sprintf(KeyRedisDatabaseCategories, "_detail_", id)
 
-	val, err := a.redisUtil.Exists(ctxBackground, key).Result()
+	val, err := a.redisUtil.Exists(a.Context, key).Result()
 
 	if err != nil {
 		fmt.Printf("error redis: %s", err.Error())
@@ -47,12 +50,12 @@ func (a *categoriesUseCase) Get(id int) (*domain.Categories, error) {
 		if jsonEncode, err := json.Marshal(domainCategory); err != nil {
 			return nil, err
 		} else {
-			if _, err := a.redisUtil.Set(ctxBackground, key, jsonEncode, db.DurationDetail).Result(); err != nil {
+			if _, err := a.redisUtil.Set(a.Context, key, jsonEncode, cache.DurationDetail).Result(); err != nil {
 				return nil, err
 			}
 		}
 	} else {
-		result, err := a.redisUtil.Get(ctxBackground, key).Result()
+		result, err := a.redisUtil.Get(a.Context, key).Result()
 
 		if err != nil {
 			return nil, err
@@ -69,9 +72,9 @@ func (a *categoriesUseCase) Get(id int) (*domain.Categories, error) {
 func (a *categoriesUseCase) Fetch() ([]*domain.Categories, error) {
 	var domainCategories []*domain.Categories
 
-	key := fmt.Sprint(KeyRedisDatabase, "_fetch")
+	key := fmt.Sprint(KeyRedisDatabaseCategories, "_fetch")
 
-	val, err := a.redisUtil.Exists(ctxBackground, key).Result()
+	val, err := a.redisUtil.Exists(a.Context, key).Result()
 
 	if err != nil {
 		fmt.Printf("error redis : %s", err.Error())
@@ -87,14 +90,14 @@ func (a *categoriesUseCase) Fetch() ([]*domain.Categories, error) {
 		if e, err := json.Marshal(domainCategories); err != nil {
 			return nil, err
 		} else {
-			_, err := a.redisUtil.Set(ctxBackground, key, e, db.DurationFetch).Result()
+			_, err := a.redisUtil.Set(a.Context, key, e, cache.DurationFetch).Result()
 
 			if err != nil {
 				return nil, err
 			}
 		}
 	} else {
-		result, err := a.redisUtil.Get(ctxBackground, key).Result()
+		result, err := a.redisUtil.Get(a.Context, key).Result()
 
 		if err != nil {
 			return nil, err

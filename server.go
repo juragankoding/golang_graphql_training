@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"log"
 	"net/http"
 	"os"
@@ -8,6 +9,8 @@ import (
 	"github.com/99designs/gqlgen/graphql/handler"
 	"github.com/99designs/gqlgen/graphql/playground"
 	"github.com/go-chi/chi"
+	"github.com/go-redis/redis/v8"
+	"github.com/juragankoding/golang_graphql_training/cache"
 	"github.com/juragankoding/golang_graphql_training/db"
 	"github.com/juragankoding/golang_graphql_training/generated"
 	"github.com/juragankoding/golang_graphql_training/graph"
@@ -34,6 +37,12 @@ func main() {
 		return
 	}
 
+	var redisUtil *redis.Client
+
+	redisUtil = cache.GetRedisClient()
+
+	contextBackground := context.Background()
+
 	//prepare repository
 	repositoryCategories := repository.NewGenerateCategoriesRepository(db)
 	repositoryCustomers := repository.NewGenerateCustomersRepository(db)
@@ -47,9 +56,9 @@ func main() {
 	repositoryStores := repository.NewGenerateStoresRepository(db)
 
 	resolver := graph.Resolver{
-		CategoriesUseCase: usecase.NewGenerateCategoriesUserCase(repositoryCategories),
+		CategoriesUseCase: usecase.NewGenerateCategoriesUserCase(repositoryCategories, contextBackground, redisUtil),
 		CustomersUseCase:  usecase.NewGenerateCustomerUseCase(repositoryCustomers),
-		BrandsUseCase:     usecase.NewGenerateBrandsUseCase(repositoryBrands),
+		BrandsUseCase:     usecase.NewGenerateBrandsUseCase(repositoryBrands, contextBackground, redisUtil),
 		OrderItemUseCase:  usecase.NewGenerateOderItemUseCase(repositoryOrderItem),
 		OrdersUseCase:     usecase.NewGenerateOrdersUseCase(repositoryOrders),
 		ProductUseCase:    usecase.NewGenerateProductUseCase(repositoryProducts),
