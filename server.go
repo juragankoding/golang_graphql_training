@@ -68,12 +68,16 @@ func main() {
 		OrderItemUseCase: usecase.NewGenerateOderItemUseCase(repositoryOrderItem,
 			contextBackground,
 			redisUtil),
-		OrdersUseCase:  usecase.NewGenerateOrdersUseCase(repositoryOrders),
-		ProductUseCase: usecase.NewGenerateProductUseCase(repositoryProducts),
-		StaffsUseCase:  usecase.NewGenerateStaffsUseCase(repositoryStaffs),
-		StocksUseCase:  usecase.NewGenerateStockUseCase(repositoryStocks),
-		UserUseCase:    usecase.NewGenerateUserUseCase(&repositoryUser),
-		StoreUseCase:   usecase.NewGenereateStoreUseCase(&repositoryStores),
+		OrdersUseCase: usecase.NewGenerateOrdersUseCase(repositoryOrders,
+			contextBackground,
+			redisUtil),
+		ProductUseCase: usecase.NewGenerateProductUseCase(repositoryProducts,
+			contextBackground,
+			redisUtil),
+		StaffsUseCase: usecase.NewGenerateStaffsUseCase(repositoryStaffs),
+		StocksUseCase: usecase.NewGenerateStockUseCase(repositoryStocks),
+		UserUseCase:   usecase.NewGenerateUserUseCase(&repositoryUser),
+		StoreUseCase:  usecase.NewGenereateStoreUseCase(&repositoryStores),
 	}
 
 	router := chi.NewRouter()
