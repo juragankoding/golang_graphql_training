@@ -56,16 +56,24 @@ func main() {
 	repositoryStores := repository.NewGenerateStoresRepository(db)
 
 	resolver := graph.Resolver{
-		CategoriesUseCase: usecase.NewGenerateCategoriesUserCase(repositoryCategories, contextBackground, redisUtil),
-		CustomersUseCase:  usecase.NewGenerateCustomerUseCase(repositoryCustomers),
-		BrandsUseCase:     usecase.NewGenerateBrandsUseCase(repositoryBrands, contextBackground, redisUtil),
-		OrderItemUseCase:  usecase.NewGenerateOderItemUseCase(repositoryOrderItem),
-		OrdersUseCase:     usecase.NewGenerateOrdersUseCase(repositoryOrders),
-		ProductUseCase:    usecase.NewGenerateProductUseCase(repositoryProducts),
-		StaffsUseCase:     usecase.NewGenerateStaffsUseCase(repositoryStaffs),
-		StocksUseCase:     usecase.NewGenerateStockUseCase(repositoryStocks),
-		UserUseCase:       usecase.NewGenerateUserUseCase(&repositoryUser),
-		StoreUseCase:      usecase.NewGenereateStoreUseCase(&repositoryStores),
+		CategoriesUseCase: usecase.NewGenerateCategoriesUserCase(repositoryCategories,
+			contextBackground,
+			redisUtil),
+		CustomersUseCase: usecase.NewGenerateCustomerUseCase(repositoryCustomers,
+			contextBackground,
+			redisUtil),
+		BrandsUseCase: usecase.NewGenerateBrandsUseCase(repositoryBrands,
+			contextBackground,
+			redisUtil),
+		OrderItemUseCase: usecase.NewGenerateOderItemUseCase(repositoryOrderItem,
+			contextBackground,
+			redisUtil),
+		OrdersUseCase:  usecase.NewGenerateOrdersUseCase(repositoryOrders),
+		ProductUseCase: usecase.NewGenerateProductUseCase(repositoryProducts),
+		StaffsUseCase:  usecase.NewGenerateStaffsUseCase(repositoryStaffs),
+		StocksUseCase:  usecase.NewGenerateStockUseCase(repositoryStocks),
+		UserUseCase:    usecase.NewGenerateUserUseCase(&repositoryUser),
+		StoreUseCase:   usecase.NewGenereateStoreUseCase(&repositoryStores),
 	}
 
 	router := chi.NewRouter()
