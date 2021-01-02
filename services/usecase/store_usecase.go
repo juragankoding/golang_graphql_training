@@ -35,14 +35,14 @@ func (s *storeUseCase) Get(id int) (*domain.Stores, error) {
 
 	var key = fmt.Sprint(keyRedisProduct, "_get_", id)
 
-	existsResult, err := s.redisUtil.Exists(a.contextUtil, key).Result()
+	existsResult, err := s.redisUtil.Exists(s.contextUtil, key).Result()
 
 	if err != nil {
 		return nil, err
 	}
 
 	if existsResult <= 0 {
-		domainStores, err = s.StoreRepo.
+		domainStores, err = (*s.StoreRepo).Get(id)
 
 		if err != nil {
 			return nil, err
@@ -51,13 +51,13 @@ func (s *storeUseCase) Get(id int) (*domain.Stores, error) {
 		if jsonDecode, err := json.Marshal(domainStores); err != nil {
 			return nil, err
 		} else {
-			if _, err := s.redisUtil.Set(a.contextUtil, key, jsonDecode, cache.DurationDetail).Result(); err != nil {
+			if _, err := s.redisUtil.Set(s.contextUtil, key, jsonDecode, cache.DurationDetail).Result(); err != nil {
 				return nil, err
 			}
 		}
 
 	} else {
-		jsonFromRedis, err := s.redisUtil.Get(a.contextUtil, key).Result()
+		jsonFromRedis, err := s.redisUtil.Get(s.contextUtil, key).Result()
 
 		if err != nil {
 			return nil, err
@@ -74,16 +74,16 @@ func (s *storeUseCase) Get(id int) (*domain.Stores, error) {
 func (s *storeUseCase) Fetch() ([]*domain.Stores, error) {
 	var domainStores []*domain.Stores
 
-	var key = fmt.Sprint(keyRedisProduct, "_get_", id)
+	var key = fmt.Sprint(keyRedisProduct, "_fetch")
 
-	existsResult, err := s.redisUtil.Exists(a.contextUtil, key).Result()
+	existsResult, err := s.redisUtil.Exists(s.contextUtil, key).Result()
 
 	if err != nil {
 		return nil, err
 	}
 
 	if existsResult <= 0 {
-		domainStores, err = s.StoreRepo.
+		domainStores, err = (*s.StoreRepo).Fetch()
 
 		if err != nil {
 			return nil, err
@@ -92,13 +92,13 @@ func (s *storeUseCase) Fetch() ([]*domain.Stores, error) {
 		if jsonDecode, err := json.Marshal(domainStores); err != nil {
 			return nil, err
 		} else {
-			if _, err := s.redisUtil.Set(a.contextUtil, key, jsonDecode, cache.DurationDetail).Result(); err != nil {
+			if _, err := s.redisUtil.Set(s.contextUtil, key, jsonDecode, cache.DurationDetail).Result(); err != nil {
 				return nil, err
 			}
 		}
 
 	} else {
-		jsonFromRedis, err := s.redisUtil.Get(a.contextUtil, key).Result()
+		jsonFromRedis, err := s.redisUtil.Get(s.contextUtil, key).Result()
 
 		if err != nil {
 			return nil, err
@@ -113,11 +113,11 @@ func (s *storeUseCase) Fetch() ([]*domain.Stores, error) {
 	return domainStores, nil
 }
 func (s *storeUseCase) Insert(stores domain.Stores) (int64, error) {
-	return s.Insert(stores)
+	return (*s.StoreRepo).Insert(stores)
 }
 func (s *storeUseCase) Update(stores domain.Stores) (int64, error) {
-	return s.Update(stores)
+	return (*s.StoreRepo).Update(stores)
 }
 func (s *storeUseCase) Delete(id int) (int64, error) {
-	return s.Delete(id)
+	return (*s.StoreRepo).Delete(id)
 }

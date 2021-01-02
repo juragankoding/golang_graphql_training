@@ -14,4 +14,5 @@ require (
 	github.com/novalagung/gubrak/v2 v2.0.1 // indirect
 	github.com/rubenv/sql-migrate v0.0.0-20200616145509-8d140a17f351
 	github.com/vektah/gqlparser/v2 v2.1.0
+	google.golang.org/genproto v0.0.0-20190819201941-24fa4b261c55
 )

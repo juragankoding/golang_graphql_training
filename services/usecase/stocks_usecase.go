@@ -8,7 +8,6 @@ import (
 	"github.com/go-redis/redis/v8"
 	"github.com/juragankoding/golang_graphql_training/cache"
 	"github.com/juragankoding/golang_graphql_training/domain"
-	"google.golang.org/genproto/googleapis/cloud/redis/v1"
 )
 
 var keyRedisStocks = "keyRedisStocks"
@@ -83,7 +82,7 @@ func (s *stockUseCase) Get(stockID int, productID int) (*domain.Stocks, error) {
 	}
 
 	if existsResult <= 0 {
-		domainStocks, err = s.StockRepository.Single(stockID, productID)
+		domainStocks, err = s.StockRepository.Get(stockID, productID)
 
 		if err != nil {
 			return nil, err

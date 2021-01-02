@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/go-redis/redis/v8"
+	redis "github.com/go-redis/redis/v8"
 	"github.com/juragankoding/golang_graphql_training/cache"
 	"github.com/juragankoding/golang_graphql_training/domain"
 )
