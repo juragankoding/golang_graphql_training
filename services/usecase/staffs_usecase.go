@@ -113,10 +113,20 @@ func (s *staffsUseCase) Single(id int) (*domain.Staffs, error) {
 }
 
 func (s *staffsUseCase) Insert(staffs domain.Staffs) (int64, error) {
-	return s.StaffsRepo.Insert(staffs)
+	if err := staffs.Validate(); err != nil {
+		return -1, err
+	}
+
+	status, err := s.StaffsRepo.Insert(staffs)
+
+	return status, err
 }
 
 func (s *staffsUseCase) Update(staffs domain.Staffs) (int64, error) {
+	if err := staffs.Validate(); err != nil {
+		return -1, err
+	}
+
 	return s.StaffsRepo.Update(staffs)
 }
 

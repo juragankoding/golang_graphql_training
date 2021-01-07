@@ -1,5 +1,11 @@
 package domain
 
+import (
+	"fmt"
+
+	"github.com/go-playground/validator/v10"
+)
+
 type Products struct {
 	ProductID      int        `json:"product_id"`
 	ProductName    string     `json:"product_name"`
@@ -34,4 +40,35 @@ func (p *Products) Compare(product Products) bool {
 		p.ModelYear == product.ModelYear &&
 		p.ProductName == product.ProductName &&
 		p.ListPrice == product.ListPrice
+}
+
+func (s *Products) Validate() error {
+	var validate *validator.Validate
+
+	validate = validator.New()
+
+	err := validate.Struct(s)
+
+	if err != nil {
+
+		if _, ok := err.(*validator.InvalidValidationError); ok {
+			return &validator.InvalidValidationError{}
+		}
+
+		for _, err := range err.(validator.ValidationErrors) {
+			fmt.Println(err.Namespace())
+			fmt.Println(err.Field())
+			fmt.Println(err.StructNamespace())
+			fmt.Println(err.StructField())
+			fmt.Println(err.Tag())
+			fmt.Println(err.ActualTag())
+			fmt.Println(err.Kind())
+			fmt.Println(err.Type())
+			fmt.Println(err.Value())
+			fmt.Println(err.Param())
+			fmt.Println()
+		}
+	}
+
+	return err
 }
